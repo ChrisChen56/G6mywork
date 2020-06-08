@@ -156,6 +156,8 @@ public class ShgmServlet extends HttpServlet {
 			baos.close();
 			byte[] img = baos.toByteArray();
 			
+			String imgsrc = request.getParameter("imgsrc");
+			
 			Integer upcheck = new Integer(request.getParameter("upcheck"));
 			
 			Timestamp uptimevo = null;
@@ -222,6 +224,7 @@ public class ShgmServlet extends HttpServlet {
 			shgmvo.setSoldtime(soldtimevo);
 			
 			if(!errormsgs.isEmpty()) {
+				request.setAttribute("imgsrc", imgsrc);
 				request.setAttribute("shgmvo", shgmvo);
 				String url = "/back-end/shgm/addShgm.jsp";
 				RequestDispatcher failedview = request.getRequestDispatcher(url);

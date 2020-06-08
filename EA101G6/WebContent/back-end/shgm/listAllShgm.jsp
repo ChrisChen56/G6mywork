@@ -24,8 +24,8 @@
 		width: 2000px;
 	}
 	th, td {
-    border: 1px solid black;
-  }
+    	border: 1px solid black;
+  	}
 </style>
 </head>
 <body>
@@ -55,6 +55,7 @@
 			<td>付款狀態</td>
 			<td>訂單狀態</td>
 			<td>售出時間</td>
+			<td>修改市集商品</td>
 			<td>刪除市集商品</td>
 		</tr>
 		
@@ -114,6 +115,13 @@
 	            </c:otherwise>
         	</c:choose>
 			<td><fmt:formatDate value="${shgmvo.soldtime}" pattern="yyyy/MM/dd HH:mm:ss"/></td>
+			<td>
+				<form method="post" action="<%= request.getContextPath()%>/back-end/shgm/shgm.do">
+					<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
+					<input type="hidden" name="action" value="update" >
+					<input type="submit" value="修改">
+				</form>
+			</td>
 			<td>
 				<form method="post" action="<%= request.getContextPath()%>/back-end/shgm/shgm.do">
 					<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">

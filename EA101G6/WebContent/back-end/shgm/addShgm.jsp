@@ -5,6 +5,7 @@
     
 <%
     	ShgmVO shgmvo = (ShgmVO) request.getAttribute("shgmvo");
+		String imgsrc = (String)request.getAttribute("imgsrc");
 %>
 
 <!DOCTYPE html>
@@ -61,7 +62,9 @@
 			</tr>
 			<tr>
 				<td>市集商品圖片</td>
-				<td><input type="file" name="img"/></td>
+				<td><input type="file" name="img" id="imgfile" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"/>
+					<img id="blah" alt="your image" width="100" height="100" src="<%= (shgmvo == null)? "": imgsrc %>"/></td>
+					<input type="hidden" name="imgsrc" id="imgid" value="<%= (shgmvo == null)? "": imgsrc %>"/>
 			</tr>
 			<tr>
 				<td>上架審核狀態</td>
@@ -160,6 +163,12 @@
 </style>
 
 <script>
+//document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])
+$("document").ready(function(){
+		$('input[type=file]').change(function(){
+			$('#imgid').val($('#blah').attr('src'));
+		});
+});
         $.datetimepicker.setLocale('zh');
         $('#f_date1').datetimepicker({
 	       theme: '',              //theme: 'dark',
