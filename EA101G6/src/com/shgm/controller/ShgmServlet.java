@@ -242,5 +242,26 @@ public class ShgmServlet extends HttpServlet {
 			failedview.forward(request, response);
 			}
 		}
+		
+		if("delete".equals(action)) {
+			
+			List<String> errormsgs = new LinkedList<String>();
+			request.setAttribute("errormsgs", errormsgs);
+			
+			try {
+				String shgmno = request.getParameter("shgmno");
+				ShgmJDBCDAO shgmdao = new ShgmJDBCDAO();
+				shgmdao.delete(shgmno);
+				
+				String url = "/back-end/shgm/listAllShgm.jsp";
+				RequestDispatcher successview = request.getRequestDispatcher(url);
+				successview.forward(request, response);
+			} catch(Exception e) {
+				errormsgs.add("刪除發生錯誤" + e.getMessage());
+				String url = "/back-end/shgm/listAllShgm.jsp";
+				RequestDispatcher errorview = request.getRequestDispatcher(url);
+				errorview.forward(request, response);
+			}
+		}
 	}
 }

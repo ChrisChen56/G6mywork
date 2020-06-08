@@ -29,6 +29,13 @@
 </style>
 </head>
 <body>
+<ul>
+	<c:if test="${not empty errormsgs}">
+		<c:forEach var="error" items="${errormsgs}">
+			<li>${error}</li>
+		</c:forEach>
+	</c:if>
+</ul>
 	<table>
 		<tr>
 			<td>市集商品編號</td>
@@ -48,6 +55,7 @@
 			<td>付款狀態</td>
 			<td>訂單狀態</td>
 			<td>售出時間</td>
+			<td>刪除市集商品</td>
 		</tr>
 		
 		<c:forEach var="shgmvo" items="${list}">
@@ -105,7 +113,14 @@
 	                 <td>取消</td>
 	            </c:otherwise>
         	</c:choose>
-			<td>${shgmvo.soldtime}</td>
+			<td><fmt:formatDate value="${shgmvo.soldtime}" pattern="yyyy/MM/dd HH:mm:ss"/></td>
+			<td>
+				<form method="post" action="<%= request.getContextPath()%>/back-end/shgm/shgm.do">
+					<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
+					<input type="hidden" name="action" value="delete" >
+					<input type="submit" value="刪除">
+				</form>
+			</td>
 		</tr>
 		</c:forEach>
 	</table>
