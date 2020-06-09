@@ -1,5 +1,7 @@
 package com.shgm.model;
 
+import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.util.Date;
@@ -10,6 +12,8 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.ServletOutputStream;
 
 public class ShgmJDBCDAO implements ShgmDAO_interface{
 	String driver = "oracle.jdbc.driver.OracleDriver";
@@ -30,8 +34,8 @@ public class ShgmJDBCDAO implements ShgmDAO_interface{
 			+ "VALUES"
 			+ "('CA'||LPAD(shgame_seq.NEXTVAL,5,'0'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	private static final String UPDATE_STMT =
-			"UPTimestamp SHGM SET sellerno=?,buyerno=?,shgmname=?,price=?,intro=?,img=?,upcheck=?,"
-			+ "uptime=?,take=?,takenm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=?,soldtime=? WHERE shgmno=?";
+			"UPDATE SHGM SET sellerno=?,buyerno=?,shgmname=?,price=?,intro=?,img=?,upcheck=?,"
+			+ "uptime=?,take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=?,soldtime=? WHERE shgmno=?";
 	private static final String DELETE_STMT =
 			"DELETE FROM SHGM WHERE shgmno=?";
 	private static final String GET_ONE_STMT=
@@ -117,6 +121,7 @@ public class ShgmJDBCDAO implements ShgmDAO_interface{
 			pstmt.setInt(14, shgmvo.getPaystatus());
 			pstmt.setInt(15, shgmvo.getStatus());
 			pstmt.setTimestamp(16, shgmvo.getSoldtime());
+			pstmt.setString(17, shgmvo.getShgmno());
 			
 			pstmt.executeUpdate();
 			
@@ -300,5 +305,4 @@ public class ShgmJDBCDAO implements ShgmDAO_interface{
 		}
 		return list;
 	}
-
 }

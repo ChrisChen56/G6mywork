@@ -6,6 +6,7 @@
 <%
     	ShgmVO shgmvo = (ShgmVO) request.getAttribute("shgmvo");
 		String imgsrc = (String)request.getAttribute("imgsrc");
+		byte[] imgsave = (byte[])request.getAttribute("imgsave");
 %>
 
 <!DOCTYPE html>
@@ -64,6 +65,7 @@
 				<td>市集商品圖片</td>
 				<td><input type="file" name="img" id="imgfile" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"/>
 					<img id="blah" alt="your image" width="100" height="100" src="<%= (shgmvo == null)? "": imgsrc %>"/></td>
+					<input type="hidden" name="imgsave" value=<%= imgsave %>>
 					<input type="hidden" name="imgsrc" id="imgid" value="<%= (shgmvo == null)? "": imgsrc %>"/>
 			</tr>
 			<tr>
@@ -167,8 +169,27 @@
 $("document").ready(function(){
 		$('input[type=file]').change(function(){
 			$('#imgid').val($('#blah').attr('src'));
+			
 		});
 });
+
+function readURL(input) {
+    for(var i =0; i< input.files.length; i++){
+        if (input.files[i]) {
+           var reader = new FileReader();
+
+           reader.onload = function (e) {
+              img.attr('src', e.target.result);
+           }
+           reader.readAsDataURL(input.files[i]);
+          }
+       }
+   }
+
+   $("#imgfile").change(function(){
+       readURL(this);
+   });
+
         $.datetimepicker.setLocale('zh');
         $('#f_date1').datetimepicker({
 	       theme: '',              //theme: 'dark',

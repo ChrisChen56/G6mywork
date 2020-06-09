@@ -62,7 +62,6 @@
 			<td><%=(shgmvo.getBoxstatus() == 0)? "未出貨": (shgmvo.getBoxstatus() == 1)? "已出貨": "送達" %></td>
 			<td><%=(shgmvo.getPaystatus() == 0)? "未付款": "已付款" %></td>
 			<td><%=(shgmvo.getStatus() == 0)? "未完成": (shgmvo.getStatus() == 1)? "已完成": "取消" %></td>
-			<td>${shgmvo.status}</td>
 			<td>${shgmvo.soldtime}</td>
 		</tr>
 	</table>

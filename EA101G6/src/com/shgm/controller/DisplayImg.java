@@ -24,6 +24,7 @@ public class DisplayImg extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
+		System.out.println("enter displayimg.jsp");
 		response.setContentType("image/gif");
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -40,6 +41,7 @@ public class DisplayImg extends HttpServlet {
 			
 			while(rs.next()) {
 				blob = rs.getBlob("img");
+				System.out.println("filelength："+blob.length()+"     "+blob.toString());
 			}
 			InputStream is = blob.getBinaryStream();
 			ServletOutputStream ops = response.getOutputStream();
