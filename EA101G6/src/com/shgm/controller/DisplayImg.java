@@ -3,18 +3,27 @@ package com.shgm.controller;
 import java.io.*;
 import java.sql.*;
 
+import javax.naming.*;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 
 public class DisplayImg extends HttpServlet {
-	String driver = "oracle.jdbc.driver.OracleDriver";
-	String url ="jdbc:oracle:thin:@localhost:1521:XE";
-	String user ="EA101";
-	String password="123456";
+	
+	private static javax.sql.DataSource ds = null;
+	static {
+		try {
+			Context ctx = new InitialContext();
+			ds = (DataSource) ctx.lookup("java:comp/env/jdbc/EA101G6DB");
+		} catch(NamingException e) {
+			e.printStackTrace();
+		}
+	}
+		
 	private static final String GET_IMG_STMT= "SELECT img FROM SHGM WHERE shgmno=?";
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -31,8 +40,7 @@ public class DisplayImg extends HttpServlet {
 		ResultSet rs = null;
 		Blob blob = null;
 		try {
-			Class.forName(driver);
-			con = DriverManager.getConnection(url, user, password);
+			con = ds.getConnection();
 			pstmt = con.prepareStatement(GET_IMG_STMT);
 			
 			String shgmno = request.getParameter("shgmno");
@@ -52,8 +60,6 @@ public class DisplayImg extends HttpServlet {
 			}
 			ops.close();
 			is.close();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

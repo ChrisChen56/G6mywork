@@ -10,7 +10,7 @@ import java.util.List;
 public class ShgmrpJDBCDAO implements ShgmrpDAO_interface{
 	String driver = "oracle.jdbc.driver.OracleDriver";
 	String url = "jdbc:oracle:thin:@localhost:1521:XE";
-	String user = "hr";
+	String user = "EA101";
 	String password = "123456";
 	
 	private static final String INSERT_STMT = 
@@ -23,7 +23,15 @@ public class ShgmrpJDBCDAO implements ShgmrpDAO_interface{
 		"SELECT shgmno, suiterno, detail, status FROM SHGMRP WHERE shgmrpno=?";
 	private static final String GET_ALL_STMT = 
 		"SELECT * FROM SHGMRP";
-	
+	public static void main(String[] args) {
+		ShgmrpJDBCDAO dao = new ShgmrpJDBCDAO();
+		ShgmrpVO vo = dao.findByPrimaryKey("CB00002");
+		System.out.println(vo.getShgmrpno());
+		System.out.println(vo.getShgmno());
+		System.out.println(vo.getSuiterno());
+		System.out.println(vo.getDetail());
+		System.out.println(vo.getStatus());
+	}
 	public void insert(ShgmrpVO shgmrpvo) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -144,13 +152,13 @@ public class ShgmrpJDBCDAO implements ShgmrpDAO_interface{
 			
 			while(rs.next()) {
 				shgmrpvo = new ShgmrpVO();
-				shgmrpvo.setShgmrpno(rs.getString(1));
-				shgmrpvo.setShgmno(rs.getString(2));
-				shgmrpvo.setSuiterno(rs.getString(3));
-				java.sql.Clob clob = rs.getClob(4);
+				shgmrpvo.setShgmrpno(shgmrpno);
+				shgmrpvo.setShgmno(rs.getString(1));
+				shgmrpvo.setSuiterno(rs.getString(2));
+				java.sql.Clob clob = rs.getClob(3);
 				String detail = clob.getSubString(1, (int)clob.length());
 				shgmrpvo.setDetail(detail);
-				shgmrpvo.setStatus(rs.getInt(5));
+				shgmrpvo.setStatus(rs.getInt(4));
 			}
 			
 			rs.close();

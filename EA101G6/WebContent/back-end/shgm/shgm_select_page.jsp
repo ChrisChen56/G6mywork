@@ -25,13 +25,13 @@
 			</form>
 		</li>
 		
-		<jsp:useBean id="shgmjdbc" class="com.shgm.model.ShgmJDBCDAO"/>
+		<jsp:useBean id="shgmsvc" class="com.shgm.model.ShgmService"/>
 		
 		<li>
 			<form method="post" action="<%=request.getContextPath()%>/back-end/shgm/shgm.do">
 			請選擇市集商品名稱：
 				<select size="1" name="shgmno">
-					<c:forEach var="shgmvo" items="${shgmjdbc.all}">
+					<c:forEach var="shgmvo" items="${shgmsvc.allShgm}">
 						<option value="${shgmvo.shgmno}">${shgmvo.shgmname}
 					</c:forEach>
 				</select>
@@ -48,7 +48,7 @@
 			<form method="post" action="<%=request.getContextPath()%>/back-end/shgm/shgm.do">
 			請選擇要修改的市集商品：
 				<select size="1" name="shgmno">
-					<c:forEach var="shgmvo" items="${shgmjdbc.all}">
+					<c:forEach var="shgmvo" items="${shgmsvc.allShgm}">
 						<option value="${shgmvo.shgmno}">${shgmvo.shgmname}
 					</c:forEach>
 				</select>

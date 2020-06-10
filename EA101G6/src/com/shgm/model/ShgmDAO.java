@@ -18,7 +18,7 @@ public class ShgmDAO implements ShgmDAO_interface{
 	static {
 		try {
 			Context ctx = new InitialContext();
-			ds = (DataSource)ctx.lookup("java:comp/env/jdbc/EA101G6TestDB");
+			ds = (DataSource)ctx.lookup("java:comp/env/jdbc/EA101G6DB");
 		} catch(NamingException e) {
 			e.printStackTrace();
 		}

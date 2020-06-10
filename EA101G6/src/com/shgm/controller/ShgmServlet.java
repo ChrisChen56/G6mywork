@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-import com.shgm.model.ShgmJDBCDAO;
+import com.shgm.model.ShgmService;
 import com.shgm.model.ShgmVO;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 7 * 1024 * 1024, maxRequestSize = 5 * 5 * 1024 * 1024)
@@ -48,8 +48,8 @@ public class ShgmServlet extends HttpServlet {
 					return;
 				}
 
-				ShgmJDBCDAO shgmdao = new ShgmJDBCDAO();
-				ShgmVO shgmvo = shgmdao.findByPrimaryKey(str);
+				ShgmService shgmdao = new ShgmService();
+				ShgmVO shgmvo = shgmdao.getOneShgm(str);
 				if (shgmvo == null) {
 					errormsgs.add("查無資料");
 				}
@@ -76,8 +76,8 @@ public class ShgmServlet extends HttpServlet {
 
 			try {
 
-				ShgmJDBCDAO shgmdao = new ShgmJDBCDAO();
-				List<ShgmVO> list = shgmdao.getall();
+				ShgmService shgmdao = new ShgmService();
+				List<ShgmVO> list = shgmdao.getAllShgm();
 				// 測試錯誤處理throw new SQLException();
 				if (list == null) {
 					errormsgs.add("查無資料");
@@ -231,8 +231,9 @@ public class ShgmServlet extends HttpServlet {
 					return;
 				}
 
-				ShgmJDBCDAO shgmdao = new ShgmJDBCDAO();
-				shgmdao.insert(shgmvo);
+				ShgmService shgmdao = new ShgmService();
+				shgmdao.addShgm(buyerno, sellerno, shgmname, price, intro, img, upcheck, uptimevo,
+						take, takernm, takerph, address, boxstatus, paystatus, status, soldtimevo);
 
 				String url = "/back-end/shgm/listAllShgm.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
@@ -252,8 +253,8 @@ public class ShgmServlet extends HttpServlet {
 
 			try {
 				String shgmno = request.getParameter("shgmno");
-				ShgmJDBCDAO shgmdao = new ShgmJDBCDAO();
-				shgmdao.delete(shgmno);
+				ShgmService shgmdao = new ShgmService();
+				shgmdao.deleteShgm(shgmno);
 
 				String url = "/back-end/shgm/listAllShgm.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
@@ -275,8 +276,8 @@ public class ShgmServlet extends HttpServlet {
 			try {
 				String shgmno = request.getParameter("shgmno");
 
-				ShgmJDBCDAO shgmdao = new ShgmJDBCDAO();
-				ShgmVO shgmvo = shgmdao.findByPrimaryKey(shgmno);
+				ShgmService shgmdao = new ShgmService();
+				ShgmVO shgmvo = shgmdao.getOneShgm(shgmno);
 
 				request.setAttribute("shgmvo", shgmvo);
 				String url = "/back-end/shgm/updateShgm.jsp";
@@ -348,8 +349,8 @@ public class ShgmServlet extends HttpServlet {
 						errormsgs.add("市集商品圖片：" + e.getMessage());
 					}
 				} else {
-					ShgmJDBCDAO shgmdao = new ShgmJDBCDAO();
-					ShgmVO shgmvo = shgmdao.findByPrimaryKey(shgmno);
+					ShgmService shgmdao = new ShgmService();
+					ShgmVO shgmvo = shgmdao.getOneShgm(shgmno);
 					img = shgmvo.getImg();
 				}
 
@@ -420,8 +421,6 @@ public class ShgmServlet extends HttpServlet {
 				shgmvo.setSoldtime(soldtimevo);
 
 				if (!errormsgs.isEmpty()) {
-//						request.setAttribute("imgsave", imgsave);
-//						request.setAttribute("imgsrc", imgsrc);
 					request.setAttribute("shgmvo", shgmvo);
 					String url = "/back-end/shgm/updateShgm.jsp";
 					RequestDispatcher failedview = request.getRequestDispatcher(url);
@@ -429,8 +428,10 @@ public class ShgmServlet extends HttpServlet {
 					return;
 				}
 
-				ShgmJDBCDAO shgmdao = new ShgmJDBCDAO();
-				shgmdao.update(shgmvo);
+				ShgmService shgmdao = new ShgmService();
+				shgmdao.updateShgm(shgmno, buyerno, sellerno, shgmname, price, intro, img, upcheck, uptimevo,
+						take, takernm, takerph, address, boxstatus, paystatus, status, soldtimevo);
+
 				request.setAttribute("shgmvo", shgmvo);
 
 				String url = "/back-end/shgm/listOneShgm.jsp";

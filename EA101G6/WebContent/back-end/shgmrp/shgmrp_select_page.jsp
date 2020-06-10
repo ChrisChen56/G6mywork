@@ -29,7 +29,7 @@
 		
 		<li>
 			<form method="post" action="<%=request.getContextPath()%>/back-end/shgm/shgm.do">
-			請選擇市集商品名稱：
+			請選擇市集商品檢舉編號：
 				<select size="1" name="shgmno">
 					<c:forEach var="shgmvo" items="${shgmjdbc.all}">
 						<option value="${shgmvo.shgmno}">${shgmvo.shgmname}

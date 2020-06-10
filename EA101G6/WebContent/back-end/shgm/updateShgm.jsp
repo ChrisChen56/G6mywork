@@ -6,10 +6,6 @@
 <%
     	ShgmVO shgmvo = (ShgmVO) request.getAttribute("shgmvo");
 %>
-<%-- 
-String imgsrc = (String)request.getAttribute("imgsrc");
-byte[] imgsave = (byte[])request.getAttribute("imgsave");
---%>
 
 <!DOCTYPE html>
 <html>
