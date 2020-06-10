@@ -9,6 +9,10 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  <resource-ref>
+  	<description>DB connection</description>
+  	<res-ref-name>jdbc/EA101G6</res-ref-name>
+  </resource-ref>
   <servlet>
     <servlet-name>ShgmServlet</servlet-name>
     <servlet-class>com.shgm.controller.ShgmServlet</servlet-class>
@@ -24,5 +28,13 @@
   <servlet-mapping>
     <servlet-name>DisplayImg</servlet-name>
     <url-pattern>/back-end/shgm/displayimg</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>ShgmrpServlet</servlet-name>
+  	<servlet-class>com.shgmrp.controller.ShgmrpServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>ShgmrpServlet</servlet-name>
+  	<url-pattern>/back-end/shgmrp/shgmrp.do</url-pattern>
   </servlet-mapping>
 </web-app>

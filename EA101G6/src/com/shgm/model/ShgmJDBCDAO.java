@@ -1,19 +1,14 @@
 package com.shgm.model;
 
-import java.io.InputStream;
-import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
-import java.util.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletOutputStream;
 
 public class ShgmJDBCDAO implements ShgmDAO_interface{
 	String driver = "oracle.jdbc.driver.OracleDriver";
@@ -72,6 +67,7 @@ public class ShgmJDBCDAO implements ShgmDAO_interface{
 			pstmt.setTimestamp(16, shgmvo.getSoldtime());
 			
 			pstmt.executeUpdate();
+			
 		} catch(ClassNotFoundException e){
 			e.printStackTrace();
 		} catch(SQLException e) {

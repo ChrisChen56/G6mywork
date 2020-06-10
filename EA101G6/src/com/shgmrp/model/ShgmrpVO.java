@@ -3,28 +3,28 @@ package com.shgmrp.model;
 import java.io.Serializable;
 
 public class ShgmrpVO implements Serializable{
-	private Integer shgmrpno;
-	private Integer shgmno;
-	private Integer suiterno;
+	private String shgmrpno;
+	private String shgmno;
+	private String suiterno;
 	private String detail;
 	private Integer status;
 	
-	public Integer getShgmrpno() {
+	public String getShgmrpno() {
 		return shgmrpno;
 	}
-	public void setShgmrpno(Integer shgmrpno) {
+	public void setShgmrpno(String shgmrpno) {
 		this.shgmrpno = shgmrpno;
 	}
-	public Integer getShgmno() {
+	public String getShgmno() {
 		return shgmno;
 	}
-	public void setShgmno(Integer shgmno) {
+	public void setShgmno(String shgmno) {
 		this.shgmno = shgmno;
 	}
-	public Integer getSuiterno() {
+	public String getSuiterno() {
 		return suiterno;
 	}
-	public void setSuiterno(Integer suiterno) {
+	public void setSuiterno(String suiterno) {
 		this.suiterno = suiterno;
 	}
 	public String getDetail() {

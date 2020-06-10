@@ -69,7 +69,7 @@ byte[] imgsave = (byte[])request.getAttribute("imgsave");
 			</tr>
 			<tr>
 				<td>市集商品圖片</td>
-				<td><input type="file" name="img" id="img" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"/>
+				<td><input type="file" name="img" id="img" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" accept=".png, .jpg, .jpeg .gif"/>
 					<img id="blah" alt="your image" width="100" height="100" src="<%=request.getContextPath()%>/back-end/shgm/displayimg?shgmno=<%= shgmvo.getShgmno()%>"/>
 			</tr>
 			<tr>
