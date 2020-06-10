@@ -21,7 +21,7 @@
 	table{
 		border: 3px solid black;
 		text-align: center;
-		width: 2000px;
+		width: 2300px;
 	}
 	th, td {
     	border: 1px solid black;

@@ -137,32 +137,26 @@ public class ShgmServlet extends HttpServlet {
 					errormsgs.add("市集商品簡介：簡介文字不得為空");
 
 				byte[] img = null;
-				Part imgreq = null;
-//			byte[] imgsave = request.getParameter("imgsave").getBytes();
-//			String imgsrc = request.getParameter("imgsrc");
-//			if(imgsave.length != 0) {
-//				img = imgsave;
-//			} else {
-				try {
-					imgreq = request.getPart("img");
-					if (imgreq == null)
-						errormsgs.add("市集商品圖片：請上傳圖片");
-					ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//				InputStream is = new ByteArrayInputStream(imgsave);
-					InputStream is = imgreq.getInputStream();
-					System.out.println(is.available());
-					byte[] bufferd = new byte[8192];
-					int i = 0;
-					while ((i = is.read(bufferd)) != -1) {
-						baos.write(bufferd, 0, i);
+				Part imgreq = request.getPart("img");
+				if (imgreq.getSize() == 0) {
+					errormsgs.add("市集商品圖片：市集商品圖片不得為空");
+				} else {
+					try {
+						InputStream is = imgreq.getInputStream();
+						ByteArrayOutputStream baos = new ByteArrayOutputStream();
+						byte[] bufferd = new byte[8192];
+						int i = 0;
+						while ((i = is.read(bufferd)) != -1) {
+							baos.write(bufferd, 0, i);
+						}
+						baos.flush();
+						baos.close();
+						img = baos.toByteArray();
+						System.out.println(img);
+					} catch (Exception e) {
+						errormsgs.add("市集商品圖片：" + e.getMessage());
 					}
-					baos.flush();
-					baos.close();
-					img = baos.toByteArray();
-				} catch (Exception e) {
-					errormsgs.add("市集商品圖片：" + e.getMessage());
 				}
-//			}
 
 				Integer upcheck = new Integer(request.getParameter("upcheck"));
 
@@ -230,8 +224,6 @@ public class ShgmServlet extends HttpServlet {
 				shgmvo.setSoldtime(soldtimevo);
 
 				if (!errormsgs.isEmpty()) {
-//				request.setAttribute("imgsave", imgsave);
-//				request.setAttribute("imgsrc", imgsrc);
 					request.setAttribute("shgmvo", shgmvo);
 					String url = "/back-end/shgm/addShgm.jsp";
 					RequestDispatcher failedview = request.getRequestDispatcher(url);
@@ -336,14 +328,10 @@ public class ShgmServlet extends HttpServlet {
 				String intro = request.getParameter("intro");
 				if (intro.trim().length() == 0)
 					errormsgs.add("市集商品簡介：簡介文字不得為空");
-				
-//				"<input type=\"hidden\" name=\"clickcheck\" value=\"clicked\" >"
-				String clickcheck = request.getParameter("clickcheck");
-				
+
 				byte[] img = null;
-				Part imgreq = request.getPart("imgfile");
-//				if("clickcheck".equals(clickcheck)) {
-				if(imgreq.getSize() != 0) {
+				Part imgreq = request.getPart("img");
+				if (imgreq.getSize() != 0) {
 					try {
 						InputStream is = imgreq.getInputStream();
 						ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -361,7 +349,7 @@ public class ShgmServlet extends HttpServlet {
 					}
 				} else {
 					ShgmJDBCDAO shgmdao = new ShgmJDBCDAO();
-					ShgmVO shgmvo  = shgmdao.findByPrimaryKey(shgmno);
+					ShgmVO shgmvo = shgmdao.findByPrimaryKey(shgmno);
 					img = shgmvo.getImg();
 				}
 

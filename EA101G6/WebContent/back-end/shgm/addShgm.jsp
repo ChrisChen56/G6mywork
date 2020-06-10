@@ -64,9 +64,7 @@
 			<tr>
 				<td>市集商品圖片</td>
 				<td><input type="file" name="img" id="imgfile" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"/>
-					<img id="blah" alt="your image" width="100" height="100" src="<%= (shgmvo == null)? "": imgsrc %>"/></td>
-					<input type="hidden" name="imgsave" value=<%= imgsave %>>
-					<input type="hidden" name="imgsrc" id="imgid" value="<%= (shgmvo == null)? "": imgsrc %>"/>
+					<img id="blah" alt="your image" width="100" height="100"/></td>
 			</tr>
 			<tr>
 				<td>上架審核狀態</td>

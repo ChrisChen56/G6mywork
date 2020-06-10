@@ -69,9 +69,8 @@ byte[] imgsave = (byte[])request.getAttribute("imgsave");
 			</tr>
 			<tr>
 				<td>市集商品圖片</td>
-				<td><input type="file" name="imgfile" id="imgfile" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"/>
+				<td><input type="file" name="img" id="img" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"/>
 					<img id="blah" alt="your image" width="100" height="100" src="<%=request.getContextPath()%>/back-end/shgm/displayimg?shgmno=<%= shgmvo.getShgmno()%>"/>
-					<input type="hidden" name="imghidden" value="<%= shgmvo.getImg()%>"/></td>
 			</tr>
 			<tr>
 				<td>上架審核狀態</td>
@@ -170,7 +169,6 @@ byte[] imgsave = (byte[])request.getAttribute("imgsave");
 </style>
 
 <script>
-//document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])
 $("#imgfile").click(function(){
   $("img").append("<input type=\"hidden\" name=\"clickcheck\" value=\"clicked\" >");
 });
