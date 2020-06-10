@@ -336,37 +336,33 @@ public class ShgmServlet extends HttpServlet {
 				String intro = request.getParameter("intro");
 				if (intro.trim().length() == 0)
 					errormsgs.add("市集商品簡介：簡介文字不得為空");
-
+				
+//				"<input type=\"hidden\" name=\"clickcheck\" value=\"clicked\" >"
+				String clickcheck = request.getParameter("clickcheck");
+				
 				byte[] img = null;
-//					byte[] imgsave = request.getParameter("imgsave").getBytes();
-				byte[] imghidden = request.getParameter("imghidden").getBytes();
-				System.out.println("imghidden："+imghidden);
-				InputStream is = null;
 				Part imgreq = request.getPart("imgfile");
-				if (imgreq != null) {
-					System.out.println(imgreq);
-					is = imgreq.getInputStream();
-					System.out.println(is);
-					System.out.println("new:newly upload image");
-				} else {
-					img = imghidden;
-					is = new ByteArrayInputStream(imghidden);
-					System.out.println(is);
-					System.out.println("old:already got an image");
-				}
-				try {
-					ByteArrayOutputStream baos = new ByteArrayOutputStream();
-					byte[] bufferd = new byte[8192];
-					int i = 0;
-					while ((i = is.read(bufferd)) != -1) {
-						baos.write(bufferd, 0, i);
+//				if("clickcheck".equals(clickcheck)) {
+				if(imgreq.getSize() != 0) {
+					try {
+						InputStream is = imgreq.getInputStream();
+						ByteArrayOutputStream baos = new ByteArrayOutputStream();
+						byte[] bufferd = new byte[8192];
+						int i = 0;
+						while ((i = is.read(bufferd)) != -1) {
+							baos.write(bufferd, 0, i);
+						}
+						baos.flush();
+						baos.close();
+						img = baos.toByteArray();
+						System.out.println(img);
+					} catch (Exception e) {
+						errormsgs.add("市集商品圖片：" + e.getMessage());
 					}
-					baos.flush();
-					baos.close();
-					img = baos.toByteArray();
-					System.out.println(img);
-				} catch (Exception e) {
-					errormsgs.add("市集商品圖片：" + e.getMessage());
+				} else {
+					ShgmJDBCDAO shgmdao = new ShgmJDBCDAO();
+					ShgmVO shgmvo  = shgmdao.findByPrimaryKey(shgmno);
+					img = shgmvo.getImg();
 				}
 
 				Integer upcheck = new Integer(request.getParameter("upcheck"));

@@ -171,6 +171,9 @@ byte[] imgsave = (byte[])request.getAttribute("imgsave");
 
 <script>
 //document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])
+$("#imgfile").click(function(){
+  $("img").append("<input type=\"hidden\" name=\"clickcheck\" value=\"clicked\" >");
+});
         $.datetimepicker.setLocale('zh');
         $('#f_date1').datetimepicker({
 	       theme: '',              //theme: 'dark',
