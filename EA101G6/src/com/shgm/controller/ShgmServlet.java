@@ -38,12 +38,14 @@ public class ShgmServlet extends HttpServlet {
 
 			try {
 				String str = request.getParameter("shgmno");
+				String strreg = "^CA\\d{5}$";
 				if (str == null || (str.trim()).length() == 0) {
-					errormsgs.add("您未輸入編號");
-
+					errormsgs.add("您未輸入市集商品編號");
+				} else if(!str.matches(strreg)) {
+					errormsgs.add("請依照市集商品編號格式輸入");
 				}
 				if (!errormsgs.isEmpty()) {
-					RequestDispatcher failureview = request.getRequestDispatcher("/back-end/shgm/shgm_select_page.jsp");
+					RequestDispatcher failureview = request.getRequestDispatcher("shgm_select_page.jsp");
 					failureview.forward(request, response);
 					return;
 				}
@@ -54,17 +56,17 @@ public class ShgmServlet extends HttpServlet {
 					errormsgs.add("查無資料");
 				}
 				if (!errormsgs.isEmpty()) {
-					RequestDispatcher failureview = request.getRequestDispatcher("/back-end/shgm/shgm_select_page.jsp");
+					RequestDispatcher failureview = request.getRequestDispatcher("shgm_select_page.jsp");
 					failureview.forward(request, response);
 					return;
 				}
 				request.setAttribute("shgmvo", shgmvo);
-				String url = "/back-end/shgm/listOneShgm.jsp";
+				String url = "listOneShgm.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 			} catch (Exception e) {
 				errormsgs.add("無法取得個別資料" + e.getMessage());
-				RequestDispatcher failureview = request.getRequestDispatcher("/back-end/shgm/shgm_select_page.jsp");
+				RequestDispatcher failureview = request.getRequestDispatcher("shgm_select_page.jsp");
 				failureview.forward(request, response);
 			}
 		}
@@ -83,17 +85,17 @@ public class ShgmServlet extends HttpServlet {
 					errormsgs.add("查無資料");
 				}
 				if (!errormsgs.isEmpty()) {
-					RequestDispatcher failureview = request.getRequestDispatcher("/back-end/shgm/shgm_select_page.jsp");
+					RequestDispatcher failureview = request.getRequestDispatcher("shgm_select_page.jsp");
 					failureview.forward(request, response);
 					return;
 				}
 				request.setAttribute("list", list);
-				String url = "/back-end/shgm/listAllShgm.jsp";
+				String url = "listAllShgm.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 			} catch (Exception e) {
 				errormsgs.add("無法取得全部資料" + e.getMessage());
-				RequestDispatcher failureview = request.getRequestDispatcher("/back-end/shgm/shgm_select_page.jsp");
+				RequestDispatcher failureview = request.getRequestDispatcher("shgm_select_page.jsp");
 				failureview.forward(request, response);
 			}
 		}
@@ -225,7 +227,7 @@ public class ShgmServlet extends HttpServlet {
 
 				if (!errormsgs.isEmpty()) {
 					request.setAttribute("shgmvo", shgmvo);
-					String url = "/back-end/shgm/addShgm.jsp";
+					String url = "addShgm.jsp";
 					RequestDispatcher failedview = request.getRequestDispatcher(url);
 					failedview.forward(request, response);
 					return;
@@ -235,12 +237,12 @@ public class ShgmServlet extends HttpServlet {
 				shgmdao.addShgm(buyerno, sellerno, shgmname, price, intro, img, upcheck, uptimevo,
 						take, takernm, takerph, address, boxstatus, paystatus, status, soldtimevo);
 
-				String url = "/back-end/shgm/listAllShgm.jsp";
+				String url = "listAllShgm.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 			} catch (Exception e) {
 				errormsgs.add("無法新增市集商品：" + e.getMessage());
-				String url = "/back-end/shgm/addShgm.jsp";
+				String url = "addShgm.jsp";
 				RequestDispatcher failedview = request.getRequestDispatcher(url);
 				failedview.forward(request, response);
 			}
@@ -256,12 +258,12 @@ public class ShgmServlet extends HttpServlet {
 				ShgmService shgmdao = new ShgmService();
 				shgmdao.deleteShgm(shgmno);
 
-				String url = "/back-end/shgm/listAllShgm.jsp";
+				String url = "listAllShgm.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 			} catch (Exception e) {
 				errormsgs.add("刪除發生錯誤" + e.getMessage());
-				String url = "/back-end/shgm/listAllShgm.jsp";
+				String url = "listAllShgm.jsp";
 				RequestDispatcher errorview = request.getRequestDispatcher(url);
 				errorview.forward(request, response);
 			}
@@ -280,13 +282,13 @@ public class ShgmServlet extends HttpServlet {
 				ShgmVO shgmvo = shgmdao.getOneShgm(shgmno);
 
 				request.setAttribute("shgmvo", shgmvo);
-				String url = "/back-end/shgm/updateShgm.jsp";
+				String url = "updateShgm.jsp";
 				RequestDispatcher successView = request.getRequestDispatcher(url);
 				successView.forward(request, response);
 
 			} catch (Exception e) {
 				errorMsgs.add("無法取得要修改的資料:" + e.getMessage());
-				String url = "/back-end/shgm/shgm_select_page.jsp";
+				String url = "shgm_select_page.jsp";
 				RequestDispatcher failureView = request.getRequestDispatcher(url);
 				failureView.forward(request, response);
 			}
@@ -422,7 +424,7 @@ public class ShgmServlet extends HttpServlet {
 
 				if (!errormsgs.isEmpty()) {
 					request.setAttribute("shgmvo", shgmvo);
-					String url = "/back-end/shgm/updateShgm.jsp";
+					String url = "updateShgm.jsp";
 					RequestDispatcher failedview = request.getRequestDispatcher(url);
 					failedview.forward(request, response);
 					return;
@@ -434,12 +436,12 @@ public class ShgmServlet extends HttpServlet {
 
 				request.setAttribute("shgmvo", shgmvo);
 
-				String url = "/back-end/shgm/listOneShgm.jsp";
+				String url = "listOneShgm.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 			} catch (Exception e) {
 				errormsgs.add("無法修改資料" + e.getMessage());
-				String url = "/back-end/shgm/updateShgm.jsp";
+				String url = "updateShgm.jsp";
 				RequestDispatcher failedview = request.getRequestDispatcher(url);
 				failedview.forward(request, response);
 			}
