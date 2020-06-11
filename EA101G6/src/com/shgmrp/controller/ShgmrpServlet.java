@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.shgm.model.ShgmService;
+import com.shgm.model.ShgmVO;
 import com.shgmrp.model.ShgmrpService;
 import com.shgmrp.model.ShgmrpVO;
 
@@ -66,6 +68,10 @@ public class ShgmrpServlet extends HttpServlet {
 				failedview.forward(request, response);
 			}
 		}
+		
+		if("get_All".equals("action")) {
+			
+		}
 
 		if ("insert".equals(action)) {
 
@@ -75,11 +81,15 @@ public class ShgmrpServlet extends HttpServlet {
 			try {
 				String shgmno = request.getParameter("shgmno");
 				String shgmnoreg = "^CA\\d{5}$";
+				
+				ShgmService shgmsvc = new ShgmService();
 
 				if (shgmno.trim().length() == 0) {
 					errormsgs.add("市集商品編號：您未輸入市集商品編號");
 				} else if (!shgmno.matches(shgmnoreg)) {
 					errormsgs.add("市集商品編號：請依照市集商品編號格式輸入");
+				} else if (shgmsvc.getOneShgm(shgmno) == null) {
+					errormsgs.add("市集商品編號：無此市集商品");
 				}
 				
 				String suiterno = request.getParameter("suiterno");
@@ -124,7 +134,101 @@ public class ShgmrpServlet extends HttpServlet {
 				failedview.forward(request, response);
 			}
 		}
+		
+		if ("getone_update".equals(action)) {
 
+			List<String> errormsgs = new LinkedList<String>();
+
+			request.setAttribute("errormsgs", errormsgs);
+
+			try {
+				String shgmrpno = request.getParameter("shgmrpno");
+
+				ShgmrpService shgmrpsvc = new ShgmrpService();
+				ShgmrpVO shgmrpvo = shgmrpsvc.getOneShgmrp(shgmrpno);
+				shgmrpvo.setShgmrpno(shgmrpno);
+				
+				System.out.println(shgmrpno);
+				
+				request.setAttribute("shgmrpvo", shgmrpvo);
+				String url = "updateShgmrp.jsp";
+				RequestDispatcher successView = request.getRequestDispatcher(url);
+				successView.forward(request, response);
+
+			} catch (Exception e) {
+				errormsgs.add("無法取得要修改的資料:" + e.getMessage());
+				String url = "shgmrp_select_page.jsp";
+				RequestDispatcher failureView = request.getRequestDispatcher(url);
+				failureView.forward(request, response);
+			}
+		}
+		
+		if("update".equals(action)) {
+			System.out.println("1");
+			List<String> errormsgs = new LinkedList<String>();
+			request.setAttribute("errormsgs", errormsgs);
+			
+			try {
+				String shgmrpno = request.getParameter("shgmrpno");
+				
+				String shgmno = request.getParameter("shgmno");
+				System.out.println(shgmno);
+				String shgmnoreg = "^CA\\d{5}$";
+				
+				ShgmService shgmsvc = new ShgmService();
+
+				if (shgmno.trim().length() == 0) {
+					errormsgs.add("市集商品編號：您未輸入市集商品編號");
+				} else if (!shgmno.matches(shgmnoreg)) {
+					errormsgs.add("市集商品編號：請依照市集商品編號格式輸入");
+				} else if (shgmsvc.getOneShgm(shgmno) == null) {
+					errormsgs.add("市集商品編號：無此市集商品");
+				}
+				
+				String suiterno = request.getParameter("suiterno");
+				String suiternoreg = "^BM\\d{5}$";
+
+				if (suiterno.trim().length() == 0) {
+					errormsgs.add("檢舉人會員編號：您的會員編號不得為空");
+				} else if (!suiterno.matches(suiternoreg)) {
+					errormsgs.add("檢舉人會員編號：請依照會員編號格式輸入");
+				}
+				
+				String detail = request.getParameter("detail");
+				System.out.println(detail);
+				if(detail.trim().length() == 0) {
+					errormsgs.add("檢舉內容：檢舉內容不得為空");
+				}
+				
+				Integer status = new Integer(request.getParameter("status"));
+				
+				ShgmrpVO shgmrpvo = new ShgmrpVO();
+				shgmrpvo.setShgmrpno(shgmrpno);
+				shgmrpvo.setShgmno(shgmno);
+				shgmrpvo.setSuiterno(suiterno);
+				shgmrpvo.setDetail(detail);
+				shgmrpvo.setStatus(status);
+				
+				if (!errormsgs.isEmpty()) {
+					request.setAttribute("shgmrpvo", shgmrpvo);
+					RequestDispatcher failedview = request.getRequestDispatcher("updateShgmrp.jsp");
+					failedview.forward(request, response);
+					return;
+				}
+				ShgmrpService shgmrpsvc = new ShgmrpService();
+				shgmrpvo = shgmrpsvc.updateShgmrp(shgmrpno, shgmno, suiterno, detail, status);
+				System.out.println("已修改");
+				
+				request.setAttribute("shgmrpvo", shgmrpvo);
+				RequestDispatcher successview = request.getRequestDispatcher("listOneShgmrp.jsp");//listAll
+				successview.forward(request, response);
+			} catch (Exception e) {
+				errormsgs.add("無法修改檢舉的市集商品" + e.getMessage());
+				RequestDispatcher failedview = request.getRequestDispatcher("shgmrp_select_page.jsp");
+				failedview.forward(request, response);
+			}
+		}
+
+		
 	}
-
 }
