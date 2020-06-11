@@ -3,6 +3,7 @@ package com.shgm.model;
 import java.sql.Timestamp;
 
 public class ShgmService {
+	
 	private ShgmDAO_interface dao;
 	
 	public ShgmService() {

@@ -25,11 +25,11 @@
 			</form>
 		</li>
 		
-		<jsp:useBean id="shgmjdbc" class="com.shgmrp.model.ShgmrpJDBCDAO"/>
+<%-- 		<jsp:useBean id="shgmjdbc" class="com.shgmrp.model.ShgmrpJDBCDAO"/>
 		
 		<li>
 			<form method="post" action="<%=request.getContextPath()%>/back-end/shgm/shgm.do">
-			請選擇市集商品檢舉編號：
+			請選擇被檢舉的市集商品：
 				<select size="1" name="shgmno">
 					<c:forEach var="shgmvo" items="${shgmjdbc.all}">
 						<option value="${shgmvo.shgmno}">${shgmvo.shgmname}
@@ -56,7 +56,7 @@
 				<input type="submit" value="送出" >
 			</form>
 		</li>
-		
+--%>		
 		<li>
 			<a href="<%=request.getContextPath()%>/back-end/shgm/listAllShgm.jsp">檢視全部市集商品</a>
 		</li>
