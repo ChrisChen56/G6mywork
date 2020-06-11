@@ -6,21 +6,27 @@
 <%
 	ShgmrpVO shgmrpvo = (ShgmrpVO)request.getAttribute("shgmrpvo");
 	ShgmService shgmsvc = new ShgmService();
+	pageContext.setAttribute("shgmsvc",shgmsvc);
 %>
 
 <html>
 <head>
 <meta charset="UTF-8">
-<title>One_Shgm</title>
+<title>One_Shgmrp</title>
 
 <style>
 	table{
 		border: 3px solid black;
 		text-align: center;
+		
 	}
 	th, td {
-    border: 1px solid black;
-  }
+    	border: 1px solid black;
+  	}
+	img{
+  		width: 200px;
+  	 	height: 150px;
+  	}
 </style>
 </head>
 <body>
@@ -29,6 +35,9 @@
 			<td>市集商品檢舉編號</td>
 			<td>市集商品編號</td>
 			<td>市集商品名稱</td>
+			<td>市集商品價錢</td>
+			<td>市集商品簡介</td>
+			<td>市集商品圖片</td>
 			<td>檢舉人會員編號</td>
 			<td>檢舉內容</td>
 			<td>檢舉狀態</td>
@@ -38,9 +47,12 @@
 			<td>${shgmrpvo.shgmrpno}</td>
 			<td>${shgmrpvo.shgmno}</td>
 			<td>${shgmsvc.getOneShgm(shgmrpvo.shgmno).shgmname}</td>
+			<td>${shgmsvc.getOneShgm(shgmrpvo.shgmno).price}</td>
+			<td style="width:400px">${shgmsvc.getOneShgm(shgmrpvo.shgmno).intro}</td>
+			<td><img src="<%=request.getContextPath() %>/back-end/shgm/displayimg?shgmno=${shgmrpvo.shgmno}"></td>
 			<td>${shgmrpvo.suiterno}</td>
 			<td>${shgmrpvo.detail}</td>
-			<td>${shgmrpvo.status}</td>
+			<td>${(shgmrpvo.status == 0)? "未審核":(shgmrpvo.status == 1)? "審核通過": "審核未通過"}</td>
 		</tr>
 	</table>
 	<a href="<%=request.getContextPath()%>/back-end/shgmrp/shgmrp_select_page.jsp">回首頁</a>

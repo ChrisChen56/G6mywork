@@ -21,7 +21,7 @@ public class ShgmrpDAO implements ShgmrpDAO_interface{
 		}
 	}
 	private static final String INSERT_STMT = 
-			"INSERT INTO (shgmrpno,shgmno,suiterno,detail,status) VALUES ('CB'||LPAD(shgmrp_seq.NEXTVAL,5,'0'), ?, ?, ?, ?)";
+			"INSERT INTO SHGMRP(shgmrpno,shgmno,suiterno,detail,status) VALUES ('CB'||LPAD(shgmrp_seq.NEXTVAL,5,'0'),?,?,?,?)";
 		private static final String UPDATE_STMT = 
 			"UPDATE SHGMRP SET shgmno=?, suiterno=?, detail=?, status=? WHERE shgmrpno=?";
 		private static final String DELETE_STMT = 

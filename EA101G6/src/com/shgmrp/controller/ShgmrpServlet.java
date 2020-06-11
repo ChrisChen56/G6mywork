@@ -22,7 +22,7 @@ public class ShgmrpServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		request.setCharacterEncoding("UTF-8");
 		String action = request.getParameter("action");
 
 		if ("get_one".equals(action)) {
@@ -47,7 +47,7 @@ public class ShgmrpServlet extends HttpServlet {
 
 				ShgmrpService shgmrpsvc = new ShgmrpService();
 				ShgmrpVO shgmrpvo = shgmrpsvc.getOneShgmrp(shgmrpno);
-				if(shgmrpvo == null) {
+				if (shgmrpvo == null) {
 					errormsgs.add("查無資料");
 				}
 				if (!errormsgs.isEmpty()) {
@@ -55,7 +55,7 @@ public class ShgmrpServlet extends HttpServlet {
 					failedview.forward(request, response);
 					return;
 				}
-				
+
 				request.setAttribute("shgmrpvo", shgmrpvo);
 				RequestDispatcher successview = request.getRequestDispatcher("listOneShgmrp.jsp");
 				successview.forward(request, response);
@@ -63,6 +63,64 @@ public class ShgmrpServlet extends HttpServlet {
 			} catch (Exception e) {
 				errormsgs.add("無法取得個別資料" + e.getMessage());
 				RequestDispatcher failedview = request.getRequestDispatcher("shgmrp_select_page.jsp");
+				failedview.forward(request, response);
+			}
+		}
+
+		if ("insert".equals(action)) {
+
+			List<String> errormsgs = new LinkedList<String>();
+			request.setAttribute("errormsgs", errormsgs);
+
+			try {
+				String shgmno = request.getParameter("shgmno");
+				String shgmnoreg = "^CA\\d{5}$";
+
+				if (shgmno.trim().length() == 0) {
+					errormsgs.add("市集商品編號：您未輸入市集商品編號");
+				} else if (!shgmno.matches(shgmnoreg)) {
+					errormsgs.add("市集商品編號：請依照市集商品編號格式輸入");
+				}
+				
+				String suiterno = request.getParameter("suiterno");
+				String suiternoreg = "^BM\\d{5}$";
+
+				if (suiterno.trim().length() == 0) {
+					errormsgs.add("檢舉人會員編號：您的會員編號不得為空");
+				} else if (!suiterno.matches(suiternoreg)) {
+					errormsgs.add("檢舉人會員編號：請依照會員編號格式輸入");
+				}
+				
+				String detail = request.getParameter("detail");
+				System.out.println(detail);
+				if(detail.trim().length() == 0) {
+					errormsgs.add("檢舉內容：檢舉內容不得為空");
+				}
+				
+				Integer status = new Integer(request.getParameter("status"));
+				
+				ShgmrpVO shgmrpvo = new ShgmrpVO();
+				shgmrpvo.setShgmno(shgmno);
+				shgmrpvo.setSuiterno(suiterno);
+				shgmrpvo.setDetail(detail);
+				shgmrpvo.setStatus(status);
+				
+				if (!errormsgs.isEmpty()) {
+					request.setAttribute("shgmrpvo", shgmrpvo);
+					RequestDispatcher failedview = request.getRequestDispatcher("addShgmrp.jsp");
+					failedview.forward(request, response);
+					return;
+				}
+				ShgmrpService shgmrpsvc = new ShgmrpService();
+				shgmrpvo = shgmrpsvc.addShgmrp(shgmno, suiterno, detail, status);
+				
+				
+				request.setAttribute("shgmrpvo", shgmrpvo);
+				RequestDispatcher successview = request.getRequestDispatcher("listOneShgmrp.jsp");//listAll
+				successview.forward(request, response);
+			} catch (Exception e) {
+				errormsgs.add("無法檢舉市集商品" + e.getMessage());
+				RequestDispatcher failedview = request.getRequestDispatcher("addShgmrp.jsp");
 				failedview.forward(request, response);
 			}
 		}

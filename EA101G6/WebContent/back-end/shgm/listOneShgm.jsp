@@ -20,8 +20,12 @@
 		text-align: center;
 	}
 	th, td {
-    border: 1px solid black;
+    	border: 1px solid black;
   }
+  	img{
+  	 	width: 200px;
+  	 	height: 150px;
+  	}
 </style>
 </head>
 <body>
@@ -52,7 +56,7 @@
 			<td>${shgmvo.shgmname}</td>
 			<td>${shgmvo.price}</td>
 			<td width="375">${shgmvo.intro}</td>
-			<td><img src="<%=request.getContextPath()%>/back-end/shgm/displayimg?shgmno=${shgmvo.shgmno}" width="200" height="150"/></td>
+			<td><img src="<%=request.getContextPath()%>/back-end/shgm/displayimg?shgmno=${shgmvo.shgmno}"/></td>
 			<td><%=(shgmvo.getUpcheck() == 0)? "未審核":(shgmvo.getUpcheck() == 1)? "審核通過": "審核未通過" %></td>
 			<td><fmt:formatDate value="${shgmvo.uptime}" pattern="yyyy/MM/dd HH:mm:ss"/></td>
 			<td>${shgmvo.take}</td>

@@ -25,24 +25,25 @@
 			</form>
 		</li>
 		
-<%-- 		<jsp:useBean id="shgmjdbc" class="com.shgmrp.model.ShgmrpJDBCDAO"/>
+ 		<jsp:useBean id="shgmrpsvc" class="com.shgmrp.model.ShgmrpService"/>
+ 		<jsp:useBean id="shgmsvc" class="com.shgm.model.ShgmService"/>
 		
 		<li>
-			<form method="post" action="<%=request.getContextPath()%>/back-end/shgm/shgm.do">
+			<form method="post" action="<%=request.getContextPath()%>/back-end/shgmrp/shgmrp.do">
 			請選擇被檢舉的市集商品：
-				<select size="1" name="shgmno">
-					<c:forEach var="shgmvo" items="${shgmjdbc.all}">
-						<option value="${shgmvo.shgmno}">${shgmvo.shgmname}
+				<select size="1" name="shgmrpno">
+					<c:forEach var="shgmrpvo" items="${shgmrpsvc.allShgmrp}">
+						<option value="${shgmrpvo.shgmrpno}">${shgmsvc.getOneShgm(shgmrpvo.shgmno).shgmname}
 					</c:forEach>
 				</select>
 				<input type="hidden" name="action" value="get_one" >
 				<input type="submit" value="送出" >
 			</form>
 		</li>
-		
 		<li>
-			<a href="<%=request.getContextPath()%>/back-end/shgm/addShgm.jsp">上架新的市集商品</a>		！！注意！！需要先通過審核
+			<a href="<%=request.getContextPath()%>/back-end/shgmrp/addShgmrp.jsp">檢舉市集商品</a>		！！注意！！需要先通過審核
 		</li>
+<%--		
 		
 		<li>
 			<form method="post" action="<%=request.getContextPath()%>/back-end/shgm/shgm.do">
@@ -61,6 +62,6 @@
 			<a href="<%=request.getContextPath()%>/back-end/shgm/listAllShgm.jsp">檢視全部市集商品</a>
 		</li>
 	</ul>
-	<a href="<%=request.getContextPath()%>/back-end/shgm/shgm_select_page.jsp">回首頁</a>
+	<a href="<%=request.getContextPath()%>/back-end/shgmrp/shgmrp_select_page.jsp">回首頁</a>
 </body>
 </html>
