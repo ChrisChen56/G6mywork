@@ -165,9 +165,6 @@
 </style>
 
 <script>
-$("#imgfile").click(function(){
-  $("img").append("<input type=\"hidden\" name=\"clickcheck\" value=\"clicked\" >");
-});
         $.datetimepicker.setLocale('zh');
         $('#f_date1').datetimepicker({
 	       theme: '',              //theme: 'dark',

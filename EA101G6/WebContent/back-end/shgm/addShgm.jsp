@@ -5,6 +5,7 @@
     
 <%
     	ShgmVO shgmvo = (ShgmVO) request.getAttribute("shgmvo");
+		String imagefailed = (String)request.getAttribute("imagefailed");
 %>
 
 <!DOCTYPE html>
@@ -62,7 +63,7 @@
 			<tr>
 				<td>市集商品圖片</td>
 				<td><input type="file" name="img" id="imgfile" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" accept=".png, .jpg, .jpeg .gif"/>
-					<img id="blah" alt="your image" width="100" height="100"/></td>
+					<img name="imgtag" id="blah" alt="your image" width="100" height="100" src="data:image/png;base64,${imagefailed}"/></td>
 			</tr>
 			<tr>
 				<td>上架審核狀態</td>
@@ -165,7 +166,6 @@
 $("document").ready(function(){
 		$('input[type=file]').change(function(){
 			$('#imgid').val($('#blah').attr('src'));
-			
 		});
 });
 

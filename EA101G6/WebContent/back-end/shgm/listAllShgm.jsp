@@ -7,9 +7,7 @@
 <%@ page import="java.sql.*" %>
 <%@ page import="java.util.*" %>
 <%
-	ShgmJDBCDAO shgmdao = new ShgmJDBCDAO();
-	List<ShgmVO> list = shgmdao.getall();
-	pageContext.setAttribute("list",list);
+	List<ShgmVO> list = (List<ShgmVO>)session.getAttribute("list");
 %>
 
 <html>

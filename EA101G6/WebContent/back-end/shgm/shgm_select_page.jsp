@@ -58,7 +58,7 @@
 		</li>
 		
 		<li>
-			<a href="<%=request.getContextPath()%>/back-end/shgm/listAllShgm.jsp">檢視全部市集商品</a>
+			<a href="<%=request.getContextPath()%>/back-end/shgm/shgm.do?action=get_all">檢視全部市集商品</a>
 		</li>
 	</ul>
 	<a href="<%=request.getContextPath()%>/back-end/shgm/shgm_select_page.jsp">回首頁</a>
