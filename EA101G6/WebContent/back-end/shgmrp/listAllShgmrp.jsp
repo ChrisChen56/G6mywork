@@ -51,6 +51,8 @@
 			<td>檢舉人會員編號</td>
 			<td>檢舉內容</td>
 			<td>檢舉狀態</td>
+			<td>修改檢舉</td>
+			<td>刪除檢舉</td>
 		</tr>
 		
 		<c:forEach var="shgmrpvo" items="${list}">
@@ -74,6 +76,8 @@
 					<td>審核未通過</td>
 				</c:otherwise>
 			</c:choose>
+			<td><input type="hidden"></td>
+			<td>刪除檢舉</td>
 		</tr>
 		</c:forEach>
 	</table>
