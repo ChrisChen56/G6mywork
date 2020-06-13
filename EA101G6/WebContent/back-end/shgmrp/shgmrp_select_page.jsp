@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>市集商品檢舉後台首頁</title>
+<title>後台市集商品檢舉首頁</title>
 </head>
 <body>
 
@@ -43,8 +43,6 @@
 		<li>
 			<a href="<%=request.getContextPath()%>/back-end/shgmrp/addShgmrp.jsp">檢舉市集商品</a>		！！注意！！需要先通過審核
 		</li>
-		
-		
 		<li>
 			<form method="post" action="<%=request.getContextPath()%>/back-end/shgmrp/shgmrp.do">
 			請選擇要修改的被檢舉市集商品：
@@ -57,11 +55,9 @@
 				<input type="submit" value="送出" >
 			</form>
 		</li>
-		
 		<li>
-			<a href="<%=request.getContextPath()%>/back-end/shgmrp/listAllShgmrp.jsp">檢視全部市集商品</a>
+			<a href="<%=request.getContextPath()%>/back-end/shgmrp/shgmrp.do?action=get_All">檢視全部的被檢舉市集商品</a>
 		</li>
-
 	</ul>
 	<a href="<%=request.getContextPath()%>/back-end/shgmrp/shgmrp_select_page.jsp">回首頁</a>
 </body>

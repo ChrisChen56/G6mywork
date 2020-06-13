@@ -5,17 +5,15 @@
 <%@ page import="com.shgm.model.*" %>
 <%@ page import="java.util.*" %>
 <%
+	List<ShgmrpVO> shgmrplist = (List<ShgmrpVO>)session.getAttribute("shgmrplist");
 	ShgmService shgmsvc = new ShgmService();
 	pageContext.setAttribute("shgmsvc", shgmsvc);
-	ShgmrpService shgmrpsvc = new ShgmrpService();
-	List<ShgmrpVO> list = shgmrpsvc.getAllShgmrp();
-	pageContext.setAttribute("list",list);
 %>
 
 <html>
 <head>
 <meta charset="UTF-8">
-<title>All_Shgm</title>
+<title>All_Shgmrp</title>
 
 <style>
 	table{
@@ -27,8 +25,8 @@
 
   	}
   	img{
-  		height:100%;
-  		width:100%;
+  		height: 200px;
+  		width: 150ps;
   	}
 </style>
 </head>
@@ -55,7 +53,7 @@
 			<td>刪除檢舉</td>
 		</tr>
 		
-		<c:forEach var="shgmrpvo" items="${list}">
+		<c:forEach var="shgmrpvo" items="${shgmrplist}">
 		<tr>
 			<td>${shgmrpvo.shgmrpno}</td>
 			<td>${shgmrpvo.shgmno}</td>
@@ -76,11 +74,23 @@
 					<td>審核未通過</td>
 				</c:otherwise>
 			</c:choose>
-			<td><input type="hidden"></td>
-			<td>刪除檢舉</td>
+			<td>
+				<form method="post" action="<%= request.getContextPath()%>/back-end/shgmrp/shgmrp.do">
+					<input type="hidden" name="shgmrpno" value="${shgmrpvo.shgmrpno}">
+					<input type="hidden" name="action" value="getone_update" >
+					<input type="submit" value="修改">
+				</form>
+			</td>
+			<td>
+				<form method="post" action="<%= request.getContextPath()%>/back-end/shgmrp/shgmrp.do">
+					<input type="hidden" name="shgmrpno" value="${shgmrpvo.shgmrpno}">
+					<input type="hidden" name="action" value="delete" >
+					<input type="submit" value="刪除">
+				</form>
+			</td>
 		</tr>
 		</c:forEach>
 	</table>
-	<a href="/EA101G6/back-end/shgm/shgm_select_page.jsp">回首頁</a>
+	<a href="/EA101G6/back-end/shgmrp/shgmrp_select_page.jsp">回首頁</a>
 </body>
 </html>

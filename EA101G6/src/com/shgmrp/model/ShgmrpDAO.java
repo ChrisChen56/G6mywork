@@ -25,11 +25,11 @@ public class ShgmrpDAO implements ShgmrpDAO_interface{
 		private static final String UPDATE_STMT = 
 			"UPDATE SHGMRP SET shgmno=?, suiterno=?, detail=?, status=? WHERE shgmrpno=?";
 		private static final String DELETE_STMT = 
-			"DELETE FROM SHGMRP WHERE shgmno = ?";
+			"DELETE FROM SHGMRP WHERE shgmrpno = ?";
 		private static final String GET_ONE_STMT = 
 			"SELECT shgmno, suiterno, detail, status FROM SHGMRP WHERE shgmrpno=?";
 		private static final String GET_ALL_STMT = 
-			"SELECT * FROM SHGMRP";
+			"SELECT * FROM SHGMRP ORDER BY CAST(SUBSTR(shgmrpno, 5) AS INT)";
 		public static void main(String[] args) {
 			ShgmrpJDBCDAO dao = new ShgmrpJDBCDAO();
 			ShgmrpVO vo = dao.findByPrimaryKey("CB00002");

@@ -37,7 +37,7 @@ public class ShgmDAO implements ShgmDAO_interface{
 			"SELECT shgmno,sellerno,buyerno,shgmname,price,intro,img,upcheck,"
 			+ "to_char(uptime,'YYYY-MM-DD HH24:MI:SS '),take,takernm,takerph,address,boxstatus,paystatus,status,soldtime FROM SHGM WHERE shgmno=?";
 	private static final String GET_ALL_STMT =
-			"SELECT * FROM SHGM";
+			"SELECT * FROM SHGM ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
 	@Override
 	public void insert(ShgmVO shgmvo) {
 		Connection con = null;

@@ -11,7 +11,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Add_Shgame</title>
+<title>Update_Shgame</title>
 <style>
 	table, td,tr{
 		text-align:center;

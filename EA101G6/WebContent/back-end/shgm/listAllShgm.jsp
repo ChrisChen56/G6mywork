@@ -7,7 +7,7 @@
 <%@ page import="java.sql.*" %>
 <%@ page import="java.util.*" %>
 <%
-	List<ShgmVO> list = (List<ShgmVO>)session.getAttribute("list");
+	List<ShgmVO> shgmlist = (List<ShgmVO>)session.getAttribute("shgmlist");
 %>
 
 <html>
@@ -57,7 +57,7 @@
 			<td>刪除市集商品</td>
 		</tr>
 		
-		<c:forEach var="shgmvo" items="${list}">
+		<c:forEach var="shgmvo" items="${shgmlist}">
 		<tr>
 			<td>${shgmvo.shgmno}</td>
 			<td>${shgmvo.sellerno}</td>
