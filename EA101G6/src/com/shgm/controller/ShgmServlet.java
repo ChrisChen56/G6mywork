@@ -31,6 +31,11 @@ public class ShgmServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
+		ShgmService shgmsvc = (ShgmService) session.getAttribute("shgmsvc");
+		if (shgmsvc == null) {
+			shgmsvc = new ShgmService();
+			session.setAttribute("shgmsvc", shgmsvc);
+		}
 		String action = request.getParameter("action");
 		System.out.println("enter controller");
 
@@ -53,8 +58,7 @@ public class ShgmServlet extends HttpServlet {
 					return;
 				}
 
-				ShgmService shgmdao = new ShgmService();
-				ShgmVO shgmvo = shgmdao.getOneShgm(str);
+				ShgmVO shgmvo = shgmsvc.getOneShgm(str);
 				if (shgmvo == null) {
 					errormsgs.add("查無資料");
 				}
@@ -78,16 +82,15 @@ public class ShgmServlet extends HttpServlet {
 
 			List<String> errormsgs = new LinkedList<String>();
 			request.setAttribute("errormsgs", errormsgs);
-			
-			List<ShgmVO> list = null;
-			try {
-				if (session.getAttribute("list") == null) {
 
-					ShgmService shgmdao = new ShgmService();
-					list = shgmdao.getAllShgm();
-					System.out.println("get new list from session");
+			List<ShgmVO> shgmlist = null;
+			try {
+				if (session.getAttribute("shgmlist") == null) {
+
+					shgmlist = shgmsvc.getAllShgm();
+					System.out.println("get new shgmlist from session");
 					// 測試錯誤處理throw new SQLException();
-					if (list == null)
+					if (shgmlist == null)
 						errormsgs.add("查無資料");
 					if (!errormsgs.isEmpty()) {
 						RequestDispatcher failureview = request.getRequestDispatcher("shgm_select_page.jsp");
@@ -95,10 +98,10 @@ public class ShgmServlet extends HttpServlet {
 						return;
 					}
 				} else {
-					list = (List<ShgmVO>)session.getAttribute("list");
+					shgmlist = (List<ShgmVO>) session.getAttribute("shgmlist");
 					System.out.println("get from session");
 				}
-				session.setAttribute("list", list);
+				session.setAttribute("shgmlist", shgmlist);
 				String url = "listAllShgm.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
@@ -113,7 +116,7 @@ public class ShgmServlet extends HttpServlet {
 
 			List<String> errormsgs = new LinkedList<String>();
 			request.setAttribute("errormsgs", errormsgs);
-			
+
 			String imagefailed = request.getParameter("imgtag");
 			try {
 
@@ -149,24 +152,30 @@ public class ShgmServlet extends HttpServlet {
 					errormsgs.add("市集商品簡介：簡介文字不得為空");
 
 				byte[] img = null;
-				
+
 				Part imgreq = request.getPart("img");
-				if (imgreq.getSize() == 0) {
+				if (imgreq.getSize() == 0 && (byte[]) session.getAttribute("img") == null) {
 					errormsgs.add("市集商品圖片：市集商品圖片不得為空");
 				} else {
 					try {
-						InputStream is = imgreq.getInputStream();
-						ByteArrayOutputStream baos = new ByteArrayOutputStream();
-						byte[] bufferd = new byte[8192];
-						int i = 0;
-						while ((i = is.read(bufferd)) != -1) {
-							baos.write(bufferd, 0, i);
+						if (imgreq.getSize() != 0) {
+							System.out.println("enter here");
+							InputStream is = imgreq.getInputStream();
+							ByteArrayOutputStream baos = new ByteArrayOutputStream();
+							byte[] bufferd = new byte[8192];
+							int i = 0;
+							while ((i = is.read(bufferd)) != -1) {
+								baos.write(bufferd, 0, i);
+							}
+							baos.flush();
+							baos.close();
+							img = baos.toByteArray();
+							session.setAttribute("img", img);
+							System.out.println(img);
+						} else {
+							img = (byte[]) session.getAttribute("img");
 						}
-						baos.flush();
-						baos.close();
-						img = baos.toByteArray();
 						imagefailed = Base64.encode(img);
-						System.out.println(img);
 					} catch (Exception e) {
 						errormsgs.add("市集商品圖片：" + e.getMessage());
 					}
@@ -238,7 +247,7 @@ public class ShgmServlet extends HttpServlet {
 				shgmvo.setSoldtime(soldtimevo);
 
 				if (!errormsgs.isEmpty()) {
-					request.setAttribute("imagefailed",imagefailed);
+					request.setAttribute("imagefailed", imagefailed);
 					request.setAttribute("shgmvo", shgmvo);
 					String url = "addShgm.jsp";
 					RequestDispatcher failedview = request.getRequestDispatcher(url);
@@ -246,18 +255,18 @@ public class ShgmServlet extends HttpServlet {
 					return;
 				}
 
-				ShgmService shgmdao = new ShgmService();
-				shgmdao.addShgm(buyerno, sellerno, shgmname, price, intro, img, upcheck, uptimevo, take, takernm,
+				shgmsvc.addShgm(buyerno, sellerno, shgmname, price, intro, img, upcheck, uptimevo, take, takernm,
 						takerph, address, boxstatus, paystatus, status, soldtimevo);
-				
+
 				request.removeAttribute("imagefailed");
-				session.removeAttribute("list");
-				
+				session.removeAttribute("shgmlist");
+				session.removeAttribute("img");// 新增成功把顯示用的圖片刪掉
+
 				String url = "shgm.do?action=get_all";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 			} catch (Exception e) {
-				request.setAttribute("imagefailed",imagefailed);
+				request.setAttribute("imagefailed", imagefailed);
 				errormsgs.add("無法新增市集商品：" + e.getMessage());
 				String url = "addShgm.jsp";
 				RequestDispatcher failedview = request.getRequestDispatcher(url);
@@ -272,11 +281,10 @@ public class ShgmServlet extends HttpServlet {
 
 			try {
 				String shgmno = request.getParameter("shgmno");
-				ShgmService shgmdao = new ShgmService();
-				shgmdao.deleteShgm(shgmno);
-				
-				session.removeAttribute("list");
-				
+				shgmsvc.deleteShgm(shgmno);
+
+				session.removeAttribute("shgmlist");
+
 				String url = "shgm.do?action=get_all";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
@@ -297,8 +305,7 @@ public class ShgmServlet extends HttpServlet {
 			try {
 				String shgmno = request.getParameter("shgmno");
 
-				ShgmService shgmdao = new ShgmService();
-				ShgmVO shgmvo = shgmdao.getOneShgm(shgmno);
+				ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
 
 				request.setAttribute("shgmvo", shgmvo);
 				String url = "updateShgm.jsp";
@@ -370,9 +377,13 @@ public class ShgmServlet extends HttpServlet {
 						errormsgs.add("市集商品圖片：" + e.getMessage());
 					}
 				} else {
-					ShgmService shgmdao = new ShgmService();
-					ShgmVO shgmvo = shgmdao.getOneShgm(shgmno);
-					img = shgmvo.getImg();
+					img = (byte[]) session.getAttribute("img");
+					if (img == null) {
+						ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
+						img = shgmvo.getImg();
+						session.setAttribute("img", img);
+						System.out.println("img stored in session");
+					}
 				}
 
 				Integer upcheck = new Integer(request.getParameter("upcheck"));
@@ -389,12 +400,25 @@ public class ShgmServlet extends HttpServlet {
 				}
 
 				String take = request.getParameter("take");
-
+				if(take.trim().length() > 10)
+					errormsgs.add("取貨方式：長度不正確");
+				if(take.trim().length() == 0)
+					errormsgs.add("取貨方式：請勿輸入空白");
+				
 				String takernm = request.getParameter("takernm");
+				if(takernm.trim().length() > 10)
+					errormsgs.add("取貨人姓名：長度不正確");
+				if(takernm.trim().length() == 0)
+					errormsgs.add("取貨人姓名：請勿輸入空白");
 
 				Integer takerph = null;
 				try {
-					takerph = new Integer(request.getParameter("takerph"));
+					String takerphstr = request.getParameter("takerph");
+					if(takerphstr.trim().length() > 10)
+						errormsgs.add("取貨人電話：請輸入十碼以內的電話號碼");
+					if(takerphstr.trim().length() == 0)
+						errormsgs.add("取貨人電話：請勿輸入空白");
+					takerph = new Integer(takerphstr);
 				} catch (Exception e) {
 					errormsgs.add("取貨人電話：格式不正確");
 				}
@@ -449,13 +473,16 @@ public class ShgmServlet extends HttpServlet {
 					return;
 				}
 
-				ShgmService shgmdao = new ShgmService();
-				shgmdao.updateShgm(shgmno, buyerno, sellerno, shgmname, price, intro, img, upcheck, uptimevo, take,
+				shgmsvc.updateShgm(shgmno, buyerno, sellerno, shgmname, price, intro, img, upcheck, uptimevo, take,
 						takernm, takerph, address, boxstatus, paystatus, status, soldtimevo);
-
+				
 				request.setAttribute("shgmvo", shgmvo);
 				
-				String url = "listOneShgm.jsp";
+				session.removeAttribute("shgmlist");
+				session.removeAttribute("img");
+				System.out.println("removed from session");
+
+				String url = "shgm.do?action=get_all";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 			} catch (Exception e) {

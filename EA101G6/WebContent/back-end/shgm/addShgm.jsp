@@ -4,6 +4,7 @@
 <%@ page import="com.shgm.model.*" %>
     
 <%
+		byte[] img = (byte[])session.getAttribute("img");
     	ShgmVO shgmvo = (ShgmVO) request.getAttribute("shgmvo");
 		String imagefailed = (String)request.getAttribute("imagefailed");
 %>
@@ -62,7 +63,7 @@
 			</tr>
 			<tr>
 				<td>市集商品圖片</td>
-				<td><input type="file" name="img" id="imgfile" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" accept=".png, .jpg, .jpeg .gif"/>
+				<td><input type="file" name="img" id="imgfile" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" accept=".png, .jpg, .jpeg .gif" value="${img}"/>
 					<img name="imgtag" id="blah" alt="your image" width="100" height="100" src="data:image/png;base64,${imagefailed}"/></td>
 			</tr>
 			<tr>
@@ -117,7 +118,7 @@
 				<td>訂單狀態</td>
 				<td><select id="status" name="status">
 						<c:forEach var="i" begin="0" end="2">
-							<option value="${i}" ${(shgmvo.status == i)? 'selected':'' }>${(i == 0)? "未完成": (i == 1)? "已完成": "取消"}</option>
+							<option value="${i}" ${(shgmvo.status == i)? 'selected':'' }>${(i == 0)? "未下訂": (i == 1)? "已下訂": (i == 2)? "已完成":"取消"}</option>
 						</c:forEach>
 					</select></td>
 			</tr>
@@ -162,25 +163,11 @@
 </style>
 
 <script>
-//document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])
 $("document").ready(function(){
 		$('input[type=file]').change(function(){
 			$('#imgid').val($('#blah').attr('src'));
 		});
 });
-
-function readURL(input) {
-    for(var i =0; i< input.files.length; i++){
-        if (input.files[i]) {
-           var reader = new FileReader();
-
-           reader.onload = function (e) {
-              img.attr('src', e.target.result);
-           }
-           reader.readAsDataURL(input.files[i]);
-          }
-       }
-   }
 
    $("#imgfile").change(function(){
        readURL(this);

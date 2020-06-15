@@ -7,7 +7,7 @@
 <%@ page import="java.sql.*" %>
 <%@ page import="java.util.*" %>
 <%
-	List<ShgmVO> list = (List<ShgmVO>)session.getAttribute("list");
+	List<ShgmVO> shgmlist = (List<ShgmVO>)session.getAttribute("shgmlist");
 %>
 
 <html>
@@ -57,7 +57,7 @@
 			<td>刪除市集商品</td>
 		</tr>
 		
-		<c:forEach var="shgmvo" items="${list}">
+		<c:forEach var="shgmvo" items="${shgmlist}">
 		<tr>
 			<td>${shgmvo.shgmno}</td>
 			<td>${shgmvo.sellerno}</td>
@@ -103,9 +103,12 @@
         	</c:choose>
 			<c:choose>
 	            <c:when test="${shgmvo.status == 0}">
-	                <td>未完成</td>
+	                <td>未下訂</td>
 	            </c:when>
 	            <c:when test="${shgmvo.status == 1}">
+	                <td>已下訂</td>
+	            </c:when>
+	            <c:when test="${shgmvo.status == 2}">
 	                <td>已完成</td>
 	            </c:when>
 	            <c:otherwise>

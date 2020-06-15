@@ -33,12 +33,11 @@ public class DisplayImg extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-//		System.out.println("enter displayimg.jsp");
 		response.setContentType("image/gif");
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		Blob blob = null;
+		byte[] bytearr = null;
 		HttpSession session = request.getSession();
 
 		String shgmno = request.getParameter("shgmno");
@@ -50,22 +49,15 @@ public class DisplayImg extends HttpServlet {
 				rs = pstmt.executeQuery();
 
 				while (rs.next()) {
-					blob = rs.getBlob("img");
-					session.setAttribute(shgmno + "imgses", blob);
+					bytearr = rs.getBytes("img");
+					session.setAttribute(shgmno + "imgses", bytearr);
 				}
 			} else {
-				blob = (Blob) session.getAttribute(shgmno + "imgses");
+				bytearr = (byte[]) session.getAttribute(shgmno + "imgses");
 			}
-			InputStream is = blob.getBinaryStream();
 			ServletOutputStream ops = response.getOutputStream();
-			byte[] buffer = new byte[(int) blob.length()];
-			int i = 0;
-			while ((i = is.read(buffer)) != -1) {
-				ops.write(buffer, 0, i);
-			}
-
+			ops.write(bytearr);
 			ops.close();
-			is.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
