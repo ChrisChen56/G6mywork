@@ -117,8 +117,8 @@
 			<tr>
 				<td>訂單狀態</td>
 				<td><select id="status" name="status">
-						<c:forEach var="i" begin="0" end="2">
-							<option value="${i}" ${(shgmvo.status == i)? 'selected':'' }>${(i == 0)? "未完成": (i == 1)? "已完成": "取消"}</option>
+						<c:forEach var="i" begin="0" end="3">
+							<option value="${i}" ${(shgmvo.status == i)? 'selected':'' }>${(i == 0)? "未下訂": (i == 1)? "已下訂": (i == 2)? "已完成":"取消"}</option>
 						</c:forEach>
 					</select></td>
 			</tr>

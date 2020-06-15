@@ -103,9 +103,12 @@
         	</c:choose>
 			<c:choose>
 	            <c:when test="${shgmvo.status == 0}">
-	                <td>未完成</td>
+	                <td>未下訂</td>
 	            </c:when>
 	            <c:when test="${shgmvo.status == 1}">
+	                <td>已下訂</td>
+	            </c:when>
+	            <c:when test="${shgmvo.status == 2}">
 	                <td>已完成</td>
 	            </c:when>
 	            <c:otherwise>
