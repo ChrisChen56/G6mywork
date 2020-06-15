@@ -26,7 +26,11 @@
   	}
   	img{
   		height: 200px;
+<<<<<<< Upstream, based on origin/master
   		width: 150ps;
+=======
+  		width: 150px;
+>>>>>>> 5da4220 back-end complete version
   	}
 </style>
 </head>
