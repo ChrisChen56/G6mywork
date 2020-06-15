@@ -20,28 +20,20 @@ public class ShgmrpServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		doPost(request, response);
-	}
+			doPost(request, response);
+		}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
-<<<<<<< Upstream, based on origin/master
+
 		ShgmrpService shgmrpsvc = (ShgmrpService)session.getAttribute("shgmrpsvc");
 		if(shgmrpsvc == null) {
 			shgmrpsvc = new ShgmrpService();
 			session.setAttribute("shgmrpsvc", shgmrpsvc);
 		}
-		
-=======
-		ShgmrpService shgmrpsvc = (ShgmrpService) session.getAttribute("shgmrpsvc");
-		if (shgmrpsvc == null) {
-			shgmrpsvc = new ShgmrpService();
-			session.setAttribute("shgmrpsvc", shgmrpsvc);
-		}
 
->>>>>>> 5da4220 back-end complete version
 		String action = request.getParameter("action");
 
 		if ("get_one".equals(action)) {
@@ -156,19 +148,12 @@ public class ShgmrpServlet extends HttpServlet {
 					failedview.forward(request, response);
 					return;
 				}
-<<<<<<< Upstream, based on origin/master
-=======
 
->>>>>>> 5da4220 back-end complete version
 				shgmrpvo = shgmrpsvc.addShgmrp(shgmno, suiterno, detail, status);
 
 				request.setAttribute("shgmrpvo", shgmrpvo);
 				session.removeAttribute("shgmrplist");
-<<<<<<< Upstream, based on origin/master
-				
-=======
 
->>>>>>> 5da4220 back-end complete version
 				RequestDispatcher successview = request.getRequestDispatcher("shgmrp.do?action=get_All");
 				successview.forward(request, response);
 			} catch (Exception e) {
@@ -257,21 +242,16 @@ public class ShgmrpServlet extends HttpServlet {
 					failedview.forward(request, response);
 					return;
 				}
-<<<<<<< Upstream, based on origin/master
-=======
 
->>>>>>> 5da4220 back-end complete version
 				shgmrpvo = shgmrpsvc.updateShgmrp(shgmrpno, shgmno, suiterno, detail, status);
 				System.out.println("已修改");
 
 				request.setAttribute("shgmrpvo", shgmrpvo);
-<<<<<<< Upstream, based on origin/master
+
 				session.removeAttribute("shgmrplist");
 				
 				RequestDispatcher successview = request.getRequestDispatcher("shgmrp.do?action=get_All");
-=======
-				RequestDispatcher successview = request.getRequestDispatcher("listOneShgmrp.jsp");// listAll
->>>>>>> 5da4220 back-end complete version
+
 				successview.forward(request, response);
 			} catch (Exception e) {
 				errormsgs.add("無法修改檢舉的市集商品" + e.getMessage());
@@ -279,8 +259,6 @@ public class ShgmrpServlet extends HttpServlet {
 				failedview.forward(request, response);
 			}
 		}
-<<<<<<< Upstream, based on origin/master
-
 		if ("delete".equals(action)) {
 			List<String> errormsgs = new LinkedList<String>();
 			request.setAttribute("errormsgs", errormsgs);
@@ -290,18 +268,6 @@ public class ShgmrpServlet extends HttpServlet {
 
 				shgmrpsvc.deleteShgmrp(shgmrpno);
 				
-=======
-		
-		if ("delete".equals(action)) {
-			List<String> errormsgs = new LinkedList<String>();
-			request.setAttribute("errormsgs", errormsgs);
-
-			try {
-				String shgmrpno = request.getParameter("shgmrpno");
-
-				shgmrpsvc.deleteShgmrp(shgmrpno);
-
->>>>>>> 5da4220 back-end complete version
 				session.removeAttribute("shgmrplist");
 
 				RequestDispatcher successview = request.getRequestDispatcher("shgmrp.do?action=get_All");

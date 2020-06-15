@@ -117,11 +117,8 @@
 			<tr>
 				<td>訂單狀態</td>
 				<td><select id="status" name="status">
-<<<<<<< Upstream, based on origin/master
+
 						<c:forEach var="i" begin="0" end="3">
-=======
-						<c:forEach var="i" begin="0" end="2">
->>>>>>> 5da4220 back-end complete version
 							<option value="${i}" ${(shgmvo.status == i)? 'selected':'' }>${(i == 0)? "未下訂": (i == 1)? "已下訂": (i == 2)? "已完成":"取消"}</option>
 						</c:forEach>
 					</select></td>
@@ -173,13 +170,6 @@ $("document").ready(function(){
 		});
 });
 
-<<<<<<< Upstream, based on origin/master
-=======
-   $("#imgfile").change(function(){
-       readURL(this);
-   });
-
->>>>>>> 5da4220 back-end complete version
         $.datetimepicker.setLocale('zh');
         $('#f_date1').datetimepicker({
 	       theme: '',              //theme: 'dark',

@@ -31,20 +31,11 @@ public class ShgmServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
-<<<<<<< Upstream, based on origin/master
-		ShgmService shgmsvc = (ShgmService)session.getAttribute("shgmsvc");
-		if(shgmsvc == null) {
-			shgmsvc = new ShgmService();
-			session.setAttribute("shgmsvc", shgmsvc);
-		}
-		
-=======
 		ShgmService shgmsvc = (ShgmService) session.getAttribute("shgmsvc");
 		if (shgmsvc == null) {
 			shgmsvc = new ShgmService();
 			session.setAttribute("shgmsvc", shgmsvc);
 		}
->>>>>>> 5da4220 back-end complete version
 		String action = request.getParameter("action");
 		System.out.println("enter controller");
 
@@ -66,11 +57,6 @@ public class ShgmServlet extends HttpServlet {
 					failureview.forward(request, response);
 					return;
 				}
-
-<<<<<<< Upstream, based on origin/master
-				
-=======
->>>>>>> 5da4220 back-end complete version
 				ShgmVO shgmvo = shgmsvc.getOneShgm(str);
 				if (shgmvo == null) {
 					errormsgs.add("查無資料");
@@ -100,10 +86,7 @@ public class ShgmServlet extends HttpServlet {
 			try {
 				if (session.getAttribute("shgmlist") == null) {
 
-<<<<<<< Upstream, based on origin/master
 					
-=======
->>>>>>> 5da4220 back-end complete version
 					shgmlist = shgmsvc.getAllShgm();
 					System.out.println("get new shgmlist from session");
 					// 測試錯誤處理throw new SQLException();
@@ -172,11 +155,7 @@ public class ShgmServlet extends HttpServlet {
 				byte[] img = null;
 
 				Part imgreq = request.getPart("img");
-<<<<<<< Upstream, based on origin/master
 				if (imgreq.getSize() == 0 && (byte[])session.getAttribute("img") == null) {
-=======
-				if (imgreq.getSize() == 0 && (byte[]) session.getAttribute("img") == null) {
->>>>>>> 5da4220 back-end complete version
 					errormsgs.add("市集商品圖片：市集商品圖片不得為空");
 				} else {
 					try {
@@ -195,21 +174,11 @@ public class ShgmServlet extends HttpServlet {
 							session.setAttribute("img", img);
 							System.out.println(img);
 						} else {
-<<<<<<< Upstream, based on origin/master
 							img = (byte[])session.getAttribute("img");
-=======
-							img = (byte[]) session.getAttribute("img");
->>>>>>> 5da4220 back-end complete version
 						}
-<<<<<<< Upstream, based on origin/master
 						
-=======
->>>>>>> 5da4220 back-end complete version
 						imagefailed = Base64.encode(img);
-<<<<<<< Upstream, based on origin/master
 						
-=======
->>>>>>> 5da4220 back-end complete version
 					} catch (Exception e) {
 						errormsgs.add("市集商品圖片：" + e.getMessage());
 					}
@@ -289,20 +258,13 @@ public class ShgmServlet extends HttpServlet {
 					return;
 				}
 
-<<<<<<< Upstream, based on origin/master
 				
-=======
->>>>>>> 5da4220 back-end complete version
 				shgmsvc.addShgm(buyerno, sellerno, shgmname, price, intro, img, upcheck, uptimevo, take, takernm,
 						takerph, address, boxstatus, paystatus, status, soldtimevo);
 
 				request.removeAttribute("imagefailed");
 				session.removeAttribute("shgmlist");
-<<<<<<< Upstream, based on origin/master
 				session.removeAttribute("img");//新增成功把顯示用的圖片刪掉
-=======
-				session.removeAttribute("img");// 新增成功把顯示用的圖片刪掉
->>>>>>> 5da4220 back-end complete version
 
 				String url = "shgm.do?action=get_all";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
@@ -323,10 +285,7 @@ public class ShgmServlet extends HttpServlet {
 
 			try {
 				String shgmno = request.getParameter("shgmno");
-<<<<<<< Upstream, based on origin/master
 				
-=======
->>>>>>> 5da4220 back-end complete version
 				shgmsvc.deleteShgm(shgmno);
 
 				session.removeAttribute("shgmlist");
@@ -351,10 +310,7 @@ public class ShgmServlet extends HttpServlet {
 			try {
 				String shgmno = request.getParameter("shgmno");
 
-<<<<<<< Upstream, based on origin/master
 				
-=======
->>>>>>> 5da4220 back-end complete version
 				ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
 
 				request.setAttribute("shgmvo", shgmvo);
@@ -428,11 +384,7 @@ public class ShgmServlet extends HttpServlet {
 					}
 				} else {
 					img = (byte[]) session.getAttribute("img");
-<<<<<<< Upstream, based on origin/master
 					if(img == null) {
-=======
-					if (img == null) {
->>>>>>> 5da4220 back-end complete version
 						ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
 						img = shgmvo.getImg();
 						session.setAttribute("img", img);
@@ -528,18 +480,11 @@ public class ShgmServlet extends HttpServlet {
 					return;
 				}
 
-<<<<<<< Upstream, based on origin/master
 				
-=======
->>>>>>> 5da4220 back-end complete version
 				shgmsvc.updateShgm(shgmno, buyerno, sellerno, shgmname, price, intro, img, upcheck, uptimevo, take,
 						takernm, takerph, address, boxstatus, paystatus, status, soldtimevo);
 				
 				request.setAttribute("shgmvo", shgmvo);
-<<<<<<< Upstream, based on origin/master
-=======
-				
->>>>>>> 5da4220 back-end complete version
 				session.removeAttribute("shgmlist");
 				session.removeAttribute("img");
 				System.out.println("removed from session");
