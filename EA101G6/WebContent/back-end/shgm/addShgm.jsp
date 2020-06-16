@@ -33,7 +33,7 @@
 	<table>
 			<tr>
 				<th>市集商品欄位</th>
-				<th>請輸入資料</th>
+				<th>請輸入資料Test</th>
 			</tr>
 			<tr>
 				<td>賣家會員編號</td>
