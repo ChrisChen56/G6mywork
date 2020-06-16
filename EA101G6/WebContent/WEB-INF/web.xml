@@ -23,14 +23,18 @@
     <servlet-name>ShgmServlet</servlet-name>
     <url-pattern>/back-end/shgm/shgm.do</url-pattern>
   </servlet-mapping>
-  <servlet>
+  <servlet-mapping>
+    <servlet-name>ShgmServlet</servlet-name>
+    <url-pattern>/front-end/shgm/shgm.do</url-pattern>
+  </servlet-mapping>
+  <!--<servlet>
     <servlet-name>ShgmServlet2</servlet-name>
     <servlet-class>com.shgm.controller.ShgmServlet2</servlet-class>
   </servlet>
-  <servlet-mapping>
+   <servlet-mapping>
     <servlet-name>ShgmServlet2</servlet-name>
     <url-pattern>/front-end/shgm/shgm.do</url-pattern>
-  </servlet-mapping>
+  </servlet-mapping>-->
   <servlet>
     <servlet-name>DisplayImg</servlet-name>
     <servlet-class>com.shgm.controller.DisplayImg</servlet-class>

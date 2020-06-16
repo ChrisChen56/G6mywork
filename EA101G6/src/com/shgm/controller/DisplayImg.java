@@ -12,19 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
+import com.shgm.model.ShgmService;
+import com.shgm.model.ShgmVO;
+
 public class DisplayImg extends HttpServlet {
-
-	private static javax.sql.DataSource ds = null;
-	static {
-		try {
-			Context ctx = new InitialContext();
-			ds = (DataSource) ctx.lookup("java:comp/env/jdbc/EA101G6DB");
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static final String GET_IMG_STMT = "SELECT img FROM SHGM WHERE shgmno=?";
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -34,45 +25,23 @@ public class DisplayImg extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		response.setContentType("image/gif");
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+		ShgmService shgmsvc = new ShgmService();
 		byte[] bytearr = null;
 		HttpSession session = request.getSession();
 
 		String shgmno = request.getParameter("shgmno");
-		try {
-			if (session.getAttribute(shgmno + "imgses") == null) {
-				con = ds.getConnection();
-				pstmt = con.prepareStatement(GET_IMG_STMT);
-				pstmt.setString(1, shgmno);
-				rs = pstmt.executeQuery();
 
-				while (rs.next()) {
-					bytearr = rs.getBytes("img");
-					session.setAttribute(shgmno + "imgses", bytearr);
-				}
-			} else {
-				bytearr = (byte[]) session.getAttribute(shgmno + "imgses");
-			}
-			ServletOutputStream ops = response.getOutputStream();
-			ops.write(bytearr);
-			ops.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (pstmt != null)
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			if (con != null)
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+		if (session.getAttribute(shgmno + "imgses") == null) {
+			
+			ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
+			bytearr = shgmvo.getImg();
+			session.setAttribute(shgmno + "imgses", bytearr);
+			
+		} else {
+			bytearr = (byte[]) session.getAttribute(shgmno + "imgses");
 		}
+		ServletOutputStream ops = response.getOutputStream();
+		ops.write(bytearr);
+		ops.close();
 	}
 }
