@@ -15,14 +15,13 @@ public class ShgmJDBCDAO implements ShgmDAO_interface{
 	String url ="jdbc:oracle:thin:@localhost:1521:XE";
 	String user ="EA101";
 	String password="123456";
-	public static void main(String[] args) {
-		ShgmJDBCDAO shgm = new ShgmJDBCDAO();
-//		List<shgmvo> list = 
-		ShgmVO vo = shgm.findByPrimaryKey("CA00001");
-		System.out.println(vo.getShgmno());
-		System.out.println(vo.getSellerno());
-		System.out.println(vo.getUptime());
-	}
+//	public static void main(String[] args) {
+//		ShgmJDBCDAO shgm = new ShgmJDBCDAO();
+//		ShgmVO vo = shgm.findByPrimaryKey("CA00001");
+//		System.out.println(vo.getShgmno());
+//		System.out.println(vo.getSellerno());
+//		System.out.println(vo.getUptime());
+//	}
 	private static final String INSERT_STMT =
 			"INSERT INTO SHGM "
 			+ "(shgmno,sellerno,buyerno,shgmname,price,intro,img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime) "
