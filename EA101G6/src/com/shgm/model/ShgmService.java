@@ -37,6 +37,22 @@ public class ShgmService {
 		return shgmvo;
 	}
 	
+	public ShgmVO sellShgm(String sellerno,String shgmname,Double price,String intro,byte[] img) {
+		
+		ShgmVO shgmvo = new ShgmVO();
+		shgmvo.setSellerno(sellerno);
+		shgmvo.setShgmname(shgmname);
+		shgmvo.setPrice(price);
+		shgmvo.setIntro(intro);
+		shgmvo.setImg(img);
+		System.out.println("Service新增成功");
+		
+		dao.sellshgm(shgmvo);
+		
+		return shgmvo;
+		
+	}
+	
 	public ShgmVO updateShgm(String shgmno,String sellerno, String buyerno, String shgmname, Double price, String intro, byte[] img, Integer upcheck, Timestamp uptime,
 			String take, String takernm, Integer takerph, String address, Integer boxstatus, Integer paystatus, Integer status, Timestamp soldtime) {
 		

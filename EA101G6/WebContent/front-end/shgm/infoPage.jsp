@@ -4,11 +4,13 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="com.shgm.model.*" %>
 <%@ page import="java.io.*" %>
+<%@ page import="java.util.*" %>
 <%@ page import="java.sql.*" %>
 <%	
 	String shgmno = request.getParameter("shgmno");
 	ShgmService shgmsvc = new ShgmService();
 	ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
+	List<ShgmVO> list = shgmsvc.getAllShgm();
 	pageContext.setAttribute("shgmvo", shgmvo);
 %>
 <!doctype html>
@@ -36,36 +38,7 @@
 <link rel="stylesheet" href="css/style.css">
 
 </head>
-<script type="text/javascript">
-	$('#exampleModal').on('show.bs.modal', function(event) {
-		var button = $(event.relatedTarget) // Button that triggered the modal
-		var recipient = button.data('whatever') // Extract info from data-* attributes
-		// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-		// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-		var modal = $(this)
-		modal.find('.modal-title').text('New message to ' + recipient)
-		modal.find('.modal-body input').val(recipient)
-	});
-	$(function() {
-		$('#imgzoom img').mouseenter(function() {
-			var wValue = 1.5 * $(this).width();
-			var hValue = 1.5 * $(this).height();
-			$(this).animate({
-				width : wValue,
-				height : hValue,
-				left : ("-"(0.5 * $(this).width()) / 2),
-				top : ("-"(0.5 * $(this).height()) / 2)
-			}, 1000);
-		}).mouseleave(function() {
-			$(this).animate({
-				width : "100",
-				height : "80",
-				left : "0px",
-				top : "0px"
-			}, 1000);
-		});
-	});
-</script>
+
 <style>
 body {
 	background-color: #EEEEEE;
@@ -139,7 +112,7 @@ div.top-info {
 
 .slide {
 	height: 90px;
-	min-height: 250px;
+	min-height: 300px;
 	background-size: cover;
 }
 </style>
@@ -183,7 +156,7 @@ div.top-info {
 
 				<div class="site-logo">
 					<a href="index.html" class="text-black"><span
-						class="text-primary">Unearth</span></a>
+						class="text-primary">Gaming on Board</span></a>
 				</div>
 
 				<div class="col-12">
@@ -317,33 +290,30 @@ div.top-info {
 
 									<!-- Carousel items -->
 									<div class="carousel-inner">
-
 										<div class="carousel-item active">
 											<div class="row">
 												<div class="col-md-3">
-													<a href="#"> <img src="http://placehold.it/250x250"
+													<a href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}"> <img src="http://placehold.it/250x250"
 														alt="Image" style="max-width: 100%;">
 													</a>
 												</div>
 												<div class="col-md-3">
-													<a href="#"> <img src="http://placehold.it/250x250"
+													<a href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}"> <img src="http://placehold.it/250x250"
 														alt="Image" style="max-width: 100%;">
 													</a>
 												</div>
 												<div class="col-md-3">
-													<a href="#"> <img src="http://placehold.it/250x250"
+													<a href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}"> <img src="http://placehold.it/250x250"
 														alt="Image" style="max-width: 100%;">
 													</a>
 												</div>
 												<div class="col-md-3">
-													<a href="#"> <img src="http://placehold.it/250x250"
+													<a href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}"> <img src="http://placehold.it/250x250"
 														alt="Image" style="max-width: 100%;">
 													</a>
 												</div>
 											</div>
-											<!--.row-->
 										</div>
-										<!--.item-->
 
 										<div class="carousel-item">
 											<div class="row">
@@ -353,22 +323,21 @@ div.top-info {
 													</a>
 												</div>
 												<div class="col-md-3">
-													<a href="#"> <img src="http://placehold.it/250x250"
+													<a href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}"> <img src="http://placehold.it/250x250"
 														alt="Image" style="max-width: 100%;">
 													</a>
 												</div>
 												<div class="col-md-3">
-													<a href="#"> <img src="http://placehold.it/250x250"
+													<a href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}"> <img src="http://placehold.it/250x250"
 														alt="Image" style="max-width: 100%;">
 													</a>
 												</div>
 												<div class="col-md-3">
-													<a href="#"> <img src="http://placehold.it/250x250"
+													<a href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}"> <img src="http://placehold.it/250x250"
 														alt="Image" style="max-width: 100%;">
 													</a>
 												</div>
 											</div>
-											<!--.row-->
 										</div>
 										<!--.item-->
 									</div>

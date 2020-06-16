@@ -177,7 +177,7 @@ div.pageselect-area {
 
 				<div class="site-logo">
 					<a href="index.html" class="text-black"><span
-						class="text-primary">Unearth</span></a>
+						class="text-primary">Gaming on Board</span></a>
 				</div>
 
 				<div class="col-12">
@@ -226,9 +226,9 @@ div.pageselect-area {
 				<ol class="breadcrumb d-flex">
 					<li class="breadcrumb-item"><a href="#">首頁</a></li>
 					<li class="breadcrumb-item active" aria-current="page">市集</li>
-					<li class="awrapper"><a class="btn btn-primary  ml-auto"
-						href="#" role="button">我要上架</a><a class="btn btn-primary "
-						href="#" role="button">我的市集商品</a></li>
+					<li class="awrapper">
+					<a class="btn btn-primary ml-auto" href="<%=request.getContextPath()%>/front-end/shgm/sellPage.jsp" role="button">我要上架</a>
+					<a class="btn btn-primary " href="#" role="button">我的市集商品</a></li>
 				</ol>
 			</nav>
 		</div>
@@ -237,7 +237,7 @@ div.pageselect-area {
 				<div class="card-deck">
 					<c:forEach var="shgmvo" items="${shgmlist}">
 						<div class="mb-4">
-							<a target="_blank" href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}">
+							<a target="_blank" href="<%=request.getContextPath()%>/front-end/shgm/infoPage.jsp?shgmno=${shgmvo.shgmno}">
 								<div class="card">
 									<img
 										src="<%=request.getContextPath()%>/back-end/shgm/displayimg?shgmno=${shgmvo.shgmno}"

@@ -28,6 +28,11 @@ public class ShgmDAO implements ShgmDAO_interface{
 			+ "(shgmno,sellerno,buyerno,shgmname,price,intro,img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime) "
 			+ "VALUES"
 			+ "('CA'||LPAD(shgame_seq.NEXTVAL,5,'0'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	private static final String SELLER_STMT =
+			"INSERT INTO SHGM"
+			+ "(shgmno,sellerno,buyerno,shgmname,price,intro,img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime) "
+			+ "VALUES"
+			+ "('CA'||LPAD(shgame_seq.NEXTVAL,5,'0'),?,null,?,?,?,?,0,CURRENT_TIMESTAMP,null,null,null,null,0,0,0,null)";
 	private static final String UPDATE_STMT =
 			"UPDATE SHGM SET sellerno=?,buyerno=?,shgmname=?,price=?,intro=?,img=?,upcheck=?,"
 			+ "uptime=?,take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=?,soldtime=? WHERE shgmno=?";
@@ -38,6 +43,7 @@ public class ShgmDAO implements ShgmDAO_interface{
 			+ "to_char(uptime,'YYYY-MM-DD HH24:MI:SS '),take,takernm,takerph,address,boxstatus,paystatus,status,soldtime FROM SHGM WHERE shgmno=?";
 	private static final String GET_ALL_STMT =
 			"SELECT * FROM SHGM ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
+	
 	@Override
 	public void insert(ShgmVO shgmvo) {
 		Connection con = null;
@@ -67,6 +73,44 @@ public class ShgmDAO implements ShgmDAO_interface{
 			
 			pstmt.executeUpdate();
 			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(con != null) {
+				try {
+					con.close();
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void sellshgm(ShgmVO shgmvo) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		try {
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(SELLER_STMT);
+			
+			pstmt.setString(1, shgmvo.getSellerno());
+			pstmt.setString(2, shgmvo.getShgmname());
+			pstmt.setDouble(3, shgmvo.getPrice());
+			Clob clob = con.createClob();
+			clob.setString(1, shgmvo.getIntro());
+			pstmt.setClob(4, clob);
+			pstmt.setBytes(5, shgmvo.getImg());
+			System.out.println("DAO成功新增");
+			
+			pstmt.executeUpdate();
 		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
