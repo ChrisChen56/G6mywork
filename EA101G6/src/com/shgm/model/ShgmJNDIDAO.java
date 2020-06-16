@@ -36,6 +36,12 @@ public class ShgmJNDIDAO implements ShgmDAO_interface{
 	private static final String UPDATE_STMT =
 			"UPDATE SHGM SET sellerno=?,buyerno=?,shgmname=?,price=?,intro=?,img=?,upcheck=?,"
 			+ "uptime=?,take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=?,soldtime=? WHERE shgmno=?";
+	private static final String SELLER_UPDATE_STMT=
+			"UPDATE SHGM SET shgmname=?,price=?,intro=?,img=? WHERE shgmno=?";
+	private static final String BUYER_STMT =
+			"UPDATE SHGM SET buyerno=?,take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=?,soldtime=? WHERE shgmno=?";
+	private static final String ODCOMPLETE_STMT =
+			"UPDATE SHGM SET soldtime=CURRENT_TIMESTAMP WHERE shgmno=?";
 	private static final String DELETE_STMT =
 			"DELETE FROM SHGM WHERE shgmno=?";
 	private static final String GET_ONE_STMT=
@@ -157,6 +163,116 @@ public class ShgmJNDIDAO implements ShgmDAO_interface{
 			pstmt.setInt(15, shgmvo.getStatus());
 			pstmt.setTimestamp(16, shgmvo.getSoldtime());
 			pstmt.setString(17, shgmvo.getShgmno());
+			
+			pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void sellerUpdate(ShgmVO shgmvo) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		try {
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(SELLER_UPDATE_STMT);
+			
+			pstmt.setString(1, shgmvo.getShgmname());
+			pstmt.setDouble(2, shgmvo.getPrice());
+			Clob clob = con.createClob();
+			clob.setString(1, shgmvo.getIntro());
+			pstmt.setClob(3, clob);
+			pstmt.setBytes(4, shgmvo.getImg());
+			pstmt.setString(5, shgmvo.getShgmno());
+			
+			pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void buyshgm(ShgmVO shgmvo) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		try {
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(BUYER_STMT);
+
+			pstmt.setString(1, shgmvo.getBuyerno());
+			pstmt.setString(2, shgmvo.getTake());
+			pstmt.setString(3, shgmvo.getTakernm());
+			pstmt.setInt(4, shgmvo.getTakerph());
+			pstmt.setString(5, shgmvo.getAddress());
+			pstmt.setInt(6, shgmvo.getBoxstatus());
+			pstmt.setInt(7, shgmvo.getPaystatus());
+			pstmt.setInt(8, shgmvo.getStatus());
+			pstmt.setString(9, shgmvo.getShgmno());
+			
+			pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void odComplete(String shgmno) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		try {
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(ODCOMPLETE_STMT);
+			
+			pstmt.setString(1, shgmno);
 			
 			pstmt.executeUpdate();
 			

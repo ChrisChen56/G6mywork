@@ -80,6 +80,41 @@ public class ShgmService {
 		return shgmvo;
 	}
 	
+	public ShgmVO sellerUpdate(String shgmno, String shgmname, Double price, String intro, byte[] img) {
+		
+		ShgmVO shgmvo = new ShgmVO();
+		shgmvo.setShgmno(shgmno);
+		shgmvo.setShgmname(shgmname);
+		shgmvo.setPrice(price);
+		shgmvo.setIntro(intro);
+		shgmvo.setImg(img);
+		
+		dao.sellerUpdate(shgmvo);
+		
+		return shgmvo;
+	}
+	
+	public ShgmVO buyshgm(String shgmno, String buyerno, String take, String takernm, Integer takerph, String address, Integer boxstatus, Integer paystatus, Integer status) {
+		
+		ShgmVO shgmvo = new ShgmVO();
+		shgmvo.setShgmno(shgmno);
+		shgmvo.setBuyerno(buyerno);
+		shgmvo.setTake(take);
+		shgmvo.setTakernm(takernm);
+		shgmvo.setTakerph(takerph);
+		shgmvo.setAddress(address);
+		shgmvo.setBoxstatus(boxstatus);
+		shgmvo.setPaystatus(paystatus);
+		shgmvo.setStatus(status);
+		
+		return shgmvo;
+	}
+	
+	public void odComplete(String shgmno) {
+		
+		dao.odComplete(shgmno);
+	}
+	
 	public void deleteShgm(String shgmno) {
 		
 		dao.delete(shgmno);

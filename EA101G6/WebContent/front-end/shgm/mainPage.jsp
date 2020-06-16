@@ -121,11 +121,8 @@ div.shgm-area {
 div.pageselect-area {
 	display: block;
 	position: relative;
-	/*bottom: 0;*/
-	border: blue 1px solid;
 	width: 100%;
 	margin: 0 auto;
-	/*margin-bottom: -53%;*/
 }
 
 .pagination {

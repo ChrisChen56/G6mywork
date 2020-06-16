@@ -275,7 +275,7 @@ div.top-info {
 				</div>
 				<br>
 				<div class="shgm-info-bottom">
-					u might be interested...
+					你可能也感興趣
 					<div class="container">
 						<div class="row blog">
 							<div class="col-md-12">

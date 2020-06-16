@@ -1,6 +1,5 @@
 package com.shgm.controller;
 
-import java.io.IOException;
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -131,5 +130,92 @@ public class ShgmServlet2 extends HttpServlet {
 				failedview.forward(request, response);
 			}
 		}
+		
+		if("buyshgm".equals(action)) {
+			
+			List<String> errormsgs = new LinkedList<String>();
+			request.setAttribute("errormsgs", errormsgs);
+
+			try {
+				String shgmno = request.getParameter("shgmno");
+
+				String buyerno = request.getParameter("buyerno");
+
+				String take = request.getParameter("take");
+				if(take.trim().length() > 10)
+					errormsgs.add("取貨方式：長度不正確");
+				if(take.trim().length() == 0)
+					errormsgs.add("取貨方式：請勿輸入空白");
+				
+				String takernm = request.getParameter("takernm");
+				if(takernm.trim().length() > 10)
+					errormsgs.add("取貨人姓名：長度不正確");
+				if(takernm.trim().length() == 0)
+					errormsgs.add("取貨人姓名：請勿輸入空白");
+
+				
+				Integer takerph = null;
+				try {
+					String takerphstr = request.getParameter("takerph");
+					if(takerphstr.trim().length() > 10)
+						errormsgs.add("取貨人電話：請輸入十碼以內的電話號碼");
+					if(takerphstr.trim().length() == 0)
+						errormsgs.add("取貨人電話：請勿輸入空白");
+					takerph = new Integer(takerphstr);
+				} catch (Exception e) {
+					errormsgs.add("取貨人電話：格式不正確");
+				}
+
+				String address = request.getParameter("address");
+				if (address.trim().length() == 0) {
+					errormsgs.add("取貨地址：地址不得為空");
+				}
+
+				Integer boxstatus = new Integer(request.getParameter("boxstatus"));
+
+				Integer paystatus = new Integer(request.getParameter("paystatus"));
+
+				Integer status = new Integer(request.getParameter("status"));
+
+				ShgmVO shgmvo = new ShgmVO();
+				shgmvo.setShgmno(shgmno);
+				shgmvo.setBuyerno(buyerno);
+				shgmvo.setTake(take);
+				shgmvo.setTakernm(takernm);
+				shgmvo.setTakerph(takerph);
+				shgmvo.setAddress(address);
+				shgmvo.setBoxstatus(boxstatus);
+				shgmvo.setPaystatus(paystatus);
+				shgmvo.setStatus(status);
+
+				if (!errormsgs.isEmpty()) {
+					request.setAttribute("shgmvo", shgmvo);
+					String url = "updateShgm.jsp";
+					RequestDispatcher failedview = request.getRequestDispatcher(url);
+					failedview.forward(request, response);
+					return;
+				}
+
+				shgmsvc.buyshgm(shgmno, buyerno, take, takernm, takerph, address, boxstatus, paystatus, status);
+				
+				if(boxstatus == 2 && paystatus == 1 && status == 2) {
+					shgmsvc.odComplete(shgmno);
+				}
+				
+				request.setAttribute("shgmvo", shgmvo);
+				session.removeAttribute("shgmlist");
+				System.out.println("removed from session");
+
+				String url = "shgm.do?action=get_all";
+				RequestDispatcher successview = request.getRequestDispatcher(url);
+				successview.forward(request, response);
+			} catch (Exception e) {
+				errormsgs.add("無法修改資料" + e.getMessage());
+				String url = "updateShgm.jsp";
+				RequestDispatcher failedview = request.getRequestDispatcher(url);
+				failedview.forward(request, response);
+			}
+		}
+		
 	}
 }
