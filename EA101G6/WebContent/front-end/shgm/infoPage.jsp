@@ -261,7 +261,7 @@ div.top-info {
 							售價
 							<h1>${shgmvo.price}</h1>
 						</div>
-						<a class="btn btn-primary" href="#" role="button">購買</a>
+						<a class="btn btn-primary" href="<%=request.getContextPath()%>/front-end/shgm/buyPage.jsp?shgmno=${shgmvo.shgmno}" role="button">購買</a>
 					</div>
 				</div>
 				<br>

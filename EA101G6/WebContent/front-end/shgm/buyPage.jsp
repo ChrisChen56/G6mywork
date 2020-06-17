@@ -1,3 +1,13 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import="com.shgm.model.*" %>
+<%	
+	String shgmno = request.getParameter("shgmno");
+	ShgmService shgmsvc = new ShgmService();
+	ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
+	pageContext.setAttribute("shgmvo", shgmvo);
+%>
 <!doctype html>
 <html lang="en">
 <head>
@@ -217,15 +227,15 @@
 			<div class="shgm-info-toparea container">
 				<div id="imgzoom" class="shgm-info-left col-6 ">
 					<div class="d-flex align-items-center flex-column bd-highlight mb-3">
-						<img src="images/Avalon.jpg" alt="..." class="img-thumbnail rounded float-left">
+						<img src="<%=request.getContextPath() %>/back-end/shgm/displayimg?shgmno=${shgmvo.shgmno}" alt="..." class="img-thumbnail rounded float-left">
 						<br>
 						<div class="p-2 bd-highlight">
-							Flex item
-							<h1>4564656</h1>
+							名稱
+							<h1>${shgmvo.shgmname}</h1>
 						</div>
 						<div class="p-2 bd-highlight">
-							Flex item
-							<h1>4564656</h1>
+							售價
+							<h1>${shgmvo.price}</h1>
 						</div>
 					</div>
 				</div>
