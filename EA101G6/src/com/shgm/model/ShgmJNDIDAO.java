@@ -225,7 +225,7 @@ public class ShgmJNDIDAO implements ShgmDAO_interface{
 	}
 	
 	@Override
-	public void buyshgm(ShgmVO shgmvo) {
+	public void dealingshgm(ShgmVO shgmvo) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		try {

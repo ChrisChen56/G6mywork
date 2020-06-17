@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="com.shgm.model.*"%>
+<%@ page import="java.util.*"%>
 
 <%
 	byte[] img = (byte[]) session.getAttribute("img");
@@ -71,6 +72,15 @@ div.top-info {
 	margin: 0;
 }
 
+#imgzoom{
+	width: 540px;
+	height: 400px;
+	display: flex;
+    flex-flow: row wrap;
+    align-content: flex-end;
+    text-align:center;
+}
+
 .shgm-info-left img {
 	margin: 0;
 	height: 320px;
@@ -84,10 +94,15 @@ div.top-info {
 
 .shgm-info-right {
 	display: table-cell;
-	vertical-align: middle;
+	vertical-align: left;
 	margin: 3% 0;
-	padding-top: 2%;
+	padding-top: 5%;
 	text-align: left;
+}
+
+.inputtext {
+	width:290px;
+	margin: 0 auto;
 }
 
 .btn {
@@ -104,6 +119,10 @@ div.top-info {
 .button-wrapper {
 	margin: 0 auto;
 	text-align: center;
+}
+
+.shgm-info-middle {
+    margin: 2%;
 }
 </style>
 <body data-spy="scroll" data-target=".site-navbar-target"
@@ -199,9 +218,8 @@ div.top-info {
 			<nav aria-label="breadcrumb" calss="breadcrumb-nav">
 				<ol class="breadcrumb d-flex">
 					<li class="breadcrumb-item"><a href="#">首頁</a></li>
-					<li class="breadcrumb-item"><a href="#">市集</a></li>
-					<li class="breadcrumb-item"><a href="#">商品頁面</a></li>
-					<li class="breadcrumb-item active" aria-current="page">購買頁面</li>
+					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/front-end/shgm/mainPage.jsp">市集</a></li>
+					<li class="breadcrumb-item active" aria-current="page">我要上架</li>
 				</ol>
 			</nav>
 		</div>
@@ -241,6 +259,7 @@ div.top-info {
 			<div class="shgm-info-toparea container">
 				<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=sellshgm" enctype="multipart/form-data">
 					<div id="imgzoom" class="shgm-info-left col-6 rounded float-left">
+						<span class="alert">${errormap.get(4)}</span>
 						<label for="imgfile">
 							<img name="imgtag" id="blah" alt="Click here to upload!" class="img-thumbnail rounded float-left" src="data:image/png;base64,${imagefailed}"/>
 						</label>
@@ -251,27 +270,28 @@ div.top-info {
 					</div>
 					<div class="shgm-info-right col-6 d-flex justify-content-center">
 						<div
-							class="shgm-info-right-inner d-flex align-items-start flex-column bd-highlight mb-3">
+							class="shgm-info-right-inner d-flex align-items-center flex-column bd-highlight mb-3">
 							<div class="form-group p-2 bd-highlight">
-								<label for="shgmname">輸入桌遊名稱</label> <input name="shgmname"
-									class="form-control" id="shgmname" rows="3" value=${(shgmvo != null)? shgmvo.shgmname:""}>
+								<label for="shgmname">輸入桌遊名稱</label> <span class="alert">${errormap.get(1)}</span><input name="shgmname"
+									class="form-control inputtext" id="shgmname" rows="3" value=${(shgmvo != null)? shgmvo.shgmname:""}>
 							</div>
 							<div class="form-group p-2 bd-highlight">
-								<label for="price">輸入您欲販售之價格</label> <input name="price"
-									class="form-control" id="price" rows="3" value=${(shgmvo != null)? shgmvo.price:""}>
+								<label for="price">輸入您欲販售之價格</label> <span class="alert">${errormap.get(2)}</span><input name="price"
+									class="form-control inputtext" id="price" rows="3" value=${(shgmvo != null)? shgmvo.price:""}>
 							</div>
 							<div class="button-wrapper">
 								<button type="submit" class="btn btn-primary">送出</button>
+								<a href="<%=request.getContextPath()%>/front-end/shgm/mainPage.jsp" class="btn btn-primary">取消</a>
 							</div>
-							<div class="alert">aasdfsdf</div>
 						</div>
 					</div>
 					<br> <br> <br>
 					<div class="shgm-info-middle">
-						輸入此桌遊的詳情
+						輸入此桌遊的詳情<span class="alert">${errormap.get(3)}</span>
 						<div class="card">
 							<textarea name="intro">${(shgmvo != null)? shgmvo.intro:""}</textarea>
 						</div>
+						${errormap.get(5)}
 					</div>
 				</form>
 				<br>

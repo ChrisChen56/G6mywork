@@ -204,7 +204,7 @@ div.top-info {
 			<nav aria-label="breadcrumb" class="breadcrumb-nav">
 				<ol class="breadcrumb d-flex">
 					<li class="breadcrumb-item"><a href="#">首頁</a></li>
-					<li class="breadcrumb-item"><a href="#">市集</a></li>
+					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/front-end/shgm/mainPage.jsp">市集</a></li>
 					<li class="breadcrumb-item active" aria-current="page">商品頁面</li>
 					<li class="awrapper"><button type="button"
 							class="btn btn-primary ml-auto" data-toggle="modal"
@@ -261,7 +261,7 @@ div.top-info {
 							售價
 							<h1>${shgmvo.price}</h1>
 						</div>
-						<a class="btn btn-primary" href="<%=request.getContextPath()%>/front-end/shgm/buyPage.jsp?shgmno=${shgmvo.shgmno}" role="button">購買</a>
+						<a class="btn btn-primary" href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneToBuy&shgmno=${shgmvo.shgmno}" role="button">購買</a>
 					</div>
 				</div>
 				<br>

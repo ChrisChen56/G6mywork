@@ -5,7 +5,7 @@ public interface ShgmDAO_interface {
 	public void sellshgm(ShgmVO shgmvo);
 	public void update(ShgmVO shgmvo);
 	public void sellerUpdate(ShgmVO shgmvo);
-	public void buyshgm(ShgmVO shgmvo);
+	public void dealingshgm(ShgmVO shgmvo);
 	public void odComplete(String shgmno);
 	public void delete(String shgmno);
 	public ShgmVO findByPrimaryKey(String shgmno);
