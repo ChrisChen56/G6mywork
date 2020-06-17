@@ -8,14 +8,14 @@ public class ShgmVO implements Serializable{
 	private String sellerno;
 	private String buyerno;
 	private String shgmname;
-	private Double price;
+	private Integer price;
 	private String intro;
 	private byte[] img;
 	private Integer upcheck;
 	private Timestamp uptime;
 	private String take;
 	private String takernm;
-	private Integer takerph;
+	private String takerph;
 	private String address;
 	private Integer boxstatus;
 	private Integer paystatus;
@@ -46,10 +46,10 @@ public class ShgmVO implements Serializable{
 	public void setShgmname(String shgmname) {
 		this.shgmname = shgmname;
 	}
-	public Double getPrice() {
+	public Integer getPrice() {
 		return price;
 	}
-	public void setPrice(Double price) {
+	public void setPrice(Integer price) {
 		this.price = price;
 	}
 	public String getIntro() {
@@ -118,10 +118,10 @@ public class ShgmVO implements Serializable{
 	public void setTakernm(String takernm) {
 		this.takernm = takernm;
 	}
-	public Integer getTakerph() {
+	public String getTakerph() {
 		return takerph;
 	}
-	public void setTakerph(Integer takerph) {
+	public void setTakerph(String takerph) {
 		this.takerph = takerph;
 	}
 }

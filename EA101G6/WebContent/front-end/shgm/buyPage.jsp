@@ -267,7 +267,7 @@ div.top-info {
 							售價
 							<h1>${shgmvo.price}</h1>
 						</div>
-					</div>
+					</div>	
 				</div>
 				<div class="shgm-info-right col-6  justify-content-center">
 					<div

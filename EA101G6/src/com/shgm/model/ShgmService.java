@@ -10,8 +10,8 @@ public class ShgmService {
 		dao = new ShgmDAO();
 	}
 	
-	public ShgmVO addShgm(String sellerno, String buyerno, String shgmname, Double price, String intro, byte[] img, Integer upcheck, Timestamp uptime,
-			String take, String takernm, Integer takerph, String address, Integer boxstatus, Integer paystatus, Integer status, Timestamp soldtime) {
+	public ShgmVO addShgm(String sellerno, String buyerno, String shgmname, Integer price, String intro, byte[] img, Integer upcheck, Timestamp uptime,
+			String take, String takernm, String takerph, String address, Integer boxstatus, Integer paystatus, Integer status, Timestamp soldtime) {
 		
 		ShgmVO shgmvo = new ShgmVO();
 		
@@ -37,7 +37,7 @@ public class ShgmService {
 		return shgmvo;
 	}
 	
-	public ShgmVO sellShgm(String sellerno,String shgmname,Double price,String intro,byte[] img) {
+	public ShgmVO sellShgm(String sellerno,String shgmname,Integer price,String intro,byte[] img) {
 		
 		ShgmVO shgmvo = new ShgmVO();
 		shgmvo.setSellerno(sellerno);
@@ -53,8 +53,8 @@ public class ShgmService {
 		
 	}
 	
-	public ShgmVO updateShgm(String shgmno,String sellerno, String buyerno, String shgmname, Double price, String intro, byte[] img, Integer upcheck, Timestamp uptime,
-			String take, String takernm, Integer takerph, String address, Integer boxstatus, Integer paystatus, Integer status, Timestamp soldtime) {
+	public ShgmVO updateShgm(String shgmno,String sellerno, String buyerno, String shgmname, Integer price, String intro, byte[] img, Integer upcheck, Timestamp uptime,
+			String take, String takernm, String takerph, String address, Integer boxstatus, Integer paystatus, Integer status, Timestamp soldtime) {
 		
 		ShgmVO shgmvo = new ShgmVO();
 		shgmvo.setShgmno(shgmno);
@@ -80,7 +80,7 @@ public class ShgmService {
 		return shgmvo;
 	}
 	
-	public ShgmVO sellerUpdate(String shgmno, String shgmname, Double price, String intro, byte[] img) {
+	public ShgmVO sellerUpdate(String shgmno, String shgmname, Integer price, String intro, byte[] img) {
 		
 		ShgmVO shgmvo = new ShgmVO();
 		shgmvo.setShgmno(shgmno);
@@ -94,7 +94,7 @@ public class ShgmService {
 		return shgmvo;
 	}
 	
-	public ShgmVO buyshgm(String shgmno, String buyerno, String take, String takernm, Integer takerph, String address, Integer boxstatus, Integer paystatus, Integer status) {
+	public ShgmVO buyshgm(String shgmno, String buyerno, String take, String takernm, String takerph, String address, Integer boxstatus, Integer paystatus, Integer status) {
 		
 		ShgmVO shgmvo = new ShgmVO();
 		shgmvo.setShgmno(shgmno);

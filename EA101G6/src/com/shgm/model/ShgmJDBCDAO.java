@@ -60,7 +60,7 @@ public class ShgmJDBCDAO implements ShgmDAO_interface{
 			pstmt.setString(1, shgmvo.getSellerno());
 			pstmt.setString(2, shgmvo.getBuyerno());
 			pstmt.setString(3, shgmvo.getShgmname());
-			pstmt.setDouble(4, shgmvo.getPrice());
+			pstmt.setInt(4, shgmvo.getPrice());
 			Clob clob = con.createClob();
 			clob.setString(1, shgmvo.getIntro());
 			pstmt.setClob(5, clob);
@@ -69,7 +69,7 @@ public class ShgmJDBCDAO implements ShgmDAO_interface{
 			pstmt.setTimestamp(8, shgmvo.getUptime());
 			pstmt.setString(9, shgmvo.getTake());
 			pstmt.setString(10, shgmvo.getTakernm());
-			pstmt.setInt(11, shgmvo.getTakerph());
+			pstmt.setString(11, shgmvo.getTakerph());
 			pstmt.setString(12, shgmvo.getAddress());
 			pstmt.setInt(13, shgmvo.getBoxstatus());
 			pstmt.setInt(14, shgmvo.getPaystatus());
@@ -111,7 +111,7 @@ public class ShgmJDBCDAO implements ShgmDAO_interface{
 			
 			pstmt.setString(1, shgmvo.getSellerno());
 			pstmt.setString(2, shgmvo.getShgmname());
-			pstmt.setDouble(3, shgmvo.getPrice());
+			pstmt.setInt(3, shgmvo.getPrice());
 			Clob clob = con.createClob();
 			clob.setString(1, shgmvo.getIntro());
 			pstmt.setClob(4, clob);
@@ -152,7 +152,7 @@ public class ShgmJDBCDAO implements ShgmDAO_interface{
 			pstmt.setString(1, shgmvo.getSellerno());
 			pstmt.setString(2, shgmvo.getBuyerno());
 			pstmt.setString(3, shgmvo.getShgmname());
-			pstmt.setDouble(4, shgmvo.getPrice());
+			pstmt.setInt(4, shgmvo.getPrice());
 			Clob clob = con.createClob();
 			clob.setString(1, shgmvo.getIntro());
 			pstmt.setClob(5, clob);
@@ -161,7 +161,7 @@ public class ShgmJDBCDAO implements ShgmDAO_interface{
 			pstmt.setTimestamp(8, shgmvo.getUptime());
 			pstmt.setString(9, shgmvo.getTake());
 			pstmt.setString(10, shgmvo.getTakernm());
-			pstmt.setInt(11, shgmvo.getTakerph());
+			pstmt.setString(11, shgmvo.getTakerph());
 			pstmt.setString(12, shgmvo.getAddress());
 			pstmt.setInt(13, shgmvo.getBoxstatus());
 			pstmt.setInt(14, shgmvo.getPaystatus());
@@ -203,7 +203,7 @@ public class ShgmJDBCDAO implements ShgmDAO_interface{
 			pstmt = con.prepareStatement(SELLER_UPDATE_STMT);
 			
 			pstmt.setString(1, shgmvo.getShgmname());
-			pstmt.setDouble(2, shgmvo.getPrice());
+			pstmt.setInt(2, shgmvo.getPrice());
 			Clob clob = con.createClob();
 			clob.setString(1, shgmvo.getIntro());
 			pstmt.setClob(3, clob);
@@ -246,7 +246,7 @@ public class ShgmJDBCDAO implements ShgmDAO_interface{
 			pstmt.setString(1, shgmvo.getBuyerno());
 			pstmt.setString(2, shgmvo.getTake());
 			pstmt.setString(3, shgmvo.getTakernm());
-			pstmt.setInt(4, shgmvo.getTakerph());
+			pstmt.setString(4, shgmvo.getTakerph());
 			pstmt.setString(5, shgmvo.getAddress());
 			pstmt.setInt(6, shgmvo.getBoxstatus());
 			pstmt.setInt(7, shgmvo.getPaystatus());
@@ -366,7 +366,7 @@ public class ShgmJDBCDAO implements ShgmDAO_interface{
 				shgmvo.setSellerno(rs.getString(2));
 				shgmvo.setBuyerno(rs.getString(3));
 				shgmvo.setShgmname(rs.getString(4));
-				shgmvo.setPrice(rs.getDouble(5));
+				shgmvo.setPrice(rs.getInt(5));
 				Clob clob = rs.getClob(6);
 				String intro = clob.getSubString(1,(int)clob.length());
 				shgmvo.setIntro(intro);
@@ -375,7 +375,7 @@ public class ShgmJDBCDAO implements ShgmDAO_interface{
 				shgmvo.setUptime(rs.getTimestamp(9));
 				shgmvo.setTake(rs.getString(10));
 				shgmvo.setTakernm(rs.getString(11));
-				shgmvo.setTakerph(rs.getInt(12));
+				shgmvo.setTakerph(rs.getString(12));
 				shgmvo.setAddress(rs.getString(13));
 				shgmvo.setBoxstatus(rs.getInt(14));
 				shgmvo.setPaystatus(rs.getInt(15));
@@ -428,7 +428,7 @@ public class ShgmJDBCDAO implements ShgmDAO_interface{
 				shgmvo.setSellerno(rs.getString(2));
 				shgmvo.setBuyerno(rs.getString(3));
 				shgmvo.setShgmname(rs.getString(4));
-				shgmvo.setPrice(rs.getDouble(5));
+				shgmvo.setPrice(rs.getInt(5));
 				Clob clob = rs.getClob(6);
 				String intro = clob.getSubString(1,(int)clob.length());
 				shgmvo.setIntro(intro);
@@ -437,7 +437,7 @@ public class ShgmJDBCDAO implements ShgmDAO_interface{
 				shgmvo.setUptime(rs.getTimestamp(9));
 				shgmvo.setTake(rs.getString(10));
 				shgmvo.setTakernm(rs.getString(11));
-				shgmvo.setTakerph(rs.getInt(12));
+				shgmvo.setTakerph(rs.getString(12));
 				shgmvo.setAddress(rs.getString(13));
 				shgmvo.setBoxstatus(rs.getInt(14));
 				shgmvo.setPaystatus(rs.getInt(15));

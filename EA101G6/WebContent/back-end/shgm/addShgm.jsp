@@ -53,7 +53,7 @@
 			<tr>
 				<td>市集商品價錢</td>
 				<td><input type="text" name="price" size="15"
-					value="<%= (shgmvo == null)? "60.0": shgmvo.getPrice()%>"/></td>
+					value="<%= (shgmvo == null)? "60": shgmvo.getPrice()%>"/></td>
 			</tr>
 			<tr>
 				<td>市集商品簡介</td>
@@ -91,7 +91,7 @@
 			<tr>
 				<td>取貨人電話</td>
 				<td><input type="text" name="takerph" size="15"
-					value="<%= (shgmvo == null)? "0987878787":shgmvo.getTakerph()%>"/></td>
+					value="<%= (shgmvo == null)? "0987-878-878":shgmvo.getTakerph()%>"/></td>
 			</tr>
 			<tr>
 				<td>取貨地址</td>

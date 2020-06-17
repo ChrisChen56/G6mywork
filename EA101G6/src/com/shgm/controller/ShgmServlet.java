@@ -148,11 +148,18 @@ public class ShgmServlet extends HttpServlet {
 				if (shgmname.trim().length() == 0)
 					errormsgs.add("市集商品名稱：請勿輸入空白");
 
-				Double price = null;
-				try {
-					price = new Double(request.getParameter("price"));
-				} catch (Exception e) {
-					errormsgs.add("市集商品價錢：格式不正確");
+				Integer price = null;
+				String pricestr = request.getParameter("price");
+				if (pricestr.trim().length() == 0) {
+					errormsgs.add("市集商品價錢：價錢不得為空");
+				} else if (pricestr.trim().length() > 6) {
+					errormsgs.add("市集商品價錢：金額超過本平台規範");
+				} else {
+					try {
+						price = new Integer(pricestr);
+					} catch (Exception e) {
+						errormsgs.add("市集商品價錢：格式不正確");
+					}
 				}
 
 				String intro = request.getParameter("intro");
@@ -208,11 +215,12 @@ public class ShgmServlet extends HttpServlet {
 
 				String takernm = request.getParameter("takernm");
 
-				Integer takerph = null;
-				try {
-					takerph = new Integer(request.getParameter("takerph"));
-				} catch (Exception e) {
-					errormsgs.add("取貨人電話：格式不正確");
+				String takerph = request.getParameter("takerph");
+				String takerphreg = "^09\\d{2}-\\d{3}-\\d{3}$";
+				if (takerph.trim().length() == 0) {
+					errormsgs.add("取貨人電話：電話不得為空");
+				} else if (!takerph.trim().matches(takerphreg)) {
+					errormsgs.add("取貨人電話：請輸入符合格式的電話號碼");
 				}
 
 				String address = request.getParameter("address");
@@ -300,17 +308,18 @@ public class ShgmServlet extends HttpServlet {
 				if (shgmname.trim().length() == 0)
 					errormap.put((long) 1, "名稱不得為空");
 
-				Double price = null;
+				Integer price = null;
 				String pricestr = request.getParameter("price");
 				if (pricestr.trim().length() == 0) {
 					errormap.put((long) 2, "價錢不得為空");
+				} else if (pricestr.trim().length() > 6) {
+					errormap.put((long) 2, "金額超過本平台規範");
 				} else {
 					try {
-						price = new Double(pricestr);
+						price = new Integer(pricestr);
 					} catch (Exception e) {
 						errormap.put((long) 2, "格式不正確");
 					}
-
 				}
 
 				String intro = request.getParameter("intro");
@@ -407,20 +416,13 @@ public class ShgmServlet extends HttpServlet {
 				if (takernm.trim().length() == 0)
 					errormap.put((long) 2, "請勿輸入空白");
 
-				Integer takerph = null;
-				String takerphstr = request.getParameter("takerph");
-				System.out.println(takerphstr);
-				if (takerphstr.trim().length() == 0) {
+				String takerph = request.getParameter("takerph");
+				String takerphreg = "^09\\d{2}-\\d{3}-\\d{3}$";
+				if (takerph.trim().length() == 0) {
 					errormap.put((long) 3, "請勿輸入空白");
-				} else if (takerphstr.trim().length() > 10) {
-					errormap.put((long) 3, "請輸入十碼以內的電話號碼");
-				} else
-					try {
-						takerph = new Integer("1111111111");//很可能是型別長度限制
-					} catch (Exception e) {
-						errormap.put((long) 3, "格式不正確");
-					}
-
+				} else if (!takerph.trim().matches(takerphreg)) {
+					errormap.put((long) 3, "請輸入符合格式的電話號碼");
+				}
 				System.out.println(takerph);
 
 				String address = request.getParameter("address");
@@ -553,11 +555,18 @@ public class ShgmServlet extends HttpServlet {
 				if (shgmname.trim().length() == 0)
 					errormsgs.add("市集商品名稱：請勿輸入空白");
 
-				Double price = null;
-				try {
-					price = new Double(request.getParameter("price"));
-				} catch (Exception e) {
-					errormsgs.add("市集商品價錢：格式不正確");
+				Integer price = null;
+				String pricestr = request.getParameter("price");
+				if (pricestr.trim().length() == 0) {
+					errormsgs.add("市集商品價錢：價錢不得為空");
+				} else if (pricestr.trim().length() > 6) {
+					errormsgs.add("市集商品價錢：金額超過本平台規範");
+				} else {
+					try {
+						price = new Integer(pricestr);
+					} catch (Exception e) {
+						errormsgs.add("市集商品價錢：格式不正確");
+					}
 				}
 
 				String intro = request.getParameter("intro");
@@ -617,16 +626,12 @@ public class ShgmServlet extends HttpServlet {
 				if (takernm.trim().length() == 0)
 					errormsgs.add("取貨人姓名：請勿輸入空白");
 
-				Integer takerph = null;
-				try {
-					String takerphstr = request.getParameter("takerph");
-					if (takerphstr.trim().length() > 10)
-						errormsgs.add("取貨人電話：請輸入十碼以內的電話號碼");
-					if (takerphstr.trim().length() == 0)
-						errormsgs.add("取貨人電話：請勿輸入空白");
-					takerph = new Integer(takerphstr);
-				} catch (Exception e) {
-					errormsgs.add("取貨人電話：格式不正確");
+				String takerph = request.getParameter("takerph");
+				String takerphreg = "^09\\d{2}-\\d{3}-\\d{3}$";
+				if (takerph.trim().length() == 0) {
+					errormsgs.add("取貨人電話：請勿輸入空白");
+				} else if (!takerph.trim().matches(takerphreg)) {
+					errormsgs.add("取貨人電話：請輸入符合格式的電話號碼");
 				}
 
 				String address = request.getParameter("address");
