@@ -94,7 +94,7 @@ public class ShgmService {
 		return shgmvo;
 	}
 	
-	public ShgmVO buyshgm(String shgmno, String buyerno, String take, String takernm, String takerph, String address, Integer boxstatus, Integer paystatus, Integer status) {
+	public ShgmVO dealingshgm(String shgmno, String buyerno, String take, String takernm, String takerph, String address, Integer boxstatus, Integer paystatus, Integer status) {
 		
 		ShgmVO shgmvo = new ShgmVO();
 		shgmvo.setShgmno(shgmno);
