@@ -107,6 +107,8 @@ public class ShgmService {
 		shgmvo.setPaystatus(paystatus);
 		shgmvo.setStatus(status);
 		
+		dao.dealingshgm(shgmvo);
+		
 		return shgmvo;
 	}
 	

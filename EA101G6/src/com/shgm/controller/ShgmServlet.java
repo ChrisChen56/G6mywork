@@ -460,7 +460,7 @@ public class ShgmServlet extends HttpServlet {
 					return;
 				}
 
-				shgmsvc.buyshgm(shgmno, buyerno, take, takernm, takerph, address, boxstatus, paystatus, status);
+				shgmsvc.dealingshgm(shgmno, buyerno, take, takernm, takerph, address, boxstatus, paystatus, status);
 
 				if (boxstatus == 2 && paystatus == 1 && status == 2) {
 					shgmsvc.odComplete(shgmno);

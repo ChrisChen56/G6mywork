@@ -38,8 +38,8 @@ public class ShgmDAO implements ShgmDAO_interface{
 			+ "uptime=?,take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=?,soldtime=? WHERE shgmno=?";
 	private static final String SELLER_UPDATE_STMT=
 			"UPDATE SHGM SET shgmname=?,price=?,intro=?,img=? WHERE shgmno=?";
-	private static final String BUYER_STMT =
-			"UPDATE SHGM SET buyerno=?,take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=?,soldtime=? WHERE shgmno=?";
+	private static final String DEALING_STMT =
+			"UPDATE SHGM SET buyerno=?,take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=? WHERE shgmno=?";
 	private static final String ODCOMPLETE_STMT =
 			"UPDATE SHGM SET soldtime=CURRENT_TIMESTAMP WHERE shgmno=?";
 	private static final String DELETE_STMT =
@@ -230,7 +230,7 @@ public class ShgmDAO implements ShgmDAO_interface{
 		PreparedStatement pstmt = null;
 		try {
 			con = ds.getConnection();
-			pstmt = con.prepareStatement(BUYER_STMT);
+			pstmt = con.prepareStatement(DEALING_STMT);
 
 			pstmt.setString(1, shgmvo.getBuyerno());
 			pstmt.setString(2, shgmvo.getTake());
