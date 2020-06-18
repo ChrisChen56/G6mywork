@@ -48,6 +48,8 @@ public class ShgmDAO implements ShgmDAO_interface{
 			"SELECT * FROM SHGM WHERE shgmno=?";
 	private static final String GET_ALL_STMT =
 			"SELECT * FROM SHGM ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
+	private static final String MAINPAGE_GETALL_STMT =
+			"SELECT * FROM SHGM WHERE (upcheck=1 AND boxstatus=0 AND paystatus=0 AND status=0) ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
 	@Override
 	public void insert(ShgmVO shgmvo) {
 		Connection con = null;

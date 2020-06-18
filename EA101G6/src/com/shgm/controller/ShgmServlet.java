@@ -176,7 +176,6 @@ public class ShgmServlet extends HttpServlet {
 				} else {
 					try {
 						if (imgreq.getSize() != 0) {
-							System.out.println("enter here");
 							InputStream is = imgreq.getInputStream();
 							ByteArrayOutputStream baos = new ByteArrayOutputStream();
 							byte[] bufferd = new byte[8192];
@@ -188,7 +187,6 @@ public class ShgmServlet extends HttpServlet {
 							baos.close();
 							img = baos.toByteArray();
 							session.setAttribute("img", img);
-							System.out.println(img);
 						} else {
 							img = (byte[]) session.getAttribute("img");
 						}
@@ -208,7 +206,6 @@ public class ShgmServlet extends HttpServlet {
 					SimpleDateFormat dateformat = new SimpleDateFormat("yyyy/MM/dd");
 					java.util.Date date = dateformat.parse(uptimepara);
 					uptimevo = new Timestamp(date.getTime());
-					System.out.println(uptimevo);
 				} catch (ParseException e) {
 					errormsgs.add("上架時間：日期轉型發生錯誤");
 				}
@@ -218,7 +215,7 @@ public class ShgmServlet extends HttpServlet {
 				String takernm = request.getParameter("takernm");
 
 				String takerph = request.getParameter("takerph");
-				String takerphreg = "^09\\d{2}-\\d{3}-\\d{3}$";
+				String takerphreg = "^09\\d{8}$";
 				if (takerph.trim().length() == 0) {
 					errormsgs.add("取貨人電話：電話不得為空");
 				} else if (!takerph.trim().matches(takerphreg)) {
@@ -242,7 +239,6 @@ public class ShgmServlet extends HttpServlet {
 					SimpleDateFormat dateformat = new SimpleDateFormat("yyyy/MM/dd");
 					java.util.Date date = dateformat.parse(soldtimepara);
 					soldtimevo = new Timestamp(date.getTime());
-					System.out.println(soldtimevo);
 				} catch (ParseException e) {
 					errormsgs.add(e.getMessage());
 					errormsgs.add("售出時間：日期轉型發生錯誤");
@@ -304,7 +300,7 @@ public class ShgmServlet extends HttpServlet {
 
 				String sellerno = request.getParameter("sellerno");
 
-				sellerno = "CA00005";// 這裡先寫死
+				sellerno = "BM00005";// 這裡先寫死
 
 				String shgmname = request.getParameter("shgmname");
 				if (shgmname.trim().length() == 0)
@@ -336,7 +332,6 @@ public class ShgmServlet extends HttpServlet {
 				} else {
 					try {
 						if (imgreq.getSize() != 0) {
-							System.out.println("enter here");
 							InputStream is = imgreq.getInputStream();
 							ByteArrayOutputStream baos = new ByteArrayOutputStream();
 							byte[] bufferd = new byte[8192];
@@ -348,7 +343,6 @@ public class ShgmServlet extends HttpServlet {
 							baos.close();
 							img = baos.toByteArray();
 							session.setAttribute("img", img);
-							System.out.println(img);
 						} else {
 							img = (byte[]) session.getAttribute("img");
 						}
@@ -381,7 +375,6 @@ public class ShgmServlet extends HttpServlet {
 				request.removeAttribute("imagefailed");
 				session.removeAttribute("shgmlist");
 				session.removeAttribute("img");// 新增成功把顯示用的圖片刪掉
-				System.out.println("新增成功");
 
 				String url = "mainPage.jsp";// forward到mainPage or myshgamePage??
 				RequestDispatcher successview = request.getRequestDispatcher(url);
@@ -425,7 +418,6 @@ public class ShgmServlet extends HttpServlet {
 				} else if (!takerph.trim().matches(takerphreg)) {
 					errormap.put((long) 3, "請輸入符合格式的電話號碼");
 				}
-				System.out.println(takerph);
 
 				String address = request.getParameter("address");
 				if (address.trim().length() == 0) {
@@ -554,12 +546,13 @@ public class ShgmServlet extends HttpServlet {
 				}
 
 				String buyerno = request.getParameter("buyerno");
-				String buyernoreg = "^BM\\d{5}$";
-				if (buyerno.trim().length() == 0) {
-					errormsgs.add("買家編號：請勿輸入空白");
-				} else if (!buyerno.trim().matches(buyernoreg)) {
-					errormsgs.add("買家編號：BM開頭、長度7的格式");
-				}
+				buyerno = null;
+//				String buyernoreg = "^BM\\d{5}$";
+//				if (buyerno.trim().length() == 0) {
+//					errormsgs.add("買家編號：請勿輸入空白");
+//				} else if (!buyerno.trim().matches(buyernoreg)) {
+//					errormsgs.add("買家編號：BM開頭、長度7的格式");
+//				}
 
 				String shgmname = request.getParameter("shgmname");
 				if (shgmname.trim().length() == 0)
@@ -637,12 +630,13 @@ public class ShgmServlet extends HttpServlet {
 					errormsgs.add("取貨人姓名：請勿輸入空白");
 
 				String takerph = request.getParameter("takerph");
-				String takerphreg = "^09\\d{2}-\\d{3}-\\d{3}$";
-				if (takerph.trim().length() == 0) {
-					errormsgs.add("取貨人電話：請勿輸入空白");
-				} else if (!takerph.trim().matches(takerphreg)) {
-					errormsgs.add("取貨人電話：請輸入符合格式的電話號碼");
-				}
+				takerph = null;
+//				String takerphreg = "^09\\d{8}$";
+//				if (takerph.trim().length() == 0) {
+//					errormsgs.add("取貨人電話：請勿輸入空白");
+//				} else if (!takerph.trim().matches(takerphreg)) {
+//					errormsgs.add("取貨人電話：請輸入符合格式的電話號碼");
+//				}
 
 				String address = request.getParameter("address");
 				if (address.trim().length() == 0) {
@@ -687,16 +681,15 @@ public class ShgmServlet extends HttpServlet {
 				shgmvo.setSoldtime(soldtimevo);
 
 				if (!errormsgs.isEmpty()) {
-					request.setAttribute("shgmvo", shgmvo);
 					String url = "updateShgm.jsp";
 					RequestDispatcher failedview = request.getRequestDispatcher(url);
 					failedview.forward(request, response);
 					return;
 				}
 
-				shgmsvc.updateShgm(shgmno, buyerno, sellerno, shgmname, price, intro, img, upcheck, uptimevo, take,
+				ShgmVO shgmvo2 = shgmsvc.updateShgm(shgmno, sellerno, buyerno, shgmname, price, intro, img, upcheck, uptimevo, take,
 						takernm, takerph, address, boxstatus, paystatus, status, soldtimevo);
-
+				
 				request.setAttribute("shgmvo", shgmvo);
 				session.removeAttribute("shgmlist");
 				session.removeAttribute("img");

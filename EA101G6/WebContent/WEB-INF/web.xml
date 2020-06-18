@@ -47,4 +47,16 @@
   	<servlet-name>ShgmrpServlet</servlet-name>
   	<url-pattern>/front-end/shgm/shgmrp.do</url-pattern>
   </servlet-mapping>
+  <filter>
+  	<filter-name>InfoPageFilter</filter-name>
+  	<filter-class>com.shgm.controller.RandListFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>InfoPageFilter</filter-name>
+  	<url-pattern>/front-end/shgm/infoPage.jsp</url-pattern>
+  	<dispatcher>REQUEST</dispatcher>
+  	<dispatcher>FORWARD</dispatcher>
+  	<dispatcher>ERROR</dispatcher>
+  	<dispatcher>ASYNC</dispatcher>
+  </filter-mapping>
 </web-app>

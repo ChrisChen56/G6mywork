@@ -11,6 +11,8 @@
 	ShgmService shgmsvc = new ShgmService();
 	ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
 	pageContext.setAttribute("shgmvo", shgmvo);
+	List<ShgmVO> list = (List<ShgmVO>) session.getAttribute("randlist");
+	pageContext.setAttribute("list", list);
 %>
 <!doctype html>
 <html lang="en">
@@ -114,6 +116,12 @@ div.top-info {
 	background-color: white;
 	color: #FF8C00; /*ffa216*/
 	box-shadow: 0 0 11px rgba(33, 33, 33, .2);
+}
+
+.carousel-item img{
+	width: 250px;
+	height: 250px;
+	object-fit: contain;
 }
 
 .slide {
@@ -299,66 +307,29 @@ div.top-info {
 									<div class="carousel-inner">
 										<div class="carousel-item active">
 											<div class="row">
+											<c:forEach var="i" begin="0" end="3">
 												<div class="col-md-3">
 													<a
-														href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}">
-														<img src="http://placehold.it/250x250" alt="Image"
+														href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${list.get(i).shgmno}">
+														<img src="<%=request.getContextPath()%>/back-end/shgm/displayimg?shgmno=${list.get(i).shgmno}" alt="Image"
 														style="max-width: 100%;">
 													</a>
 												</div>
-												<div class="col-md-3">
-													<a
-														href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}">
-														<img src="http://placehold.it/250x250" alt="Image"
-														style="max-width: 100%;">
-													</a>
-												</div>
-												<div class="col-md-3">
-													<a
-														href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}">
-														<img src="http://placehold.it/250x250" alt="Image"
-														style="max-width: 100%;">
-													</a>
-												</div>
-												<div class="col-md-3">
-													<a
-														href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}">
-														<img src="http://placehold.it/250x250" alt="Image"
-														style="max-width: 100%;">
-													</a>
-												</div>
+											</c:forEach>
 											</div>
 										</div>
-
 										<div class="carousel-item">
 											<div class="row">
-												<div class="col-md-3">
-													<a href="#"> <img src="http://placehold.it/250x250"
-														alt="Image" style="max-width: 100%;">
-													</a>
-												</div>
+											<c:forEach var="i" begin="4" end="7">
 												<div class="col-md-3">
 													<a
-														href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}">
-														<img src="http://placehold.it/250x250" alt="Image"
+														href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${list.get(i).shgmno}">
+														<img src="<%=request.getContextPath()%>/back-end/shgm/displayimg?shgmno=${list.get(i).shgmno}" alt="Image"
 														style="max-width: 100%;">
 													</a>
 												</div>
-												<div class="col-md-3">
-													<a
-														href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}">
-														<img src="http://placehold.it/250x250" alt="Image"
-														style="max-width: 100%;">
-													</a>
-												</div>
-												<div class="col-md-3">
-													<a
-														href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}">
-														<img src="http://placehold.it/250x250" alt="Image"
-														style="max-width: 100%;">
-													</a>
-												</div>
-											</div>
+											</c:forEach>
+											</div>											
 										</div>
 										<!--.item-->
 									</div>
