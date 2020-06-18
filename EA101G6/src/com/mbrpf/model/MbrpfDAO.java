@@ -23,12 +23,94 @@ public class MbrpfDAO implements MbrpfDAO_interface{
 			e.printStackTrace();
 		}
 	}
+	private static final String LOGIN_STMT = "SELECT mbrno,mbract,mbrpw,mbrname,points FROM MBRPF WHERE mbract=? AND mbrpw=?";
 	private static final String UPDATE_STMT =
 			"UPDATE MBRPF SET points=? WHERE mbrno=?";
 	private static final String GET_ONE_STMT=
 			"SELECT mbrno,mbract,mbrpw,mbrname,points FROM MBRPF WHERE mbrno=?";
 	private static final String GET_ALL_STMT =
 			"SELECT mbrno,mbract,mbrpw,mbrname,points FROM MBRPF";
+	
+	public boolean check(String mbract, String mbrpw) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		boolean result = false;
+		try {
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(LOGIN_STMT);
+			
+			pstmt.setString(1, mbract);
+			pstmt.setString(2, mbrpw);
+			System.out.println("2");
+			if(pstmt.executeUpdate() != 0) 
+				result = true;
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(con != null) {
+				try {
+					con.close();
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return result;
+	}
+	
+	public MbrpfVO findByActPw(String mbract, String mbrpw) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		MbrpfVO mbrpfvo = null;
+		try {
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(LOGIN_STMT);
+			
+			pstmt.setString(1, mbract);
+			pstmt.setString(2, mbrpw);
+			
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				mbrpfvo = new MbrpfVO();
+				mbrpfvo.setMbrno(rs.getString(1));
+				mbrpfvo.setMbract(rs.getString(2));
+				mbrpfvo.setMbrpw(rs.getString(3));
+				mbrpfvo.setMbrname(rs.getString(4));
+				mbrpfvo.setPoints(rs.getInt(5));
+			}
+			
+			
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(con != null) {
+				try {
+					con.close();
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return mbrpfvo;
+	}
+	
 	@Override
 	public void update(MbrpfVO mbrpfvo) {
 		Connection con = null;

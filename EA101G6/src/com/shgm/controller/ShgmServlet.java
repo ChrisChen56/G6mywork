@@ -19,6 +19,7 @@ import javax.servlet.http.Part;
 
 import com.mbrpf.model.MbrpfService;
 import com.mbrpf.model.MbrpfVO;
+
 import com.shgm.model.ShgmService;
 import com.shgm.model.ShgmVO;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
@@ -40,6 +41,27 @@ public class ShgmServlet extends HttpServlet {
 		}
 		String action = request.getParameter("action");
 		System.out.println("enter controller");
+		
+		if("login".equals(action)) {
+			
+			String mbract = request.getParameter("mbract");
+			String mbrpw = request.getParameter("mbrpw");
+			
+			MbrpfService mbrsvc = new MbrpfService();
+			if(mbrsvc.check(mbract, mbrpw)) {
+				MbrpfVO mbrpfvo = mbrsvc.getByActPw(mbract, mbrpw);
+				
+				session.setAttribute("member", mbrpfvo);
+				RequestDispatcher successview = request.getRequestDispatcher("mainPage.jsp");
+				successview.forward(request, response);
+				
+			} else {
+				String error = "帳號密碼錯誤";
+				request.setAttribute("error", error);
+				RequestDispatcher failedview = request.getRequestDispatcher("simpleLogin.jsp");
+				failedview.forward(request, response);
+			}
+		}
 
 		if ("get_one".equals(action)) {
 
@@ -397,7 +419,7 @@ public class ShgmServlet extends HttpServlet {
 				String shgmno = request.getParameter("shgmno");
 
 				String buyerno = request.getParameter("buyerno");
-				buyerno = "BM00010";
+				buyerno = "BM00007";
 
 				String take = request.getParameter("take");
 				if (take.trim().length() > 10)
@@ -426,13 +448,13 @@ public class ShgmServlet extends HttpServlet {
 
 				// 還有付款要處理 這裡先以正常出貨狀態來跑(0未出貨1已付款1已下訂)
 				Integer boxstatus = new Integer(request.getParameter("boxstatus"));
-				boxstatus = 0;
+				boxstatus = 2;
 
 				Integer paystatus = new Integer(request.getParameter("paystatus"));
 				paystatus = 1;
 
 				Integer status = new Integer(request.getParameter("status"));
-				status = 1;
+				status = 2;
 
 				shgmvo = shgmsvc.getOneShgm(shgmno);
 				// 取出當前要交易的商品，forward後可以順便用EL取出它的名稱與價錢

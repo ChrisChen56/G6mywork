@@ -10,7 +10,17 @@ public class MbrpfService {
 		dao = new MbrpfDAO();
 	}
 	
-	public MbrpfVO update(String mbrno,Integer points) {
+	public MbrpfVO getByActPw(String mbract, String mbrpw) {
+		
+		return dao.findByActPw(mbract, mbrpw);
+	}
+	
+	public boolean check(String mbract, String mbrpw) {
+		System.out.println("1");
+		return dao.check(mbract, mbrpw);
+	}
+	
+	public MbrpfVO update(String mbrno, Integer points) {
 		
 		MbrpfVO mbrpfvo = new MbrpfVO();
 		mbrpfvo.setMbrno(mbrno);
