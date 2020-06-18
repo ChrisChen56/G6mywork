@@ -87,7 +87,7 @@ div.top-info {
 	display: table-cell;
 	vertical-align: left;
 	margin: 3% 0;
-	padding-top: 2%;
+	padding-top: 1.6%;
 	text-align: left;
 }
 
@@ -224,30 +224,27 @@ div.top-info {
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">New message</h5>
+						<h5 class="modal-title" id="exampleModalLabel">檢舉此商品</h5>
 						<button type="button" class="close" data-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-					<div class="modal-body">
-						<form>
+					<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgmrp.do?action=insertrp">
+						<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
+						<div class="modal-body">
 							<div class="form-group">
-								<label for="recipient-name" class="col-form-label">Recipient:</label>
-								<input type="text" class="form-control" id="recipient-name">
+								<label for="message-text" class="col-form-label">檢舉內容:</label>
+								<textarea name="detail" class="form-control" id="message-text"></textarea>
 							</div>
-							<div class="form-group">
-								<label for="message-text" class="col-form-label">Message:</label>
-								<textarea class="form-control" id="message-text"></textarea>
-							</div>
-						</form>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Send
-							message</button>
-					</div>
+
+						</div>
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary">確定</button>
+							<button type="button" class="btn btn-primary"
+								data-dismiss="modal">取消</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>

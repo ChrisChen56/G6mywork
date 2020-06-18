@@ -241,7 +241,7 @@ div.pageselect-area {
 										class="card-img-top" alt="Sorry! there's no image...">
 									<div class="card-body">
 										<h5 class="card-title">${shgmvo.shgmname}</h5>
-										<p class="card-text">${shgmvo.price}</p>
+										<p class="card-text">$${shgmvo.price}</p>
 									</div>
 								</div>
 							</a>

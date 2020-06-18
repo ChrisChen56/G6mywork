@@ -1,6 +1,7 @@
 package com.shgmrp.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -99,7 +100,55 @@ public class ShgmrpServlet extends HttpServlet {
 			}
 
 		}
+//在controller作亂數，取有效shgmno八個丟到infoPage
+		if ("insertrp".equals(action)) {
 
+			HashMap<Long, String> errormap = new HashMap<Long, String>();
+			request.setAttribute("errormap", errormap);
+			
+			try {
+
+				ShgmService shgmsvc = new ShgmService();
+
+				String shgmno = request.getParameter("shgmno");
+
+				//之後從session拿到當前檢舉人，先寫死
+				String suiterno = request.getParameter("suiterno");
+				suiterno = "BM00001";
+
+				String detail = request.getParameter("detail");
+				if (detail.trim().length() == 0) {
+					errormap.put((long) 1,"檢舉內容不得為空");
+				}
+
+				Integer status = 0;
+
+				ShgmrpVO shgmrpvo = new ShgmrpVO();
+				shgmrpvo.setShgmno(shgmno);
+				shgmrpvo.setSuiterno(suiterno);
+				shgmrpvo.setDetail(detail);
+				shgmrpvo.setStatus(status);
+
+				if (!errormap.isEmpty()) {
+					RequestDispatcher failedview = request.getRequestDispatcher("infoPage.jsp");
+					failedview.forward(request, response);
+					return;
+				}
+
+				shgmrpsvc.addShgmrp(shgmno, suiterno, detail, status);
+
+				session.removeAttribute("shgmrplist");
+				
+				//要再加上成功提示
+				RequestDispatcher successview = request.getRequestDispatcher("infoPage.jsp");
+				successview.forward(request, response);
+			} catch (Exception e) {
+				errormap.put((long) 1, "無法檢舉市集商品");
+				RequestDispatcher failedview = request.getRequestDispatcher("infoPage.jsp");
+				failedview.forward(request, response);
+			}
+		}
+		
 		if ("insert".equals(action)) {
 
 			List<String> errormsgs = new LinkedList<String>();

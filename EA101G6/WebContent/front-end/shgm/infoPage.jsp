@@ -1,16 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ page import="com.shgm.model.*" %>
-<%@ page import="java.io.*" %>
-<%@ page import="java.util.*" %>
-<%@ page import="java.sql.*" %>
-<%	
+<%@ page import="com.shgm.model.*"%>
+<%@ page import="java.io.*"%>
+<%@ page import="java.util.*"%>
+<%@ page import="java.sql.*"%>
+<%
 	String shgmno = request.getParameter("shgmno");
 	ShgmService shgmsvc = new ShgmService();
 	ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
-	List<ShgmVO> list = shgmsvc.getAllShgm();
 	pageContext.setAttribute("shgmvo", shgmvo);
 %>
 <!doctype html>
@@ -37,8 +36,6 @@
 <!-- MAIN CSS -->
 <link rel="stylesheet" href="css/style.css">
 
-</head>
-
 <style>
 body {
 	background-color: #EEEEEE;
@@ -48,6 +45,10 @@ body {
 .icon {
 	width: 20px;
 	height: 20px;
+}
+
+.modal-footer{
+	height: 80px;
 }
 
 div.main-area {
@@ -68,11 +69,16 @@ div.main-area {
 	background-color: #EEEEEE;
 }
 
+.rpdiv {
+	color: #FF4500;
+	margin-right: 5%;
+}
+
 .awrapper {
 	width: 200px;
 	display: inline;
 	text-align: right;
-	margin-left: 70%;
+	margin-left: 72.5%;
 }
 
 div.top-info {
@@ -116,6 +122,8 @@ div.top-info {
 	background-size: cover;
 }
 </style>
+</head>
+
 <body data-spy="scroll" data-target=".site-navbar-target"
 	data-offset="300" background="images/bgimage3.jpg">
 	<div class="site-wrap" id="home-section">
@@ -204,9 +212,10 @@ div.top-info {
 			<nav aria-label="breadcrumb" class="breadcrumb-nav">
 				<ol class="breadcrumb d-flex">
 					<li class="breadcrumb-item"><a href="#">首頁</a></li>
-					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/front-end/shgm/mainPage.jsp">市集</a></li>
+					<li class="breadcrumb-item"><a
+						href="<%=request.getContextPath()%>/front-end/shgm/mainPage.jsp">市集</a></li>
 					<li class="breadcrumb-item active" aria-current="page">商品頁面</li>
-					<li class="awrapper"><button type="button"
+					<li class="awrapper"><span class="rpdiv">${errormap.get(1)}</span><button type="button"
 							class="btn btn-primary ml-auto" data-toggle="modal"
 							data-target="#exampleModal" data-whatever="@mdo">檢舉</button></li>
 				</ol>
@@ -217,38 +226,36 @@ div.top-info {
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">New message</h5>
+						<h5 class="modal-title" id="exampleModalLabel">檢舉此商品</h5>
 						<button type="button" class="close" data-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-					<div class="modal-body">
-						<form>
+					<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgmrp.do?action=insertrp">
+						<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
+						<div class="modal-body">
 							<div class="form-group">
-								<label for="recipient-name" class="col-form-label">Recipient:</label>
-								<input type="text" class="form-control" id="recipient-name">
+								<label for="message-text" class="col-form-label">檢舉內容:</label>
+								<textarea name="detail" class="form-control" id="message-text"></textarea>
 							</div>
-							<div class="form-group">
-								<label for="message-text" class="col-form-label">Message:</label>
-								<textarea class="form-control" id="message-text"></textarea>
-							</div>
-						</form>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Send
-							message</button>
-					</div>
+
+						</div>
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary">確定</button>
+							<button type="button" class="btn btn-primary"
+								data-dismiss="modal">取消</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
 		<div class="shgm-info-allarea">
 			<div class="shgm-info-toparea container">
 				<div id="imgzoom" class="shgm-info-left col-6 ">
-					<img src="<%=request.getContextPath() %>/back-end/shgm/displayimg?shgmno=${shgmvo.shgmno}" alt="..."
-						class="img-thumbnail rounded float-left">
+					<img
+						src="<%=request.getContextPath() %>/back-end/shgm/displayimg?shgmno=${shgmvo.shgmno}"
+						alt="..." class="img-thumbnail rounded float-left">
 				</div>
 				<div class="shgm-info-right col-6 d-flex justify-content-center">
 					<div
@@ -261,16 +268,16 @@ div.top-info {
 							售價
 							<h1>${shgmvo.price}</h1>
 						</div>
-						<a class="btn btn-primary" href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneToBuy&shgmno=${shgmvo.shgmno}" role="button">購買</a>
+						<a class="btn btn-primary"
+							href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneToBuy&shgmno=${shgmvo.shgmno}"
+							role="button">購買</a>
 					</div>
 				</div>
 				<br>
 				<div class="shgm-info-middle">
 					簡介
 					<div class="card">
-						<div class="card-body">
-							${shgmvo.intro}
-						</div>
+						<div class="card-body">${shgmvo.intro}</div>
 					</div>
 				</div>
 				<br>
@@ -293,23 +300,31 @@ div.top-info {
 										<div class="carousel-item active">
 											<div class="row">
 												<div class="col-md-3">
-													<a href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}"> <img src="http://placehold.it/250x250"
-														alt="Image" style="max-width: 100%;">
+													<a
+														href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}">
+														<img src="http://placehold.it/250x250" alt="Image"
+														style="max-width: 100%;">
 													</a>
 												</div>
 												<div class="col-md-3">
-													<a href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}"> <img src="http://placehold.it/250x250"
-														alt="Image" style="max-width: 100%;">
+													<a
+														href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}">
+														<img src="http://placehold.it/250x250" alt="Image"
+														style="max-width: 100%;">
 													</a>
 												</div>
 												<div class="col-md-3">
-													<a href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}"> <img src="http://placehold.it/250x250"
-														alt="Image" style="max-width: 100%;">
+													<a
+														href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}">
+														<img src="http://placehold.it/250x250" alt="Image"
+														style="max-width: 100%;">
 													</a>
 												</div>
 												<div class="col-md-3">
-													<a href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}"> <img src="http://placehold.it/250x250"
-														alt="Image" style="max-width: 100%;">
+													<a
+														href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}">
+														<img src="http://placehold.it/250x250" alt="Image"
+														style="max-width: 100%;">
 													</a>
 												</div>
 											</div>
@@ -323,18 +338,24 @@ div.top-info {
 													</a>
 												</div>
 												<div class="col-md-3">
-													<a href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}"> <img src="http://placehold.it/250x250"
-														alt="Image" style="max-width: 100%;">
+													<a
+														href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}">
+														<img src="http://placehold.it/250x250" alt="Image"
+														style="max-width: 100%;">
 													</a>
 												</div>
 												<div class="col-md-3">
-													<a href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}"> <img src="http://placehold.it/250x250"
-														alt="Image" style="max-width: 100%;">
+													<a
+														href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}">
+														<img src="http://placehold.it/250x250" alt="Image"
+														style="max-width: 100%;">
 													</a>
 												</div>
 												<div class="col-md-3">
-													<a href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}"> <img src="http://placehold.it/250x250"
-														alt="Image" style="max-width: 100%;">
+													<a
+														href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${shgmvo.shgmno}">
+														<img src="http://placehold.it/250x250" alt="Image"
+														style="max-width: 100%;">
 													</a>
 												</div>
 											</div>

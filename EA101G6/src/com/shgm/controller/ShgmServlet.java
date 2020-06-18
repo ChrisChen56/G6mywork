@@ -419,7 +419,7 @@ public class ShgmServlet extends HttpServlet {
 					errormap.put((long) 2, "請勿輸入空白");
 
 				String takerph = request.getParameter("takerph");
-				String takerphreg = "^09\\d{2}-\\d{3}-\\d{3}$";
+				String takerphreg = "^09\\d{8}$";
 				if (takerph.trim().length() == 0) {
 					errormap.put((long) 3, "請勿輸入空白");
 				} else if (!takerph.trim().matches(takerphreg)) {
