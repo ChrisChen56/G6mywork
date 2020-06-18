@@ -45,8 +45,7 @@ public class ShgmDAO implements ShgmDAO_interface{
 	private static final String DELETE_STMT =
 			"DELETE FROM SHGM WHERE shgmno=?";
 	private static final String GET_ONE_STMT=
-			"SELECT shgmno,sellerno,buyerno,shgmname,price,intro,img,upcheck,"
-			+ "to_char(uptime,'YYYY-MM-DD HH24:MI:SS '),take,takernm,takerph,address,boxstatus,paystatus,status,soldtime FROM SHGM WHERE shgmno=?";
+			"SELECT * FROM SHGM WHERE shgmno=?";
 	private static final String GET_ALL_STMT =
 			"SELECT * FROM SHGM ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
 	@Override

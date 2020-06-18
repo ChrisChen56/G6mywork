@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import com.mbrpf.model.MbrpfService;
+import com.mbrpf.model.MbrpfVO;
 import com.shgm.model.ShgmService;
 import com.shgm.model.ShgmVO;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
@@ -402,7 +404,7 @@ public class ShgmServlet extends HttpServlet {
 				String shgmno = request.getParameter("shgmno");
 
 				String buyerno = request.getParameter("buyerno");
-				buyerno = "MB00010";
+				buyerno = "BM00010";
 
 				String take = request.getParameter("take");
 				if (take.trim().length() > 10)
@@ -462,7 +464,15 @@ public class ShgmServlet extends HttpServlet {
 
 				shgmsvc.dealingshgm(shgmno, buyerno, take, takernm, takerph, address, boxstatus, paystatus, status);
 
+				//已送達、已付款、已完成
 				if (boxstatus == 2 && paystatus == 1 && status == 2) {
+					MbrpfService mbrsvc = new MbrpfService();
+					String sellerno = shgmvo.getSellerno();
+					//取出賣家的mbrpfvo以便對points做更動
+					MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(sellerno);
+					//把賣家原本的points加上販售之價格
+					mbrsvc.update(sellerno, mbrpfvo.getPoints()+shgmvo.getPrice());
+					//資料庫更新售出時間
 					shgmsvc.odComplete(shgmno);
 				}
 
