@@ -6,7 +6,7 @@
 <%
 	ShgmrpVO shgmrpvo = (ShgmrpVO)request.getAttribute("shgmrpvo");
 	ShgmService shgmsvc = new ShgmService();
-	pageContext.setAttribute("shgmsvc",shgmsvc);
+	session.setAttribute("shgmsvc",shgmsvc);
 %>
 
 <html>

@@ -100,14 +100,14 @@ public class ShgmServlet extends HttpServlet {
 				failureview.forward(request, response);
 			}
 		}
-
-		if ("getOneToBuy".equals(action)) {
-
-			String str = request.getParameter("shgmno");
-			ShgmVO shgmvo = shgmsvc.getOneShgm(str);
-			request.setAttribute("shgmvo", shgmvo);
-			RequestDispatcher successview = request.getRequestDispatcher("buyPage.jsp");
-			successview.forward(request, response);
+		if ("getOneToInfo".equals(action)) {
+			
+			String shgmno = request.getParameter("shgmno");
+			ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
+			session.setAttribute("shgmvo", shgmvo);
+			RequestDispatcher nextjsp = request.getRequestDispatcher("infoPage.jsp");
+			nextjsp.forward(request, response);
+			
 		}
 
 		if ("get_all".equals(action)) {

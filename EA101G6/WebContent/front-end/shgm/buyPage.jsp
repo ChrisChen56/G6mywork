@@ -3,8 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="com.shgm.model.*"%>
 <%
-	ShgmVO shgmvo = (ShgmVO) request.getAttribute("shgmvo");
-	pageContext.setAttribute("shgmvo", shgmvo);
+	ShgmVO shgmvo = (ShgmVO) session.getAttribute("shgmvo");
 %>
 <!doctype html>
 <html lang="en">

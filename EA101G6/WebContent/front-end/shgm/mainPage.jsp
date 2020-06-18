@@ -9,7 +9,7 @@
 <%
 	ShgmService shgmsvc = new ShgmService();
 	List<ShgmVO> shgmlist = shgmsvc.getAllShgm();
-	pageContext.setAttribute("shgmlist", shgmlist);
+	session.setAttribute("shgmlist", shgmlist);
 %>
 <!doctype html>
 <html lang="en">
@@ -234,7 +234,7 @@ div.pageselect-area {
 				<div class="card-deck">
 					<c:forEach var="shgmvo" items="${shgmlist}">
 						<div class="mb-4">
-							<a target="_self" href="<%=request.getContextPath()%>/front-end/shgm/infoPage.jsp?shgmno=${shgmvo.shgmno}">
+							<a target="_self" href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneToInfo&shgmno=${shgmvo.shgmno}">
 								<div class="card">
 									<img
 										src="<%=request.getContextPath()%>/back-end/shgm/displayimg?shgmno=${shgmvo.shgmno}"

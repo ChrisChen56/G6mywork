@@ -7,7 +7,7 @@
 <%
 	List<ShgmrpVO> shgmrplist = (List<ShgmrpVO>)session.getAttribute("shgmrplist");
 	ShgmService shgmsvc = new ShgmService();
-	pageContext.setAttribute("shgmsvc", shgmsvc);
+	session.setAttribute("shgmsvc", shgmsvc);
 %>
 
 <html>
@@ -25,8 +25,8 @@
 
   	}
   	img{
-  		height: 200px;
-  		width: 150px;
+  		height: 150px;
+  		width: 200px;
   	}
 </style>
 </head>

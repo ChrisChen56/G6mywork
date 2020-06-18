@@ -7,12 +7,9 @@
 <%@ page import="java.util.*"%>
 <%@ page import="java.sql.*"%>
 <%
-	String shgmno = request.getParameter("shgmno");
-	ShgmService shgmsvc = new ShgmService();
-	ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
-	pageContext.setAttribute("shgmvo", shgmvo);
+	ShgmVO shgmvo = (ShgmVO) session.getAttribute("shgmvo");
 	List<ShgmVO> list = (List<ShgmVO>) session.getAttribute("randlist");
-	pageContext.setAttribute("list", list);
+	session.setAttribute("list", list);
 %>
 <!doctype html>
 <html lang="en">
@@ -277,7 +274,7 @@ div.top-info {
 							<h1>${shgmvo.price}</h1>
 						</div>
 						<a class="btn btn-primary"
-							href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneToBuy&shgmno=${shgmvo.shgmno}"
+							href="<%=request.getContextPath()%>/front-end/shgm/buyPage.jsp"
 							role="button">購買</a>
 					</div>
 				</div>
@@ -310,7 +307,7 @@ div.top-info {
 											<c:forEach var="i" begin="0" end="3">
 												<div class="col-md-3">
 													<a
-														href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${list.get(i).shgmno}">
+														href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneToInfo&shgmno=${list.get(i).shgmno}">
 														<img src="<%=request.getContextPath()%>/back-end/shgm/displayimg?shgmno=${list.get(i).shgmno}" alt="Image"
 														style="max-width: 100%;">
 													</a>
@@ -323,7 +320,7 @@ div.top-info {
 											<c:forEach var="i" begin="4" end="7">
 												<div class="col-md-3">
 													<a
-														href="<%=request.getContextPath()%>/front-end/infoPage.jsp?shgmno=${list.get(i).shgmno}">
+														href="<%=request.getContextPath()%>/front-end/shgm/infoPage.jsp?shgmno=${list.get(i).shgmno}">
 														<img src="<%=request.getContextPath()%>/back-end/shgm/displayimg?shgmno=${list.get(i).shgmno}" alt="Image"
 														style="max-width: 100%;">
 													</a>
