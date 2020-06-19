@@ -140,10 +140,17 @@ div.top-info {
 					<a href="#" class="text-white"><span class="d-md-inline-block"><img
 							class="icon" src="images/add-icon.png">註冊</span></a>
 					<div class="float-right">
+						<c:choose>
+						<c:when test="${member.mbrname != ''}">
+						<span class="d-md-inline-block text-white">歡迎你！${member.mbrname}</span>
+						</c:when>
+						<c:otherwise>
 						<a href="#" class="text-white"><span class="d-md-inline-block"><img
-								class="icon" src="images/User-icon.png">會員登入</span></a> <a href="#"
-							class="text-white"><span class="d-md-inline-block"><img
+								class="icon" src="images/User-icon.png">會員登入</span></a> 
+						<a href="#" class="text-white"><span class="d-md-inline-block"><img
 								class="icon" src="images/man-icon.png">店家登入</span></a>
+						</c:otherwise>
+						</c:choose>
 					</div>
 				</div>
 			</div>
@@ -204,7 +211,7 @@ div.top-info {
 
 	<div class="main-area container col-10 align-self-center">
 		<div class="top-info-wrapper">
-			<nav aria-label="breadcrumb" calss="breadcrumb-nav">
+			<nav aria-label="breadcrumb" class="breadcrumb-nav">
 				<ol class="breadcrumb d-flex">
 					<li class="breadcrumb-item"><a href="#">首頁</a></li>
 					<li class="breadcrumb-item"><a
@@ -230,7 +237,6 @@ div.top-info {
 						</button>
 					</div>
 					<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgmrp.do?action=insertrp">
-						<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
 						<div class="modal-body">
 							<div class="form-group">
 								<label for="message-text" class="col-form-label">檢舉內容:</label>
@@ -243,6 +249,8 @@ div.top-info {
 							<button type="button" class="btn btn-primary"
 								data-dismiss="modal">取消</button>
 						</div>
+						<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
+						<input type="hidden" name="suiterno" value="${member.mbrno}">
 					</form>
 				</div>
 			</div>
@@ -270,7 +278,6 @@ div.top-info {
 						class="shgm-info-right-inner  align-items-center flex-column bd-highlight mb-3">
 						<form method="post"
 							action="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=dealingshgm">
-							<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
 							<div class="form-group">
 								<label for="take">取貨方式</label><span class="alert">${errormap.get(1)}</span>
 								<input type="text" class="form-control" id="take" 
@@ -304,6 +311,8 @@ div.top-info {
 									href="<%=request.getContextPath()%>/front-end/shgm/mainPage.jsp"
 									class="btn btn-primary">取消購買</a>
 							</div>
+							<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
+							<input type="hidden" name="buyerno" value="${member.mbrno}">
 						</form>
 						<b><span class="alert">${errormap.get(5)}</span></b> <b>還有付款要處理
 							這裡先以正常出貨狀態來跑(0未出貨1已付款1已下訂)</b>
@@ -313,7 +322,6 @@ div.top-info {
 		</div>
 	</div>
 	<div class="random-area"></div>
-	</div>
 
 
 

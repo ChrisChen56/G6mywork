@@ -50,7 +50,7 @@ public class ShgmServlet extends HttpServlet {
 			MbrpfService mbrsvc = new MbrpfService();
 			if(mbrsvc.check(mbract, mbrpw)) {
 				MbrpfVO mbrpfvo = mbrsvc.getByActPw(mbract, mbrpw);
-				
+				System.out.println(mbrpfvo.getMbrname());
 				session.setAttribute("member", mbrpfvo);
 				RequestDispatcher successview = request.getRequestDispatcher("mainPage.jsp");
 				successview.forward(request, response);
@@ -233,8 +233,18 @@ public class ShgmServlet extends HttpServlet {
 				}
 
 				String take = request.getParameter("take");
+				if (take.trim().length() == 0) {
+					errormsgs.add("取貨方式：取貨方式不得為空");
+				} else if (take.trim().length() > 3) {
+					errormsgs.add("取貨方式：長度不正確");
+				}
 
 				String takernm = request.getParameter("takernm");
+				if (takernm.trim().length() == 0) {
+					errormsgs.add("取貨人姓名：姓名不得為空");
+				} else if (takernm.trim().length() > 3) {
+					errormsgs.add("取貨人姓名：長度不正確");
+				}
 
 				String takerph = request.getParameter("takerph");
 				String takerphreg = "^09\\d{8}$";
@@ -322,8 +332,6 @@ public class ShgmServlet extends HttpServlet {
 
 				String sellerno = request.getParameter("sellerno");
 
-				sellerno = "BM00005";// 這裡先寫死
-
 				String shgmname = request.getParameter("shgmname");
 				if (shgmname.trim().length() == 0)
 					errormap.put((long) 1, "名稱不得為空");
@@ -332,11 +340,11 @@ public class ShgmServlet extends HttpServlet {
 				String pricestr = request.getParameter("price");
 				if (pricestr.trim().length() == 0) {
 					errormap.put((long) 2, "價錢不得為空");
-				} else if (pricestr.trim().length() > 6) {
-					errormap.put((long) 2, "金額超過本平台規範");
 				} else {
 					try {
 						price = new Integer(pricestr);
+						if(price > 999999)
+							errormap.put((long) 2, "金額超過本平台規範");
 					} catch (Exception e) {
 						errormap.put((long) 2, "格式不正確");
 					}
@@ -385,7 +393,7 @@ public class ShgmServlet extends HttpServlet {
 
 				if (!errormap.isEmpty()) {
 					request.setAttribute("imagefailed", imagefailed);
-					request.setAttribute("shgmvo", shgmvo);
+					request.setAttribute("shgmsell", shgmvo);
 					String url = "sellPage.jsp";
 					RequestDispatcher failedview = request.getRequestDispatcher(url);
 					failedview.forward(request, response);
@@ -411,7 +419,7 @@ public class ShgmServlet extends HttpServlet {
 		}
 
 		if ("dealingshgm".equals(action)) {
-			ShgmVO shgmvo = null;
+			ShgmVO shgmvo = (ShgmVO) session.getAttribute("shgmvo");
 
 			HashMap<Long, String> errormap = new HashMap<Long, String>();
 			request.setAttribute("errormap", errormap);
@@ -419,16 +427,15 @@ public class ShgmServlet extends HttpServlet {
 				String shgmno = request.getParameter("shgmno");
 
 				String buyerno = request.getParameter("buyerno");
-				buyerno = "BM00007";
 
 				String take = request.getParameter("take");
-				if (take.trim().length() > 10)
+				if (take.trim().length() > 3)//還需要修改
 					errormap.put((long) 1, "長度不正確");
 				if (take.trim().length() == 0)
 					errormap.put((long) 1, "請勿輸入空白");
 
 				String takernm = request.getParameter("takernm");
-				if (takernm.trim().length() > 10)
+				if (takernm.trim().length() > 3)//還需要修改
 					errormap.put((long) 2, "長度不正確");
 				if (takernm.trim().length() == 0)
 					errormap.put((long) 2, "請勿輸入空白");
@@ -442,6 +449,9 @@ public class ShgmServlet extends HttpServlet {
 				}
 
 				String address = request.getParameter("address");
+				if (address.trim().length() > 10) {//還需要修改
+					errormap.put((long) 4, "長度不正確");
+				}
 				if (address.trim().length() == 0) {
 					errormap.put((long) 4, "地址不得為空");
 				}
@@ -456,7 +466,6 @@ public class ShgmServlet extends HttpServlet {
 				Integer status = new Integer(request.getParameter("status"));
 				status = 2;
 
-				shgmvo = shgmsvc.getOneShgm(shgmno);
 				// 取出當前要交易的商品，forward後可以順便用EL取出它的名稱與價錢
 				shgmvo.setShgmno(shgmno);
 				shgmvo.setBuyerno(buyerno);
@@ -469,7 +478,6 @@ public class ShgmServlet extends HttpServlet {
 				shgmvo.setStatus(status);
 
 				if (!errormap.isEmpty()) {
-					request.setAttribute("shgmvo", shgmvo);
 					String url = "buyPage.jsp";
 					RequestDispatcher failedview = request.getRequestDispatcher(url);
 					failedview.forward(request, response);
@@ -497,7 +505,6 @@ public class ShgmServlet extends HttpServlet {
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 			} catch (Exception e) {
-				request.setAttribute("shgmvo", shgmvo);
 				errormap.put((long) 5, "無法購買此商品");
 				String url = "buyPage.jsp";
 				RequestDispatcher failedview = request.getRequestDispatcher(url);
@@ -569,12 +576,12 @@ public class ShgmServlet extends HttpServlet {
 
 				String buyerno = request.getParameter("buyerno");
 				buyerno = null;
-//				String buyernoreg = "^BM\\d{5}$";
-//				if (buyerno.trim().length() == 0) {
-//					errormsgs.add("買家編號：請勿輸入空白");
-//				} else if (!buyerno.trim().matches(buyernoreg)) {
-//					errormsgs.add("買家編號：BM開頭、長度7的格式");
-//				}
+				String buyernoreg = "^BM\\d{5}$";
+				if (buyerno.trim().length() == 0) {
+					errormsgs.add("買家編號：請勿輸入空白");
+				} else if (!buyerno.trim().matches(buyernoreg)) {
+					errormsgs.add("買家編號：BM開頭、長度7的格式");
+				}
 
 				String shgmname = request.getParameter("shgmname");
 				if (shgmname.trim().length() == 0)
@@ -640,30 +647,35 @@ public class ShgmServlet extends HttpServlet {
 				}
 
 				String take = request.getParameter("take");
-				if (take.trim().length() > 10)
+				if (take.trim().length() > 3)
 					errormsgs.add("取貨方式：長度不正確");
 				if (take.trim().length() == 0)
 					errormsgs.add("取貨方式：請勿輸入空白");
 
 				String takernm = request.getParameter("takernm");
-				if (takernm.trim().length() > 10)
+				if (takernm.trim().length() > 3)
 					errormsgs.add("取貨人姓名：長度不正確");
 				if (takernm.trim().length() == 0)
 					errormsgs.add("取貨人姓名：請勿輸入空白");
 
 				String takerph = request.getParameter("takerph");
 				takerph = null;
-//				String takerphreg = "^09\\d{8}$";
-//				if (takerph.trim().length() == 0) {
-//					errormsgs.add("取貨人電話：請勿輸入空白");
-//				} else if (!takerph.trim().matches(takerphreg)) {
-//					errormsgs.add("取貨人電話：請輸入符合格式的電話號碼");
-//				}
+				String takerphreg = "^09\\d{8}$";
+				if (takerph.trim().length() == 0) {
+					errormsgs.add("取貨人電話：請勿輸入空白");
+				}
+				if (!takerph.trim().matches(takerphreg)) {
+					errormsgs.add("取貨人電話：請輸入符合格式的電話號碼");
+				}
 
 				String address = request.getParameter("address");
 				if (address.trim().length() == 0) {
 					errormsgs.add("取貨地址：地址不得為空");
 				}
+				if (address.trim().length() > 10) {
+					errormsgs.add("取貨地址：長度不正確");
+				}
+				
 
 				Integer boxstatus = new Integer(request.getParameter("boxstatus"));
 

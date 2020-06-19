@@ -6,9 +6,10 @@
 
 <%
 	byte[] img = (byte[]) session.getAttribute("img");
-	ShgmVO shgmvo = (ShgmVO) request.getAttribute("shgmvo");
+	ShgmVO shgmsell = (ShgmVO) request.getAttribute("shgmsell");
 	String imagefailed = (String) request.getAttribute("imagefailed");
 %>
+${session.scope }
 <!doctype html>
 <html lang="en">
 <head>
@@ -128,10 +129,6 @@ div.top-info {
 <body data-spy="scroll" data-target=".site-navbar-target"
 	data-offset="300" background="images/bgimage3.jpg">
 
-
-
-
-
 	<div class="site-wrap" id="home-section">
 
 		<div class="site-mobile-menu site-navbar-target">
@@ -151,10 +148,17 @@ div.top-info {
 					<a href="#" class="text-white"><span class="d-md-inline-block"><img
 							class="icon" src="images/add-icon.png">註冊</span></a>
 					<div class="float-right">
+						<c:choose>
+						<c:when test="${member.mbrname != ''}">
+						<span class="d-md-inline-block text-white">歡迎你！${member.mbrname}</span>
+						</c:when>
+						<c:otherwise>
 						<a href="#" class="text-white"><span class="d-md-inline-block"><img
-								class="icon" src="images/User-icon.png">會員登入</span></a> <a href="#"
-							class="text-white"><span class="d-md-inline-block"><img
+								class="icon" src="images/User-icon.png">會員登入</span></a> 
+						<a href="#" class="text-white"><span class="d-md-inline-block"><img
 								class="icon" src="images/man-icon.png">店家登入</span></a>
+						</c:otherwise>
+						</c:choose>
 					</div>
 				</div>
 			</div>
@@ -273,11 +277,11 @@ div.top-info {
 							class="shgm-info-right-inner d-flex align-items-center flex-column bd-highlight mb-3">
 							<div class="form-group p-2 bd-highlight">
 								<label for="shgmname">輸入桌遊名稱</label> <span class="alert">${errormap.get(1)}</span><input name="shgmname"
-									class="form-control inputtext" id="shgmname" rows="3" value=${(shgmvo != null)? shgmvo.shgmname:""}>
+									class="form-control inputtext" id="shgmname" rows="3" value=${(shgmsell != null)? shgmsell.shgmname:""}>
 							</div>
 							<div class="form-group p-2 bd-highlight">
 								<label for="price">輸入您欲販售之價格</label> <span class="alert">${errormap.get(2)}</span><input name="price"
-									class="form-control inputtext" id="price" rows="3" value=${(shgmvo != null)? shgmvo.price:""}>
+									class="form-control inputtext" id="price" rows="3" value=${(shgmsell != null)? shgmsell.price:""}>
 							</div>
 							<div class="button-wrapper">
 								<button type="submit" class="btn btn-primary">送出</button>
@@ -289,10 +293,12 @@ div.top-info {
 					<div class="shgm-info-middle">
 						輸入此桌遊的詳情<span class="alert">${errormap.get(3)}</span>
 						<div class="card">
-							<textarea name="intro">${(shgmvo != null)? shgmvo.intro:""}</textarea>
+							<textarea name="intro">${(shgmsell != null)? shgmsell.intro:""}</textarea>
 						</div>
 						${errormap.get(5)}
 					</div>
+					<input type="hidden" name="sellerno" value="${member.mbrno}">
+					
 				</form>
 				<br>
 			</div>

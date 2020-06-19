@@ -3,10 +3,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="com.shgm.model.*"%>
+<%@ page import="com.mbrpf.model.*" %>
 <%@ page import="java.io.*"%>
 <%@ page import="java.sql.*"%>
 <%@ page import="java.util.*"%>
 <%
+	MbrpfVO member = (MbrpfVO) session.getAttribute("member");
 	ShgmService shgmsvc = new ShgmService();
 	List<ShgmVO> shgmlist = shgmsvc.getAllShgm();
 	session.setAttribute("shgmlist", shgmlist);
@@ -155,10 +157,17 @@ div.pageselect-area {
 					<a href="#" class="text-white"><span class="d-md-inline-block"><img
 							class="icon" src="images/add-icon.png">註冊</span></a>
 					<div class="float-right">
+						<c:choose>
+						<c:when test="${member.mbrname != ''}">
+						<span class="d-md-inline-block text-white">歡迎你！${member.mbrname}</span>
+						</c:when>
+						<c:otherwise>
 						<a href="#" class="text-white"><span class="d-md-inline-block"><img
-								class="icon" src="images/User-icon.png">會員登入</span></a> <a href="#"
-							class="text-white"><span class="d-md-inline-block"><img
+								class="icon" src="images/User-icon.png">會員登入</span></a> 
+						<a href="#" class="text-white"><span class="d-md-inline-block"><img
 								class="icon" src="images/man-icon.png">店家登入</span></a>
+						</c:otherwise>
+						</c:choose>
 					</div>
 				</div>
 			</div>

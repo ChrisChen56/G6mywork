@@ -150,10 +150,17 @@ div.top-info {
 					<a href="#" class="text-white"><span class="d-md-inline-block"><img
 							class="icon" src="images/add-icon.png">註冊</span></a>
 					<div class="float-right">
+						<c:choose>
+						<c:when test="${member.mbrname != ''}">
+						<span class="d-md-inline-block text-white">歡迎你！${member.mbrname}</span>
+						</c:when>
+						<c:otherwise>
 						<a href="#" class="text-white"><span class="d-md-inline-block"><img
-								class="icon" src="images/User-icon.png">會員登入</span></a> <a href="#"
-							class="text-white"><span class="d-md-inline-block"><img
+								class="icon" src="images/User-icon.png">會員登入</span></a> 
+						<a href="#" class="text-white"><span class="d-md-inline-block"><img
 								class="icon" src="images/man-icon.png">店家登入</span></a>
+						</c:otherwise>
+						</c:choose>
 					</div>
 				</div>
 			</div>
@@ -238,7 +245,6 @@ div.top-info {
 						</button>
 					</div>
 					<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgmrp.do?action=insertrp">
-						<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
 						<div class="modal-body">
 							<div class="form-group">
 								<label for="message-text" class="col-form-label">檢舉內容:</label>
@@ -251,6 +257,8 @@ div.top-info {
 							<button type="button" class="btn btn-primary"
 								data-dismiss="modal">取消</button>
 						</div>
+						<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
+						<input type="hidden" name="suiterno" value="${member.mbrno}">
 					</form>
 				</div>
 			</div>
