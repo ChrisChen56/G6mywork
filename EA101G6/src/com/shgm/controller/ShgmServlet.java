@@ -31,6 +31,7 @@ public class ShgmServlet extends HttpServlet {
 		doPost(request, response);
 	}
 
+	@SuppressWarnings("null")
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
@@ -562,6 +563,8 @@ public class ShgmServlet extends HttpServlet {
 		if ("update".equals(action)) {
 			List<String> errormsgs = new LinkedList<String>();
 			request.setAttribute("errormsgs", errormsgs);
+			
+			ShgmVO shgmvo = null;
 
 			try {
 				String shgmno = request.getParameter("shgmno");
@@ -626,7 +629,7 @@ public class ShgmServlet extends HttpServlet {
 				} else {
 					img = (byte[]) session.getAttribute("img");
 					if (img == null) {
-						ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
+						shgmvo = shgmsvc.getOneShgm(shgmno);
 						img = shgmvo.getImg();
 						session.setAttribute("img", img);
 						System.out.println("img stored in session");
@@ -695,7 +698,7 @@ public class ShgmServlet extends HttpServlet {
 					errormsgs.add("售出時間：日期轉型發生錯誤");
 				}
 
-				ShgmVO shgmvo = new ShgmVO();
+				shgmvo = new ShgmVO();
 				shgmvo.setShgmno(shgmno);
 				shgmvo.setSellerno(sellerno);
 				shgmvo.setBuyerno(buyerno);
@@ -721,7 +724,7 @@ public class ShgmServlet extends HttpServlet {
 					return;
 				}
 
-				ShgmVO shgmvo2 = shgmsvc.updateShgm(shgmno, sellerno, buyerno, shgmname, price, intro, img, upcheck, uptimevo, take,
+				shgmvo = shgmsvc.updateShgm(shgmno, sellerno, buyerno, shgmname, price, intro, img, upcheck, uptimevo, take,
 						takernm, takerph, address, boxstatus, paystatus, status, soldtimevo);
 				
 				request.setAttribute("shgmvo", shgmvo);

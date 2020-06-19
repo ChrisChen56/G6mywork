@@ -91,7 +91,7 @@
 			<tr>
 				<td>取貨人電話</td>
 				<td><input type="text" name="takerph" size="15"
-					value="<%= (shgmvo == null)? "0987-878-878":shgmvo.getTakerph()%>"/></td>
+					value="<%= (shgmvo == null)? "0987878878":shgmvo.getTakerph()%>"/></td>
 			</tr>
 			<tr>
 				<td>取貨地址</td>

@@ -3,11 +3,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="com.shgm.model.*"%>
+<%@ page import="com.mbrpf.model.*"%>
 <%@ page import="java.io.*"%>
 <%@ page import="java.util.*"%>
 <%@ page import="java.sql.*"%>
 <%
-	ShgmVO shgmvo = (ShgmVO) session.getAttribute("shgmvo");
+	MbrpfVO member = (MbrpfVO) session.getAttribute("member");
 	List<ShgmVO> list = (List<ShgmVO>) session.getAttribute("randlist");
 	session.setAttribute("list", list);
 %>
@@ -151,7 +152,7 @@ div.top-info {
 							class="icon" src="images/add-icon.png">註冊</span></a>
 					<div class="float-right">
 						<c:choose>
-						<c:when test="${member.mbrname != ''}">
+						<c:when test="<%=member != null%>">
 						<span class="d-md-inline-block text-white">歡迎你！${member.mbrname}</span>
 						</c:when>
 						<c:otherwise>

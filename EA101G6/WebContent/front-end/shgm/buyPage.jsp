@@ -2,7 +2,9 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="com.shgm.model.*"%>
+<%@ page import="com.mbrpf.model.*"%>
 <%
+	MbrpfVO member = (MbrpfVO) session.getAttribute("member");
 	ShgmVO shgmvo = (ShgmVO) session.getAttribute("shgmvo");
 %>
 <!doctype html>
@@ -141,7 +143,7 @@ div.top-info {
 							class="icon" src="images/add-icon.png">註冊</span></a>
 					<div class="float-right">
 						<c:choose>
-						<c:when test="${member.mbrname != ''}">
+						<c:when test="<%=member != null%>">
 						<span class="d-md-inline-block text-white">歡迎你！${member.mbrname}</span>
 						</c:when>
 						<c:otherwise>
