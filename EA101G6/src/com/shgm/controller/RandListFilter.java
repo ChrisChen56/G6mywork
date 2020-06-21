@@ -26,10 +26,10 @@ public class RandListFilter extends HttpServlet implements Filter {
     	
     	ShgmService shgmsvc = new ShgmService();
     	String shgmno = request.getParameter("shgmno");
-    	ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);//取得使用者點選的shgmvo
+    	ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);//取得使用者點選的市集商品
     	
     	List<ShgmVO> list = new ArrayList<ShgmVO>();
-    	list = shgmsvc.getAllShgm();//取得全部的shgmvo(之後要換成只拿1.0.0.0)
+    	list = shgmsvc.getAllShgm();//取得全部的市集商品(之後要換成只拿1.0.0.0)
     	
     	
     	for(Iterator<ShgmVO> it = list.iterator();it.hasNext();) {

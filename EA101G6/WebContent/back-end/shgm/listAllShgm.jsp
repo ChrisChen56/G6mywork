@@ -4,10 +4,12 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="com.shgm.model.*" %>
 <%@ page import="java.io.*" %>
-<%@ page import="java.sql.*" %>
 <%@ page import="java.util.*" %>
 <%
-	List<ShgmVO> shgmlist = (List<ShgmVO>)session.getAttribute("shgmlist");
+	session.removeAttribute("img");
+	ShgmService shgmsvc = new ShgmService();
+	List<ShgmVO> list = shgmsvc.getAllShgm();
+	pageContext.setAttribute("shgmlist", list);
 %>
 
 <html>
@@ -23,6 +25,11 @@
 	}
 	th, td {
     	border: 1px solid black;
+  	}
+  	.imgtd img{
+  		width:200px;
+  		height:150px;
+  		objtec-fit:contain;
   	}
 </style>
 </head>
@@ -61,11 +68,11 @@
 		<tr>
 			<td>${shgmvo.shgmno}</td>
 			<td>${shgmvo.sellerno}</td>
-			<td>${shgmvo.buyerno}</td>
+			<td>${(shgmvo.buyerno == null)? "尚未有買家":shgmvo.buyerno}</td>
 			<td>${shgmvo.shgmname}</td>
 			<td>${shgmvo.price}</td>
-			<td width="375">${shgmvo.intro}</td>
-			<td><img src="<%=request.getContextPath()%>/back-end/shgm/displayimg?shgmno=${shgmvo.shgmno}" width="200" height="150"/></td>
+			<td width="375" style="text-align:left;">${shgmvo.intro}</td>
+			<td class="imgtd"><img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"/></td>
 			<c:choose>
 	            <c:when test="${shgmvo.upcheck == 0}">
 	                <td>未審核</td>
@@ -77,11 +84,11 @@
 	                 <td>審核未通過</td>
 	            </c:otherwise>
         	</c:choose>
-			<td><fmt:formatDate value="${shgmvo.uptime}" pattern="yyyy/MM/dd HH:mm:ss"/></td>
-			<td>${shgmvo.take}</td>
-			<td>${shgmvo.takernm}</td>
-			<td>${shgmvo.takerph}</td>
-			<td>${shgmvo.address}</td>
+			<td>${(shgmvo.uptime == null)? "尚未上架":shgmvo.uptime}<fmt:formatDate value="" pattern="yyyy/MM/dd HH:mm:ss"/></td>
+			<td>${(shgmvo.take == null)? "尚無資料":shgmvo.take}</td>
+			<td>${(shgmvo.takernm == null)? "尚無資料":shgmvo.takernm}</td>
+			<td>${(shgmvo.takerph == null)? "尚無資料":shgmvo.takerph}</td>
+			<td>${(shgmvo.address == null)? "尚無資料":shgmvo.address}</td>
 			<c:choose>
 	            <c:when test="${shgmvo.boxstatus == 0}">
 	                <td>未出貨</td>
@@ -115,16 +122,16 @@
 	                 <td>取消</td>
 	            </c:otherwise>
         	</c:choose>
-			<td><fmt:formatDate value="${shgmvo.soldtime}" pattern="yyyy/MM/dd HH:mm:ss"/></td>
+			<td>${(shgmvo.soldtime == null)? "尚未賣出":shgmvo.soldtime}<fmt:formatDate value="" pattern="yyyy/MM/dd HH:mm:ss"/></td>
 			<td>
-				<form method="post" action="<%= request.getContextPath()%>/back-end/shgm/shgm.do">
+				<form method="post" action="<%= request.getContextPath()%>/shgm/shgm.do">
 					<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
 					<input type="hidden" name="action" value="getone_update" >
 					<input type="submit" value="修改">
 				</form>
 			</td>
 			<td>
-				<form method="post" action="<%= request.getContextPath()%>/back-end/shgm/shgm.do">
+				<form method="post" action="<%= request.getContextPath()%>/shgm/shgm.do">
 					<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
 					<input type="hidden" name="action" value="delete" >
 					<input type="submit" value="刪除">
@@ -133,6 +140,6 @@
 		</tr>
 		</c:forEach>
 	</table>
-	<a href="/EA101G6/back-end/shgm/shgm_select_page.jsp">回首頁</a>
+	<a href="<%= request.getContextPath()%>/back-end/shgm/shgm_select_page.jsp">回首頁</a>
 </body>
 </html>

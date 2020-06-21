@@ -4,9 +4,8 @@
 <%@ page import="com.shgm.model.*" %>
     
 <%
-		byte[] img = (byte[])session.getAttribute("img");
+		byte[] img = (byte[])request.getAttribute("img");
     	ShgmVO shgmvo = (ShgmVO) request.getAttribute("shgmvo");
-		String imagefailed = (String)request.getAttribute("imagefailed");
 %>
 
 <!DOCTYPE html>
@@ -29,7 +28,7 @@
 			</c:forEach>
 		</c:if>
 	</ul>
-<form method="post" action="<%=request.getContextPath() %>/back-end/shgm/shgm.do" enctype="multipart/form-data">
+<form method="post" action="<%=request.getContextPath() %>/shgm/shgm.do" enctype="multipart/form-data">
 	<table>
 			<tr>
 				<th>市集商品欄位</th>
@@ -53,8 +52,8 @@
 			<tr>
 				<td>市集商品價錢</td>
 				<td><input type="text" name="price" size="15"
-					value="<%= (shgmvo == null)? "60": shgmvo.getPrice()%>"/></td>
-			</tr>
+					value="<%= (shgmvo == null)? "60": (shgmvo.getPrice() == null)? "":shgmvo.getPrice()%>"/></td>
+					</tr>
 			<tr>
 				<td>市集商品簡介</td>
 				<td><textarea name="intro" cols="32" rows="10"><%= (shgmvo == null)? "遊戲中玩家們輪流轉動轉盤，並根據轉盤指示內容，利用鎚子敲打指定顏色冰塊，想辦法讓目標冰塊掉落，且不能讓破冰台上的企鵝跌落。藉由遊戲進行，不僅能訓練玩家的肢體手感，還可測試玩家的應變力及平衡感，可說是極具挑戰性的肢體桌上遊戲。": shgmvo.getIntro()%>
@@ -63,9 +62,9 @@
 			</tr>
 			<tr>
 				<td>市集商品圖片</td>
-				<td><input type="file" name="img" id="imgfile" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" accept=".png, .jpg, .jpeg .gif" value="${img}"/>
-					<img name="imgtag" id="blah" alt="your image" width="100" height="100" src="data:image/png;base64,${imagefailed}"/></td>
-			</tr>
+				<td><input type="file" name="imginput" id="imgfile" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" accept=".png, .jpg, .jpeg .gif" value="${img}"/>
+				<img name="imgtag" id="blah" alt="your image" width="100" height="100" src="data:image/png;base64,${imagefailed}"/></td>
+		</tr>
 			<tr>
 				<td>上架審核狀態</td>
 				<td><select id="upcheck" name="upcheck">
@@ -76,7 +75,7 @@
 			</tr>
 			<tr>
 				<td>上架時間</td>
-				<td><input type="text" name="uptime" id="f_date1" size="15"/></td>
+				<td>本商品尚未上架</td>
 			</tr>
 			<tr>
 				<td>取貨方式</td>
@@ -125,7 +124,7 @@
 			</tr>
 			<tr>
 				<td>售出時間</td>
-				<td><input type="text" name="soldtime" id="f_date2" size="15"/></td>
+				<td>本商品尚未售出</td>
 			</tr>
 			<tr>
 				<td colspan="2"><input type="hidden" name="action" value="insert">	
@@ -136,58 +135,4 @@
 	<a href="<%=request.getContextPath() %>/back-end/shgm/shgm_select_page.jsp">回首頁</a>
 </body>
 
-<% 
-  java.sql.Timestamp uptime = null;
-  try {
-	  uptime = shgmvo.getUptime();
-   } catch (Exception e) {
-	   uptime = new java.sql.Timestamp(System.currentTimeMillis());
-   }
-  java.sql.Timestamp soldtime = null;
-  try {
-	  soldtime = shgmvo.getSoldtime();
-   } catch (Exception e) {
-	   soldtime = new java.sql.Timestamp(System.currentTimeMillis());
-   }
-%>
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/datetimepicker/jquery.datetimepicker.css" />
-<script src="<%=request.getContextPath()%>/datetimepicker/jquery.js"></script>
-<script src="<%=request.getContextPath()%>/datetimepicker/jquery.datetimepicker.full.js"></script>
-
-<style>
-  .xdsoft_datetimepicker .xdsoft_datepicker {
-           width:  300px;   /* width:  300px; */
-  }
-  .xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box {
-           height: 151px;   /* height:  151px; */
-  }
-</style>
-
-<script>
-$("document").ready(function(){
-		$('input[type=file]').change(function(){
-			$('#imgid').val($('#blah').attr('src'));
-		});
-});
-
-        $.datetimepicker.setLocale('zh');
-        $('#f_date1').datetimepicker({
-	       theme: '',              //theme: 'dark',
-	       timepicker:false,       //timepicker:true,
-	       step: 1,                //step: 60 (這是timepicker的預設間隔60分鐘)
-	       format:'Y/m/d',         //format:'Y-m-d H:i:s',
-		   value: '<%=uptime%>', // value:   new Date(),
-           //disabledDates:        ['2017/06/08','2017/06/09','2017/06/10'], // 去除特定不含
-           //startDate:	            '2017/07/10',  // 起始日
-           //minDate:               '-1970-01-01', // 去除今日(不含)之前
-           //maxDate:               '+1970-01-01'  // 去除今日(不含)之後
-        });
-        $('#f_date2').datetimepicker({
-	       theme: '',              //theme: 'dark',
-	       timepicker:false,       //timepicker:true,
-	       step: 1,                //step: 60 (這是timepicker的預設間隔60分鐘)
-	       format:'Y/m/d',         //format:'Y-m-d H:i:s',
-		   value: '<%=soldtime%>', // value:   new Date(),
-        });
-</script>
 </html>

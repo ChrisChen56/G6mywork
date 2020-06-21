@@ -56,7 +56,7 @@
 			<td>${shgmvo.shgmname}</td>
 			<td>${shgmvo.price}</td>
 			<td width="375">${shgmvo.intro}</td>
-			<td><img src="<%=request.getContextPath()%>/back-end/shgm/displayimg?shgmno=${shgmvo.shgmno}"/></td>
+			<td><img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"/></td>
 			<td><%=(shgmvo.getUpcheck() == 0)? "未審核":(shgmvo.getUpcheck() == 1)? "審核通過": "審核未通過" %></td>
 			<td><fmt:formatDate value="${shgmvo.uptime}" pattern="yyyy/MM/dd HH:mm:ss"/></td>
 			<td>${shgmvo.take}</td>

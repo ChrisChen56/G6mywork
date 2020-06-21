@@ -48,7 +48,7 @@
 			<td>${shgmsvc.getOneShgm(shgmrpvo.shgmno).shgmname}</td>
 			<td>${shgmsvc.getOneShgm(shgmrpvo.shgmno).price}</td>
 			<td style="width:400px">${shgmsvc.getOneShgm(shgmrpvo.shgmno).intro}</td>
-			<td><img src="<%=request.getContextPath() %>/back-end/shgm/displayimg?shgmno=${shgmrpvo.shgmno}"></td>
+			<td><img src="<%=request.getContextPath() %>/shgm/displayimg?shgmno=${shgmrpvo.shgmno}"></td>
 			<td>${shgmrpvo.suiterno}</td>
 			<td>${shgmrpvo.detail}</td>
 			<td>${(shgmrpvo.status == 0)? "未審核":(shgmrpvo.status == 1)? "審核通過": "審核未通過"}</td>

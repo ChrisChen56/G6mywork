@@ -10,8 +10,8 @@ public class ShgmService {
 		dao = new ShgmDAO();
 	}
 	
-	public ShgmVO addShgm(String sellerno, String buyerno, String shgmname, Integer price, String intro, byte[] img, Integer upcheck, Timestamp uptime,
-			String take, String takernm, String takerph, String address, Integer boxstatus, Integer paystatus, Integer status, Timestamp soldtime) {
+	public ShgmVO addShgm(String sellerno, String buyerno, String shgmname, Integer price, String intro, byte[] img, Integer upcheck,
+			String take, String takernm, String takerph, String address, Integer boxstatus, Integer paystatus, Integer status) {
 		
 		ShgmVO shgmvo = new ShgmVO();
 		
@@ -22,7 +22,6 @@ public class ShgmService {
 		shgmvo.setIntro(intro);
 		shgmvo.setImg(img);
 		shgmvo.setUpcheck(upcheck);
-		shgmvo.setUptime(uptime);
 		shgmvo.setTake(take);
 		shgmvo.setTakernm(takernm);
 		shgmvo.setTakerph(takerph);
@@ -30,7 +29,6 @@ public class ShgmService {
 		shgmvo.setBoxstatus(boxstatus);
 		shgmvo.setPaystatus(paystatus);
 		shgmvo.setStatus(status);
-		shgmvo.setSoldtime(soldtime);
 		
 		dao.insert(shgmvo);
 		
@@ -53,8 +51,8 @@ public class ShgmService {
 		
 	}
 	
-	public ShgmVO updateShgm(String shgmno,String sellerno, String buyerno, String shgmname, Integer price, String intro, byte[] img, Integer upcheck, Timestamp uptime,
-			String take, String takernm, String takerph, String address, Integer boxstatus, Integer paystatus, Integer status, Timestamp soldtime) {
+	public ShgmVO updateShgm(String shgmno,String sellerno, String buyerno, String shgmname, Integer price, String intro, byte[] img, Integer upcheck,
+			String take, String takernm, String takerph, String address, Integer boxstatus, Integer paystatus, Integer status) {
 		
 		ShgmVO shgmvo = new ShgmVO();
 		shgmvo.setShgmno(shgmno);
@@ -65,7 +63,6 @@ public class ShgmService {
 		shgmvo.setIntro(intro);
 		shgmvo.setImg(img);
 		shgmvo.setUpcheck(upcheck);
-		shgmvo.setUptime(uptime);
 		shgmvo.setTake(take);
 		shgmvo.setTakernm(takernm);
 		shgmvo.setTakerph(takerph);
@@ -73,7 +70,6 @@ public class ShgmService {
 		shgmvo.setBoxstatus(boxstatus);
 		shgmvo.setPaystatus(paystatus);
 		shgmvo.setStatus(status);
-		shgmvo.setSoldtime(soldtime);
 		
 		dao.update(shgmvo);
 		

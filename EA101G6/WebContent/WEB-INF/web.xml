@@ -21,7 +21,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>ShgmServlet</servlet-name>
-    <url-pattern>/back-end/shgm/shgm.do</url-pattern>
+    <url-pattern>/shgm/shgm.do</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>ShgmServlet</servlet-name>
@@ -33,7 +33,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>DisplayImg</servlet-name>
-    <url-pattern>/back-end/shgm/displayimg</url-pattern>
+    <url-pattern>/shgm/displayimg</url-pattern>
   </servlet-mapping>
   <servlet>
   	<servlet-name>ShgmrpServlet</servlet-name>
@@ -41,7 +41,7 @@
   </servlet>
   <servlet-mapping>
   	<servlet-name>ShgmrpServlet</servlet-name>
-  	<url-pattern>/back-end/shgmrp/shgmrp.do</url-pattern>
+  	<url-pattern>/shgmrp/shgmrp.do</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>ShgmrpServlet</servlet-name>

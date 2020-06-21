@@ -238,7 +238,7 @@ div.top-info {
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-					<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgmrp.do?action=insertrp">
+					<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgmrp.do">
 						<div class="modal-body">
 							<div class="form-group">
 								<label for="message-text" class="col-form-label">檢舉內容:</label>
@@ -253,6 +253,7 @@ div.top-info {
 						</div>
 						<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
 						<input type="hidden" name="suiterno" value="${member.mbrno}">
+						<input type="hidden" name="action" value="insertrp">
 					</form>
 				</div>
 			</div>
@@ -263,7 +264,7 @@ div.top-info {
 					<div
 						class="d-flex align-items-left flex-column bd-highlight mb-3">
 						<img
-							src="<%=request.getContextPath() %>/back-end/shgm/displayimg?shgmno=${shgmvo.shgmno}"
+							src="<%=request.getContextPath() %>/shgm/displayimg?shgmno=${shgmvo.shgmno}"
 							alt="..." class="img-thumbnail rounded float-left"> <br>
 						<div class="p-2 bd-highlight">
 							名稱
@@ -279,7 +280,7 @@ div.top-info {
 					<div
 						class="shgm-info-right-inner  align-items-center flex-column bd-highlight mb-3">
 						<form method="post"
-							action="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=dealingshgm">
+							action="<%=request.getContextPath()%>/front-end/shgm/shgm.do">
 							<div class="form-group">
 								<label for="take">取貨方式</label><span class="alert">${errormap.get(1)}</span>
 								<input type="text" class="form-control" id="take" 
@@ -315,6 +316,7 @@ div.top-info {
 							</div>
 							<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
 							<input type="hidden" name="buyerno" value="${member.mbrno}">
+							<input type="hidden" name="action" value="dealingshgm">
 						</form>
 						<b><span class="alert">${errormap.get(5)}</span></b> <b>還有付款要處理
 							這裡先以正常出貨狀態來跑(0未出貨1已付款1已下訂)</b>
@@ -330,34 +332,6 @@ div.top-info {
 
 
 	<script type="text/javascript">
-		$('#exampleModal').on('show.bs.modal', function(event) {
-			var button = $(event.relatedTarget) // Button that triggered the modal
-			var recipient = button.data('whatever') // Extract info from data-* attributes
-			// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-			var modal = $(this)
-			modal.find('.modal-title').text('New message to ' + recipient)
-			modal.find('.modal-body input').val(recipient)
-		})
-		$(function() {
-			$('#imgzoom img').mouseenter(function() {
-				var wValue = 1.5 * $(this).width();
-				var hValue = 1.5 * $(this).height();
-				$(this).animate({
-					width : wValue,
-					height : hValue,
-					left : ("-"(0.5 * $(this).width()) / 2),
-					top : ("-"(0.5 * $(this).height()) / 2)
-				}, 1000);
-			}).mouseleave(function() {
-				$(this).animate({
-					width : "100",
-					height : "80",
-					left : "0px",
-					top : "0px"
-				}, 1000);
-			});
-		});
 	</script>
 	<script src="js/jquery-3.3.1.min.js"></script>
 	<!-- 看起來沒屁用 -->

@@ -2,11 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="com.shgm.model.*" %>
-    
 <%
     	ShgmVO shgmvo = (ShgmVO) request.getAttribute("shgmvo");
 %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,7 +25,7 @@
 			</c:forEach>
 		</c:if>
 	</ul>
-<form method="post" action="<%=request.getContextPath() %>/back-end/shgm/shgm.do" enctype="multipart/form-data">
+<form method="post" action="<%=request.getContextPath() %>/shgm/shgm.do" enctype="multipart/form-data">
 	<table>
 			<tr>
 				<th>市集商品欄位</th>
@@ -44,8 +42,8 @@
 			</tr>
 			<tr>
 				<td>買家會員編號</td>
-				<td><input type="text" name="buyerno" size="15"
-					value="<%= shgmvo.getBuyerno()%>"/></td>
+				<td><input type="text" name="buyerno" size="15" placeholder="<%= (shgmvo.getBuyerno() == null)? "尚未有買家":""%>"
+				value="<%= (shgmvo.getBuyerno() == null)? "":shgmvo.getBuyerno()%>"/></td>
 			</tr>
 			<tr>
 				<td>市集商品名稱</td>
@@ -65,9 +63,16 @@
 			</tr>
 			<tr>
 				<td>市集商品圖片</td>
-				<td><input type="file" name="img" id="img" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" accept=".png, .jpg, .jpeg .gif"/>
-					<img id="blah" alt="your image" width="100" height="100" src="<%=request.getContextPath()%>/back-end/shgm/displayimg?shgmno=<%= shgmvo.getShgmno()%>"/>
-			</tr>
+				<td><input type="file" name="imginput" id="img" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" accept=".png, .jpg, .jpeg .gif" value=""/>
+					<c:choose>
+						<c:when test="${img != null }">
+							<img id="blah" name="imgtag" alt="your image" width="100" height="100" src="data:image/png;base64,${imagefailed}"/>
+						</c:when>
+						<c:otherwise>
+							<img id="blah" name="imgtag" alt="your image" width="100" height="100" src="<%=request.getContextPath()%>/back-end/shgm/displayimg?shgmno=<%= shgmvo.getShgmno()%>"/>
+						</c:otherwise>
+					</c:choose>
+					</tr>
 			<tr>
 				<td>上架審核狀態</td>
 				<td><select id="upcheck" name="upcheck">
@@ -78,27 +83,27 @@
 			</tr>
 			<tr>
 				<td>上架時間</td>
-				<td><input type="text" name="uptime" id="f_date1" size="15"/></td>
+				<td>${(shgmvo.uptime == null)? "尚未上架":shgmvo.uptime}</td>
 			</tr>
 			<tr>
 				<td>取貨方式</td>
-				<td><input type="text" name="take" size="15"
-					value="<%= shgmvo.getTake()%>"/></td>
+				<td><input type="text" name="take" size="15" placeholder="<%= (shgmvo.getTake() == null)? "尚無資料":""%>"
+				value="<%= (shgmvo.getTake() == null)? "": shgmvo.getTake()%>"/></td>
 			</tr>
 			<tr>
 				<td>取貨人姓名</td>
-				<td><input type="text" name="takernm" size="15"
-					value="<%= shgmvo.getTakernm()%>"/></td>
+				<td><input type="text" name="takernm" size="15" placeholder="<%= (shgmvo.getTakernm() == null)? "尚無資料":""%>"
+				value="<%= (shgmvo.getTakernm() == null)? "": shgmvo.getTakernm()%>"/></td>
 			</tr>
 			<tr>
 				<td>取貨人電話</td>
-				<td><input type="text" name="takerph" size="15"
-					value="<%= shgmvo.getTakerph()%>"/></td>
+				<td><input type="text" name="takerph" size="15" placeholder="<%= (shgmvo.getTakerph() == null)? "尚無資料":""%>"
+				value="<%= (shgmvo.getTakerph() == null)? "": shgmvo.getTakerph()%>"/></td>
 			</tr>
 			<tr>
 				<td>取貨地址</td>
-				<td><input type="text" name="address" size="15"
-					value="<%= shgmvo.getAddress()%>"/></td>
+				<td><input type="text" name="address" size="15" placeholder="<%= (shgmvo.getAddress() == null)? "尚無資料":""%>"
+				value="<%= (shgmvo.getAddress() == null)? "": shgmvo.getAddress()%>"/></td>
 			</tr>
 			<tr>
 				<td>出貨狀態</td>
@@ -126,63 +131,16 @@
 			</tr>
 			<tr>
 				<td>售出時間</td>
-				<td><input type="text" name="soldtime" id="f_date2" size="15"/></td>
+				<td>${(shgmvo.soldtime == null)? "尚未賣出":shgmvo.soldtime}</td>
 			</tr>
 			<tr>
-				<td colspan="2"><input type="hidden" name="action" value="update">	
-					<input type="submit" value="送出" ></td>
+				<td colspan="2">
+				<input type="hidden" name="action" value="update">	
+				<input type="submit" value="送出" ></td>
 			</tr>
 	</table>
 </form>
 	<a href="<%=request.getContextPath() %>/back-end/shgm/shgm_select_page.jsp">回首頁</a>
 </body>
 
-<% 
-  java.sql.Timestamp uptime = null;
-  try {
-	  uptime = shgmvo.getUptime();
-   } catch (Exception e) {
-	   uptime = new java.sql.Timestamp(System.currentTimeMillis());
-   }
-  java.sql.Timestamp soldtime = null;
-  try {
-	  soldtime = shgmvo.getSoldtime();
-   } catch (Exception e) {
-	   soldtime = new java.sql.Timestamp(System.currentTimeMillis());
-   }
-%>
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/datetimepicker/jquery.datetimepicker.css" />
-<script src="<%=request.getContextPath()%>/datetimepicker/jquery.js"></script>
-<script src="<%=request.getContextPath()%>/datetimepicker/jquery.datetimepicker.full.js"></script>
-
-<style>
-  .xdsoft_datetimepicker .xdsoft_datepicker {
-           width:  300px;   /* width:  300px; */
-  }
-  .xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box {
-           height: 151px;   /* height:  151px; */
-  }
-</style>
-
-<script>
-        $.datetimepicker.setLocale('zh');
-        $('#f_date1').datetimepicker({
-	       theme: '',              //theme: 'dark',
-	       timepicker:false,       //timepicker:true,
-	       step: 1,                //step: 60 (這是timepicker的預設間隔60分鐘)
-	       format:'Y/m/d',         //format:'Y-m-d H:i:s',
-		   value: '<%=uptime%>', // value:   new Date(),
-           //disabledDates:        ['2017/06/08','2017/06/09','2017/06/10'], // 去除特定不含
-           //startDate:	            '2017/07/10',  // 起始日
-           //minDate:               '-1970-01-01', // 去除今日(不含)之前
-           //maxDate:               '+1970-01-01'  // 去除今日(不含)之後
-        });
-        $('#f_date2').datetimepicker({
-	       theme: '',              //theme: 'dark',
-	       timepicker:false,       //timepicker:true,
-	       step: 1,                //step: 60 (這是timepicker的預設間隔60分鐘)
-	       format:'Y/m/d',         //format:'Y-m-d H:i:s',
-		   value: '<%=soldtime%>', // value:   new Date(),
-        });
-</script>
 </html>

@@ -5,9 +5,11 @@
 <%@ page import="com.shgm.model.*" %>
 <%@ page import="java.util.*" %>
 <%
-	List<ShgmrpVO> shgmrplist = (List<ShgmrpVO>)session.getAttribute("shgmrplist");
+	ShgmrpService shgmrpsvc = new ShgmrpService();
+	List<ShgmrpVO> list = shgmrpsvc.getAllShgmrp();
+	pageContext.setAttribute("shgmrplist", list);
 	ShgmService shgmsvc = new ShgmService();
-	session.setAttribute("shgmsvc", shgmsvc);
+	pageContext.setAttribute("shgmsvc", shgmsvc);
 %>
 
 <html>

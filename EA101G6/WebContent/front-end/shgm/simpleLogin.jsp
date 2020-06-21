@@ -200,12 +200,13 @@ div.pageselect-area {
 		
 		<div class="shgm-area-wrapper">
 			<div class="shgm-area ">
-				<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=login">
+				<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgm.do">
 					輸入帳號
 					<input type="text" name="mbract">
 					輸入密碼
 					<input type="text" name="mbrpw">
 					<input type="submit" value="送出">
+					<input type="hidden" name="action" value="login">
 				</form>
 				${error}
 			</div>

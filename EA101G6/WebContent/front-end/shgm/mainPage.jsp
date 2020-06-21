@@ -11,7 +11,7 @@
 	MbrpfVO member = (MbrpfVO) session.getAttribute("member");
 	ShgmService shgmsvc = new ShgmService();
 	List<ShgmVO> shgmlist = shgmsvc.getAllShgm();
-	session.setAttribute("shgmlist", shgmlist);
+	pageContext.setAttribute("shgmlist", shgmlist);
 %>
 <!doctype html>
 <html lang="en">
@@ -246,7 +246,7 @@ div.pageselect-area {
 							<a target="_self" href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneToInfo&shgmno=${shgmvo.shgmno}">
 								<div class="card">
 									<img
-										src="<%=request.getContextPath()%>/back-end/shgm/displayimg?shgmno=${shgmvo.shgmno}"
+										src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"
 										class="card-img-top" alt="Sorry! there's no image...">
 									<div class="card-body">
 										<h5 class="card-title">${shgmvo.shgmname}</h5>

@@ -23,19 +23,32 @@ public class ShgmDAO implements ShgmDAO_interface{
 			e.printStackTrace();
 		}
 	}
-	private static final String INSERT_STMT =
+	private static final String INSERT_NOCHECK_STMT =
 			"INSERT INTO SHGM "
 			+ "(shgmno,sellerno,buyerno,shgmname,price,intro,img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime) "
 			+ "VALUES"
-			+ "('CA'||LPAD(shgame_seq.NEXTVAL,5,'0'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ "('CA'||LPAD(shgame_seq.NEXTVAL,5,'0'),?,?,?,?,?,?,?,null,?,?,?,?,?,?,?,null)";
+	private static final String INSERT_CHECK_STMT =
+			"INSERT INTO SHGM "
+			+ "(shgmno,sellerno,buyerno,shgmname,price,intro,img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime) "
+			+ "VALUES"
+			+ "('CA'||LPAD(shgame_seq.NEXTVAL,5,'0'),?,?,?,?,?,?,?,CURRENT_TIMESTAMP,?,?,?,?,?,?,?,null)";
+	private static final String INSERT_SOLD_STMT =
+			"INSERT INTO SHGM "
+			+ "(shgmno,sellerno,buyerno,shgmname,price,intro,img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime) "
+			+ "VALUES"
+			+ "('CA'||LPAD(shgame_seq.NEXTVAL,5,'0'),?,?,?,?,?,?,?,CURRENT_TIMESTAMP,?,?,?,?,?,?,?,CURRENT_TIMESTAMP)";
 	private static final String SELLER_STMT =
 			"INSERT INTO SHGM"
 			+ "(shgmno,sellerno,buyerno,shgmname,price,intro,img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime) "
 			+ "VALUES"
-			+ "('CA'||LPAD(shgame_seq.NEXTVAL,5,'0'),?,null,?,?,?,?,0,CURRENT_TIMESTAMP,null,null,null,null,0,0,0,null)";
+			+ "('CA'||LPAD(shgame_seq.NEXTVAL,5,'0'),?,null,?,?,?,?,0,null,null,null,null,null,0,0,0,null)";
 	private static final String UPDATE_STMT =
-			"UPDATE SHGM SET sellerno=?,buyerno=?,shgmname=?,price=?,intro=?,img=?,upcheck=?,"
-			+ "uptime=?,take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=?,soldtime=? WHERE shgmno=?";
+			"UPDATE SHGM SET sellerno=?,buyerno=?,shgmname=?,price=?,intro=?,img=?,upcheck=?,uptime=null,"
+			+ "take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=?,soldtime=null WHERE shgmno=?";
+	private static final String UPDATE_CHECK1_STMT =
+			"UPDATE SHGM SET sellerno=?,buyerno=?,shgmname=?,price=?,intro=?,img=?,upcheck=?,uptime=CURRENT_TIMESTAMP,"
+			+ "take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=? WHERE shgmno=?";
 	private static final String SELLER_UPDATE_STMT=
 			"UPDATE SHGM SET shgmname=?,price=?,intro=?,img=? WHERE shgmno=?";
 	private static final String DEALING_STMT =
@@ -56,8 +69,15 @@ public class ShgmDAO implements ShgmDAO_interface{
 		PreparedStatement pstmt = null;
 		try {
 			con = ds.getConnection();
-			pstmt = con.prepareStatement(INSERT_STMT);
 			
+			if(shgmvo.getBoxstatus() == 2 && shgmvo.getPaystatus() == 1 && shgmvo.getStatus() == 2){
+				pstmt = con.prepareStatement(INSERT_SOLD_STMT);
+			} else if(shgmvo.getUpcheck() == 1) {
+				pstmt = con.prepareStatement(INSERT_CHECK_STMT);
+			} else {
+				pstmt = con.prepareStatement(INSERT_NOCHECK_STMT);
+			}
+					
 			pstmt.setString(1, shgmvo.getSellerno());
 			pstmt.setString(2, shgmvo.getBuyerno());
 			pstmt.setString(3, shgmvo.getShgmname());
@@ -67,15 +87,13 @@ public class ShgmDAO implements ShgmDAO_interface{
 			pstmt.setClob(5, clob);
 			pstmt.setBytes(6, shgmvo.getImg());
 			pstmt.setInt(7, shgmvo.getUpcheck());
-			pstmt.setTimestamp(8, shgmvo.getUptime());
-			pstmt.setString(9, shgmvo.getTake());
-			pstmt.setString(10, shgmvo.getTakernm());
-			pstmt.setString(11, shgmvo.getTakerph());
-			pstmt.setString(12, shgmvo.getAddress());
-			pstmt.setInt(13, shgmvo.getBoxstatus());
-			pstmt.setInt(14, shgmvo.getPaystatus());
-			pstmt.setInt(15, shgmvo.getStatus());
-			pstmt.setTimestamp(16, shgmvo.getSoldtime());
+			pstmt.setString(8, shgmvo.getTake());
+			pstmt.setString(9, shgmvo.getTakernm());
+			pstmt.setString(10, shgmvo.getTakerph());
+			pstmt.setString(11, shgmvo.getAddress());
+			pstmt.setInt(12, shgmvo.getBoxstatus());
+			pstmt.setInt(13, shgmvo.getPaystatus());
+			pstmt.setInt(14, shgmvo.getStatus());
 			
 			pstmt.executeUpdate();
 			
@@ -143,7 +161,12 @@ public class ShgmDAO implements ShgmDAO_interface{
 		PreparedStatement pstmt = null;
 		try {
 			con = ds.getConnection();
-			pstmt = con.prepareStatement(UPDATE_STMT);
+			if(shgmvo.getUpcheck() == 1) {
+				pstmt = con.prepareStatement(UPDATE_CHECK1_STMT);
+				//已上架審核的狀態下，不應該有可以修改商品資料的行為，需要再修改
+			} else {
+				pstmt = con.prepareStatement(UPDATE_STMT);
+			}
 			
 			pstmt.setString(1, shgmvo.getSellerno());
 			pstmt.setString(2, shgmvo.getBuyerno());
@@ -154,19 +177,23 @@ public class ShgmDAO implements ShgmDAO_interface{
 			pstmt.setClob(5, clob);
 			pstmt.setBytes(6, shgmvo.getImg());
 			pstmt.setInt(7, shgmvo.getUpcheck());
-			pstmt.setTimestamp(8, shgmvo.getUptime());
-			pstmt.setString(9, shgmvo.getTake());
-			pstmt.setString(10, shgmvo.getTakernm());
-			pstmt.setString(11, shgmvo.getTakerph());
-			pstmt.setString(12, shgmvo.getAddress());
-			pstmt.setInt(13, shgmvo.getBoxstatus());
-			pstmt.setInt(14, shgmvo.getPaystatus());
-			pstmt.setInt(15, shgmvo.getStatus());
-			pstmt.setTimestamp(16, shgmvo.getSoldtime());
-			pstmt.setString(17, shgmvo.getShgmno());
+			pstmt.setString(8, shgmvo.getTake());
+			pstmt.setString(9, shgmvo.getTakernm());
+			pstmt.setString(10, shgmvo.getTakerph());
+			pstmt.setString(11, shgmvo.getAddress());
+			pstmt.setInt(12, shgmvo.getBoxstatus());
+			pstmt.setInt(13, shgmvo.getPaystatus());
+			pstmt.setInt(14, shgmvo.getStatus());
+			pstmt.setString(15, shgmvo.getShgmno());
 			
 			pstmt.executeUpdate();
 			
+			if(shgmvo.getBoxstatus() == 2 && shgmvo.getPaystatus() == 1 && shgmvo.getStatus() == 2){
+				pstmt = con.prepareStatement(ODCOMPLETE_STMT);
+				pstmt.setString(1, shgmvo.getShgmno());
+				
+				pstmt.executeUpdate();
+			} 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -242,6 +269,12 @@ public class ShgmDAO implements ShgmDAO_interface{
 			pstmt.setInt(7, shgmvo.getPaystatus());
 			pstmt.setInt(8, shgmvo.getStatus());
 			pstmt.setString(9, shgmvo.getShgmno());
+			
+//			一次連線中直接在DAO裡面判斷，還是寫一個方法在controller呼叫？
+//			if(shgmvo.getBoxstatus() == 2 && shgmvo.getPaystatus() == 1 && shgmvo.getStatus() == 2){
+//				pstmt = con.prepareStatement(ODCOMPLETE_STMT);
+//				pstmt.setString(1, shgmvo.getShgmno());
+//			} 
 			
 			pstmt.executeUpdate();
 			
@@ -349,7 +382,7 @@ public class ShgmDAO implements ShgmDAO_interface{
 				shgmvo.setShgmname(rs.getString(4));
 				shgmvo.setPrice(rs.getInt(5));
 				Clob clob = rs.getClob(6);
-				String intro = clob.getSubString(1,(int)clob.length());
+				String intro = clob.getSubString(1,(int)clob.length()).replace("\n", "<br>\n");
 				shgmvo.setIntro(intro);
 				shgmvo.setImg(rs.getBytes(7));
 				shgmvo.setUpcheck(rs.getInt(8));
@@ -408,7 +441,7 @@ public class ShgmDAO implements ShgmDAO_interface{
 				shgmvo.setShgmname(rs.getString(4));
 				shgmvo.setPrice(rs.getInt(5));
 				Clob clob = rs.getClob(6);
-				String intro = clob.getSubString(1,(int)clob.length());
+				String intro = clob.getSubString(1,(int)clob.length()).replace("\n", "<br>\n");
 				shgmvo.setIntro(intro);
 				shgmvo.setImg(rs.getBytes(7));
 				shgmvo.setUpcheck(rs.getInt(8));

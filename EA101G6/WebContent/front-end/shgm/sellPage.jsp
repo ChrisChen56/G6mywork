@@ -261,7 +261,7 @@ div.top-info {
 		</div>
 		<div class="shgm-info-allarea">
 			<div class="shgm-info-toparea container">
-				<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=sellshgm" enctype="multipart/form-data">
+				<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgm.do" enctype="multipart/form-data">
 					<div id="imgzoom" class="shgm-info-left col-6 rounded float-left">
 						<span class="alert">${errormap.get(4)}</span>
 						<label for="imgfile">
@@ -298,16 +298,12 @@ div.top-info {
 						${errormap.get(5)}
 					</div>
 					<input type="hidden" name="sellerno" value="${member.mbrno}">
-					
+					<input type="hidden" name="action" value="sellshgm">
 				</form>
 				<br>
 			</div>
 		</div>
 	</div>
-
-
-
-
 
 
 	<script src="js/jquery-3.3.1.min.js"></script>

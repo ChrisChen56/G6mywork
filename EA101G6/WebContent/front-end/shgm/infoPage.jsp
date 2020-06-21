@@ -10,11 +10,13 @@
 <%
 	MbrpfVO member = (MbrpfVO) session.getAttribute("member");
 	List<ShgmVO> list = (List<ShgmVO>) session.getAttribute("randlist");
-	session.setAttribute("list", list);
+	pageContext.setAttribute("list", list);
 %>
 <!doctype html>
 <html lang="en">
 <head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <title>${shgmvo.shgmname}</title>
 <meta charset="utf-8">
 <meta name="viewport"
@@ -153,7 +155,8 @@ div.top-info {
 					<div class="float-right">
 						<c:choose>
 						<c:when test="<%=member != null%>">
-						<span class="d-md-inline-block text-white">歡迎你！${member.mbrname}</span>
+						<span class="d-md-inline-block text-white">歡迎你！</span>
+						<span id="mbrname" class="d-md-inline-block text-white">${member.mbrname}</span>
 						</c:when>
 						<c:otherwise>
 						<a href="#" class="text-white"><span class="d-md-inline-block"><img
@@ -245,7 +248,7 @@ div.top-info {
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-					<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgmrp.do?action=insertrp">
+					<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgmrp.do">
 						<div class="modal-body">
 							<div class="form-group">
 								<label for="message-text" class="col-form-label">檢舉內容:</label>
@@ -260,6 +263,7 @@ div.top-info {
 						</div>
 						<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
 						<input type="hidden" name="suiterno" value="${member.mbrno}">
+						<input type="hidden" name="action" value="insertrp">
 					</form>
 				</div>
 			</div>
@@ -268,7 +272,7 @@ div.top-info {
 			<div class="shgm-info-toparea container">
 				<div id="imgzoom" class="shgm-info-left col-6 ">
 					<img
-						src="<%=request.getContextPath() %>/back-end/shgm/displayimg?shgmno=${shgmvo.shgmno}"
+						src="<%=request.getContextPath() %>/shgm/displayimg?shgmno=${shgmvo.shgmno}"
 						alt="..." class="img-thumbnail rounded float-left">
 				</div>
 				<div class="shgm-info-right col-6 d-flex justify-content-center">
@@ -280,9 +284,9 @@ div.top-info {
 						</div>
 						<div class="p-2 bd-highlight">
 							售價
-							<h1>${shgmvo.price}</h1>
+							<h1 id="price">${shgmvo.price}</h1>
 						</div>
-						<a class="btn btn-primary"
+						<a id="buythis" class="btn btn-primary"
 							href="<%=request.getContextPath()%>/front-end/shgm/buyPage.jsp"
 							role="button">購買</a>
 					</div>
@@ -317,7 +321,7 @@ div.top-info {
 												<div class="col-md-3">
 													<a
 														href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneToInfo&shgmno=${list.get(i).shgmno}">
-														<img src="<%=request.getContextPath()%>/back-end/shgm/displayimg?shgmno=${list.get(i).shgmno}" alt="Image"
+														<img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${list.get(i).shgmno}" alt="Image"
 														style="max-width: 100%;">
 													</a>
 												</div>
@@ -329,8 +333,8 @@ div.top-info {
 											<c:forEach var="i" begin="4" end="7">
 												<div class="col-md-3">
 													<a
-														href="<%=request.getContextPath()%>/front-end/shgm/infoPage.jsp?shgmno=${list.get(i).shgmno}">
-														<img src="<%=request.getContextPath()%>/back-end/shgm/displayimg?shgmno=${list.get(i).shgmno}" alt="Image"
+														href="<%=request.getContextPath()%>/shgm/shgm.do?action=getOneToInfo&shgmno=${list.get(i).shgmno}">
+														<img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${list.get(i).shgmno}" alt="Image"
 														style="max-width: 100%;">
 													</a>
 												</div>
@@ -348,42 +352,35 @@ div.top-info {
 				</div>
 			</div>
 		</div>
-		<div class="random-area"></div>
+		<input type="hidden" id="points" value="${member.points}">
 	</div>
 
 
 
 
-
-	<script type="text/javascript">
-		$('#exampleModal').on('show.bs.modal', function(event) {
-			var button = $(event.relatedTarget) // Button that triggered the modal
-			var recipient = button.data('whatever') // Extract info from data-* attributes
-			// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-			var modal = $(this)
-			modal.find('.modal-title').text('New message to ' + recipient)
-			modal.find('.modal-body input').val(recipient)
-		})
-		$(function() {
-			$('#imgzoom img').mouseenter(function() {
-				var wValue = 1.5 * $(this).width();
-				var hValue = 1.5 * $(this).height();
-				$(this).animate({
-					width : wValue,
-					height : hValue,
-					left : ("-"(0.5 * $(this).width()) / 2),
-					top : ("-"(0.5 * $(this).height()) / 2)
-				}, 1000);
-			}).mouseleave(function() {
-				$(this).animate({
-					width : "100",
-					height : "80",
-					left : "0px",
-					top : "0px"
-				}, 1000);
-			});
+	<script>
+	$(document).ready(function(){
+		$("#buythis").click(function(){
+			if($("#mbrname").text() == ""){
+				alert("您未登入");
+				window.location.href = "<%= request.getContextPath()%>/front-end/shgm/simpleLogin.jsp";
+				return false;
+			}
+			var $price = parseInt($("#price").text());
+			var $points = $("#points").val();
+			if ( $price > $points ){
+				alert($("#price").text());
+				alert($("#points").val());
+				Swal.fire({
+					  icon: 'error',
+					  title: '您的餘額不足',
+					  text: '請進行儲值再繼續購物',
+					  footer: '<a href>沒錢了沒錢了沒錢了沒錢了</a>'
+					});
+				event.preventDefault();
+			}
 		});
+	});
 	</script>
 	<script src="js/jquery-3.3.1.min.js"></script>
 	<!-- 看起來沒屁用 -->

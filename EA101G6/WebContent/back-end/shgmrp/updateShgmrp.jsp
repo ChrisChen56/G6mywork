@@ -27,7 +27,7 @@
 			</c:forEach>
 		</c:if>
 	</ul>
-<form method="post" action="<%=request.getContextPath() %>/back-end/shgmrp/shgmrp.do">
+<form method="post" action="<%=request.getContextPath() %>/shgmrp/shgmrp.do">
 	<table>
 			<tr>
 				<th>檢舉市集商品欄位</th>

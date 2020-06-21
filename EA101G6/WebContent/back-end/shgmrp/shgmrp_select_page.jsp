@@ -16,20 +16,25 @@
 		</c:if>
 	</ul>
 	<ul>
+	
+ 		<jsp:useBean id="shgmrpsvc" class="com.shgmrp.model.ShgmrpService"/>
+ 		<jsp:useBean id="shgmsvc" class="com.shgm.model.ShgmService"/>
+ 		
 		<li>
-			<form method="post" action="<%=request.getContextPath()%>/back-end/shgmrp/shgmrp.do" >
-				請輸入市集商品檢舉編號(CB00001)：
-				<input type="text" name="shgmrpno" >
+			<form method="post" action="<%=request.getContextPath()%>/shgmrp/shgmrp.do">
+			請選擇市集商品檢舉編號：
+				<select size="1" name="shgmrpno">
+					<c:forEach var="shgmrpvo" items="${shgmrpsvc.allShgmrp}">
+						<option value="${shgmrpvo.shgmrpno}">${shgmrpvo.shgmrpno}
+					</c:forEach>
+				</select>
 				<input type="hidden" name="action" value="get_one" >
 				<input type="submit" value="送出" >
 			</form>
 		</li>
 		
- 		<jsp:useBean id="shgmrpsvc" class="com.shgmrp.model.ShgmrpService"/>
- 		<jsp:useBean id="shgmsvc" class="com.shgm.model.ShgmService"/>
-		
 		<li>
-			<form method="post" action="<%=request.getContextPath()%>/back-end/shgmrp/shgmrp.do">
+			<form method="post" action="<%=request.getContextPath()%>/shgmrp/shgmrp.do">
 			請選擇被檢舉的市集商品：
 				<select size="1" name="shgmrpno">
 					<c:forEach var="shgmrpvo" items="${shgmrpsvc.allShgmrp}">
@@ -44,7 +49,7 @@
 			<a href="<%=request.getContextPath()%>/back-end/shgmrp/addShgmrp.jsp">檢舉市集商品</a>		！！注意！！需要先通過審核
 		</li>
 		<li>
-			<form method="post" action="<%=request.getContextPath()%>/back-end/shgmrp/shgmrp.do">
+			<form method="post" action="<%=request.getContextPath()%>/shgmrp/shgmrp.do">
 			請選擇要修改的被檢舉市集商品：
 				<select size="1" name="shgmrpno">
 					<c:forEach var="shgmrpvo" items="${shgmrpsvc.allShgmrp}">
