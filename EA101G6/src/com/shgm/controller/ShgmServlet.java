@@ -128,7 +128,7 @@ public class ShgmServlet extends HttpServlet {
 			String shgmno = request.getParameter("shgmno");
 
 			ShgmService shgmsvc = new ShgmService();
-			ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
+			ShgmVO shgmvo = shgmsvc.getOneForInfo(shgmno);
 
 			session.setAttribute("shgmvo", shgmvo);
 			String url = "/front-end/shgm/infoPage.jsp";
@@ -218,9 +218,17 @@ public class ShgmServlet extends HttpServlet {
 				// 取貨地址可為空字串
 				String address = request.getParameter("address");
 
+				Integer boxstatus = new Integer(request.getParameter("boxstatus"));
+
+				Integer paystatus = new Integer(request.getParameter("paystatus"));
+
+				Integer status = new Integer(request.getParameter("status"));
+
 				// 只要買家、取貨方式、取貨人姓名、取貨人電話、取貨地址五個欄位任一個有填入資料，其他四個欄位也必須要填
+				// 而且出貨、付款、訂單狀態只要不是初始狀態，其餘欄位就要填寫
 				if (buyerno.trim().length() > 0 || take.trim().length() > 0 || takernm.trim().length() > 0
-						|| takerph.trim().length() > 0 || address.trim().length() > 0) {
+						|| takerph.trim().length() > 0 || address.trim().length() > 0 || boxstatus != 0
+						|| paystatus != 0 || status != 0) {
 
 					// 買家編號錯誤處理
 					if (buyerno.trim().length() == 0) {
@@ -254,12 +262,6 @@ public class ShgmServlet extends HttpServlet {
 						errormsgs.add("取貨地址：地址不得為空");
 				}
 
-				Integer boxstatus = new Integer(request.getParameter("boxstatus"));
-
-				Integer paystatus = new Integer(request.getParameter("paystatus"));
-
-				Integer status = new Integer(request.getParameter("status"));
-
 				ShgmVO shgmvo = new ShgmVO();
 				shgmvo.setBuyerno(buyerno);
 				shgmvo.setSellerno(sellerno);
@@ -291,8 +293,25 @@ public class ShgmServlet extends HttpServlet {
 				}
 
 				ShgmService shgmsvc = new ShgmService();
-				shgmsvc.addShgm(sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm, takerph,
-						address, boxstatus, paystatus, status);
+				// 上架即通過審核，更新上架時間
+				if (upcheck == 1) {
+					shgmsvc.addShgmCheck1(sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm,
+							takerph, address, boxstatus, paystatus, status);
+					// 上架即通過審核且賣出，更新上架、售出時間
+				} else if (upcheck == 1 && boxstatus == 2 && paystatus == 1 && status == 2) {
+					shgmsvc.addShgmSold(sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm, takerph,
+							address, boxstatus, paystatus, status);
+					MbrpfService mbrsvc = new MbrpfService();
+					sellerno = shgmvo.getSellerno();
+					// 取出賣家的mbrpfvo以便對points做更動
+					MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(sellerno);
+					// 把賣家原本的points加上販售之價格
+					mbrsvc.update(sellerno, mbrpfvo.getPoints() + shgmvo.getPrice());
+				} else {
+					// 正常上架未通過審查，上架、售出時間為空值
+					shgmsvc.addShgmNocheck(sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm,
+							takerph, address, boxstatus, paystatus, status);
+				}
 
 				// 新增成功把圖片從session中移除
 				session.removeAttribute("img");
@@ -365,8 +384,7 @@ public class ShgmServlet extends HttpServlet {
 						errormap.put((long) 4, "圖片無法上傳");
 					}
 				}
-				
-				
+
 				ShgmVO shgmvo = new ShgmVO();
 				shgmvo.setSellerno(sellerno);
 				shgmvo.setShgmname(shgmname);
@@ -375,8 +393,8 @@ public class ShgmServlet extends HttpServlet {
 				shgmvo.setImg(img);
 
 				if (!errormap.isEmpty()) {
-					//出現錯誤
-					//session存入圖片資料、轉送顯示用的圖片、市集商品資料
+					// 出現錯誤
+					// session存入圖片資料、轉送顯示用的圖片、市集商品資料
 					session.setAttribute("img", img);
 					request.setAttribute("imagefailed", imagefailed);
 					request.setAttribute("shgmsell", shgmvo);
@@ -410,8 +428,8 @@ public class ShgmServlet extends HttpServlet {
 			request.setAttribute("errormap", errormap);
 			try {
 				String shgmno = request.getParameter("shgmno");
-				
-				//從會員資料取得，不需要錯誤處理
+
+				// 從會員資料取得，不需要錯誤處理
 				String buyerno = request.getParameter("buyerno");
 
 				String take = request.getParameter("take");
@@ -472,8 +490,7 @@ public class ShgmServlet extends HttpServlet {
 				ShgmService shgmsvc = new ShgmService();
 				shgmsvc.dealingshgm(shgmno, buyerno, take, takernm, takerph, address, boxstatus, paystatus, status);
 
-//一次連線中在DAO裡面判斷，還是寫一個方法在controller呼叫？
-				// 已送達、已付款、已完成
+				// 已上架的市集商品，同時也已送達、已付款、已完成，即是訂單完成，可以增加賣家的點數了
 				if (boxstatus == 2 && paystatus == 1 && status == 2) {
 					MbrpfService mbrsvc = new MbrpfService();
 					String sellerno = shgmvo.getSellerno();
@@ -482,7 +499,7 @@ public class ShgmServlet extends HttpServlet {
 					// 把賣家原本的points加上販售之價格
 					mbrsvc.update(sellerno, mbrpfvo.getPoints() + shgmvo.getPrice());
 					// 資料庫更新售出時間
-					shgmsvc.odComplete(shgmno);
+					shgmsvc.soldShgm(shgmno);
 				}
 
 				String url = "/front-end/shgm/mainPage.jsp";
@@ -545,157 +562,177 @@ public class ShgmServlet extends HttpServlet {
 			System.out.println("-----------------------enter update-----------------------");
 			List<String> errormsgs = new LinkedList<String>();
 			request.setAttribute("errormsgs", errormsgs);
-			
+
 			String imagefailed = request.getParameter("imagefailed");
 			try {
-			String shgmno = request.getParameter("shgmno");
+				String shgmno = request.getParameter("shgmno");
 
-			String sellerno = request.getParameter("sellerno");
-			String memberreg = "^BM\\d{5}$";
-			if (sellerno.trim().length() == 0) {
-				errormsgs.add("賣家編號：請勿輸入空白");
-			} else if (!sellerno.trim().matches(memberreg)) {
-				errormsgs.add("賣家編號：BM開頭、長度7的格式");
-			}
-
-			// 買家可為空字串
-			String buyerno = request.getParameter("buyerno");
-
-			String shgmname = request.getParameter("shgmname");
-			if (shgmname.trim().length() == 0)
-				errormsgs.add("市集商品名稱：請勿輸入空白");
-
-			Integer price = null;
-			String pricestr = request.getParameter("price");
-			if (pricestr.trim().length() == 0) {
-				errormsgs.add("市集商品價錢：價錢不得為空");
-			} else {
-				try {
-					price = new Integer(pricestr.trim());
-					if (pricestr.trim().length() > 6)
-						errormsgs.add("市集商品價錢：長度超過本平台規範");
-				} catch (Exception e) {
-					errormsgs.add("市集商品價錢：格式不正確");
+				String sellerno = request.getParameter("sellerno");
+				String memberreg = "^BM\\d{5}$";
+				if (sellerno.trim().length() == 0) {
+					errormsgs.add("賣家編號：請勿輸入空白");
+				} else if (!sellerno.trim().matches(memberreg)) {
+					errormsgs.add("賣家編號：BM開頭、長度7的格式");
 				}
-			}
-			String intro = request.getParameter("intro");
-			if (intro.trim().length() == 0)
-				errormsgs.add("市集商品簡介：簡介文字不得為空");
 
-			byte[] img = null;
-			Part imgreq = request.getPart("imginput");
-			// 上傳檔案大小大於零，表示有新的圖片要進行上傳
-			if (imgreq.getSize() > 0) {
-				InputStream is = imgreq.getInputStream();
-				img = new byte[is.available()];
-				is.read(img);
-				System.out.println("上傳成功");
-			} else {
-				// 上傳檔案大小小於零，如果session不為空值，取出session裡面的圖片，反之，沿用資料庫原本的圖片
-				if((byte[]) session.getAttribute("img") == null) {
-					ShgmService shgmsvc = new ShgmService();
-					ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
-					img = shgmvo.getImg();
+				// 買家可為空字串
+				String buyerno = request.getParameter("buyerno");
+
+				String shgmname = request.getParameter("shgmname");
+				if (shgmname.trim().length() == 0)
+					errormsgs.add("市集商品名稱：請勿輸入空白");
+
+				Integer price = null;
+				String pricestr = request.getParameter("price");
+				if (pricestr.trim().length() == 0) {
+					errormsgs.add("市集商品價錢：價錢不得為空");
 				} else {
-					img = (byte[]) session.getAttribute("img");
+					try {
+						price = new Integer(pricestr.trim());
+						if (pricestr.trim().length() > 6)
+							errormsgs.add("市集商品價錢：長度超過本平台規範");
+					} catch (Exception e) {
+						errormsgs.add("市集商品價錢：格式不正確");
+					}
 				}
-			}
-			// 如果其他欄位發生錯誤，回到新增頁面時，顯示base64編碼的圖片
-			imagefailed = Base64.encode(img);
+				String intro = request.getParameter("intro");
+				if (intro.trim().length() == 0)
+					errormsgs.add("市集商品簡介：簡介文字不得為空");
 
-			Integer upcheck = new Integer(request.getParameter("upcheck"));
+				byte[] img = null;
+				Part imgreq = request.getPart("imginput");
+				// 上傳檔案大小大於零，表示有新的圖片要進行上傳
+				if (imgreq.getSize() > 0) {
+					InputStream is = imgreq.getInputStream();
+					img = new byte[is.available()];
+					is.read(img);
+					System.out.println("上傳成功");
+				} else {
+					// 上傳檔案大小小於零，如果session不為空值，取出session裡面的圖片，反之，沿用資料庫原本的圖片
+					if ((byte[]) session.getAttribute("img") == null) {
+						ShgmService shgmsvc = new ShgmService();
+						ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
+						img = shgmvo.getImg();
+					} else {
+						img = (byte[]) session.getAttribute("img");
+					}
+				}
+				// 如果其他欄位發生錯誤，回到新增頁面時，顯示base64編碼的圖片
+				imagefailed = Base64.encode(img);
 
-			// 取貨方式可為空字串
-			String take = request.getParameter("take");
+				Integer upcheck = new Integer(request.getParameter("upcheck"));
 
-			// 取貨人姓名可為空字串
-			String takernm = request.getParameter("takernm");
+				// 取貨方式可為空字串
+				String take = request.getParameter("take");
 
-			// 取貨人電話可為空字串
-			String takerph = request.getParameter("takerph");
+				// 取貨人姓名可為空字串
+				String takernm = request.getParameter("takernm");
 
-			// 取貨地址可為空字串
-			String address = request.getParameter("address");
+				// 取貨人電話可為空字串
+				String takerph = request.getParameter("takerph");
 
-			// 只要買家、取貨方式、取貨人姓名、取貨人電話、取貨地址五個欄位任一個有填入資料，其他四個欄位也必須要填
-			if (buyerno.trim().length() > 0 || take.trim().length() > 0 || takernm.trim().length() > 0
-					|| takerph.trim().length() > 0 || address.trim().length() > 0) {
+				// 取貨地址可為空字串
+				String address = request.getParameter("address");
 
-				// 買家編號錯誤處理
-				if (buyerno.trim().length() == 0) {
-					errormsgs.add("買家編號：不得為空");
-				} else if (!buyerno.trim().matches(memberreg)) {
-					errormsgs.add("買家編號：BM開頭、長度7的格式");
+				Integer boxstatus = new Integer(request.getParameter("boxstatus"));
+
+				Integer paystatus = new Integer(request.getParameter("paystatus"));
+
+				Integer status = new Integer(request.getParameter("status"));
+
+				// 只要買家、取貨方式、取貨人姓名、取貨人電話、取貨地址五個欄位任一個有填入資料，其他四個欄位也必須要填。
+				// 而且出貨、付款、訂單狀態只要不是初始狀態，其餘欄位就要填寫
+				if (buyerno.trim().length() > 0 || take.trim().length() > 0 || takernm.trim().length() > 0
+						|| takerph.trim().length() > 0 || address.trim().length() > 0 || boxstatus != 0
+						|| paystatus != 0 || status != 0) {
+
+					// 買家編號錯誤處理
+					if (buyerno.trim().length() == 0) {
+						errormsgs.add("買家編號：不得為空");
+					} else if (!buyerno.trim().matches(memberreg)) {
+						errormsgs.add("買家編號：BM開頭、長度7的格式");
+					}
+
+					// 取貨方式錯誤處理
+					if (take.trim().length() == 0) {
+						errormsgs.add("取貨方式：不得為空");
+					} else if (take.trim().length() > 3) {
+						errormsgs.add("取貨方式：長度不正確");
+					}
+
+					// 取貨人姓名錯誤處理
+					if (takernm.trim().length() == 0) {
+						errormsgs.add("取貨人姓名：不得為空");
+					} else if (takernm.trim().length() > 3)
+						errormsgs.add("取貨人姓名：長度不正確");
+
+					// 取貨人電話錯誤處理
+					String takerphreg = "^09\\d{8}$";
+					if (takerph.trim().length() == 0) {
+						errormsgs.add("取貨人電話：不得為空");
+					} else if (!takerph.trim().matches(takerphreg))
+						errormsgs.add("取貨人電話：請輸入符合格式的電話號碼");
+
+					// 取貨地址
+					if (address.trim().length() == 0)
+						errormsgs.add("取貨地址：地址不得為空");
 				}
 
-				// 取貨方式錯誤處理
-				if (take.trim().length() == 0) {
-					errormsgs.add("取貨方式：不得為空");
-				} else if (take.trim().length() > 3) {
-					errormsgs.add("取貨方式：長度不正確");
+				ShgmVO shgmvo = new ShgmVO();
+				shgmvo.setShgmno(shgmno);
+				shgmvo.setSellerno(sellerno);
+				shgmvo.setBuyerno(buyerno);
+				shgmvo.setShgmname(shgmname);
+				shgmvo.setPrice(price);
+				shgmvo.setIntro(intro);
+				shgmvo.setImg(img);
+				shgmvo.setUpcheck(upcheck);
+				shgmvo.setTake(take);
+				shgmvo.setTakernm(takernm);
+				shgmvo.setTakerph(takerph);
+				shgmvo.setAddress(address);
+				shgmvo.setBoxstatus(boxstatus);
+				shgmvo.setPaystatus(paystatus);
+				shgmvo.setStatus(status);
+
+				if (!errormsgs.isEmpty()) {
+					request.setAttribute("imagefailed", imagefailed);
+					session.setAttribute("img", img);
+					request.setAttribute("shgmvo", shgmvo);
+					String url = "/back-end/shgm/updateShgm.jsp";
+					RequestDispatcher failedview = request.getRequestDispatcher(url);
+					failedview.forward(request, response);
+					return;
 				}
 
-				// 取貨人姓名錯誤處理
-				if (takernm.trim().length() == 0) {
-					errormsgs.add("取貨人姓名：不得為空");
-				} else if (takernm.trim().length() > 3)
-					errormsgs.add("取貨人姓名：長度不正確");
+				ShgmService shgmsvc = new ShgmService();
 
-				// 取貨人電話錯誤處理
-				String takerphreg = "^09\\d{8}$";
-				if (takerph.trim().length() == 0) {
-					errormsgs.add("取貨人電話：不得為空");
-				} else if (!takerph.trim().matches(takerphreg))
-					errormsgs.add("取貨人電話：請輸入符合格式的電話號碼");
+				// 已上架的市集商品，同時修改成已送達、已付款、已完成，即是訂單完成，可以增加賣家的點數了
+				if (upcheck == 1 && boxstatus == 2 && paystatus == 1 && status == 2) {
+					MbrpfService mbrsvc = new MbrpfService();
+					sellerno = shgmvo.getSellerno();
+					// 取出賣家的mbrpfvo以便對points做更動
+					MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(sellerno);
+					// 把賣家原本的points加上販售之價格
+					mbrsvc.update(sellerno, mbrpfvo.getPoints() + shgmvo.getPrice());
+					// 資料庫更新售出時間
+					shgmsvc.soldShgm(shgmno);
+				} else if (upcheck == 1) {
+					// 修改後，已通過審查，同時更新上架時間
+					shgmsvc.updateShgmCheck1(shgmno, sellerno, buyerno, shgmname, price, intro, img, upcheck, take,
+							takernm, takerph, address, boxstatus, paystatus, status);
+				} else {
+					// 修改後，未通過審查，上架時間為空值
+					shgmsvc.updateShgm(shgmno, sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm,
+							takerph, address, boxstatus, paystatus, status);
+				}
 
-				// 取貨地址
-				if (address.trim().length() == 0)
-					errormsgs.add("取貨地址：地址不得為空");
-			}
+				// 新增成功，移除圖片資料
+				session.removeAttribute("img");
 
-			Integer boxstatus = new Integer(request.getParameter("boxstatus"));
-
-			Integer paystatus = new Integer(request.getParameter("paystatus"));
-
-			Integer status = new Integer(request.getParameter("status"));
-
-			ShgmVO shgmvo = new ShgmVO();
-			shgmvo.setShgmno(shgmno);
-			shgmvo.setSellerno(sellerno);
-			shgmvo.setBuyerno(buyerno);
-			shgmvo.setShgmname(shgmname);
-			shgmvo.setPrice(price);
-			shgmvo.setIntro(intro);
-			shgmvo.setImg(img);
-			shgmvo.setUpcheck(upcheck);
-			shgmvo.setTake(take);
-			shgmvo.setTakernm(takernm);
-			shgmvo.setTakerph(takerph);
-			shgmvo.setAddress(address);
-			shgmvo.setBoxstatus(boxstatus);
-			shgmvo.setPaystatus(paystatus);
-			shgmvo.setStatus(status);
-
-			if (!errormsgs.isEmpty()) {
-				request.setAttribute("imagefailed", imagefailed);
-				session.setAttribute("img", img);
-				request.setAttribute("shgmvo", shgmvo);
-				String url = "/back-end/shgm/updateShgm.jsp";
-				RequestDispatcher failedview = request.getRequestDispatcher(url);
-				failedview.forward(request, response);
-				return;
-			}
-
-			ShgmService shgmsvc = new ShgmService();
-			shgmsvc.updateShgm(shgmno, sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm, takerph,
-					address, boxstatus, paystatus, status);
-			
-			//新增成功，移除圖片資料
-			session.removeAttribute("img");
-
-			String url = "/back-end/shgm/listAllShgm.jsp";
-			RequestDispatcher successview = request.getRequestDispatcher(url);
-			successview.forward(request, response);
+				String url = "/back-end/shgm/listAllShgm.jsp";
+				RequestDispatcher successview = request.getRequestDispatcher(url);
+				successview.forward(request, response);
 			} catch (Exception e) {
 				errormsgs.add("無法修改資料" + e.getMessage());
 				String url = "/back-end/shgm/shgm_select_page.jsp";

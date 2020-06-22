@@ -84,7 +84,14 @@
 	                 <td>審核未通過</td>
 	            </c:otherwise>
         	</c:choose>
-			<td>${(shgmvo.uptime == null)? "尚未上架":shgmvo.uptime}<fmt:formatDate value="" pattern="yyyy/MM/dd HH:mm:ss"/></td>
+        	<c:choose>
+        		<c:when test="${shgmvo.uptime == null}">
+        			<td>本商品尚未上架</td>
+        		</c:when>
+        		<c:otherwise>
+	        		<td><fmt:formatDate value="${shgmvo.uptime}" pattern="yyyy/MM/dd HH:mm:ss"/></td>
+        		</c:otherwise>
+        	</c:choose>
 			<td>${(shgmvo.take == null)? "尚無資料":shgmvo.take}</td>
 			<td>${(shgmvo.takernm == null)? "尚無資料":shgmvo.takernm}</td>
 			<td>${(shgmvo.takerph == null)? "尚無資料":shgmvo.takerph}</td>
@@ -122,7 +129,14 @@
 	                 <td>取消</td>
 	            </c:otherwise>
         	</c:choose>
-			<td>${(shgmvo.soldtime == null)? "尚未賣出":shgmvo.soldtime}<fmt:formatDate value="" pattern="yyyy/MM/dd HH:mm:ss"/></td>
+        	<c:choose>
+        		<c:when test="${shgmvo.soldtime == null}">
+        			<td>本商品尚未售出</td>
+        		</c:when>
+        		<c:otherwise>
+	        		<td><fmt:formatDate value="${shgmvo.soldtime}" pattern="yyyy/MM/dd HH:mm:ss"/></td>
+        		</c:otherwise>
+        	</c:choose>
 			<td>
 				<form method="post" action="<%= request.getContextPath()%>/shgm/shgm.do">
 					<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">

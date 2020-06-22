@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="com.shgm.model.*" %>
 <%
     	ShgmVO shgmvo = (ShgmVO) request.getAttribute("shgmvo");
@@ -69,7 +70,7 @@
 							<img id="blah" name="imgtag" alt="your image" width="100" height="100" src="data:image/png;base64,${imagefailed}"/>
 						</c:when>
 						<c:otherwise>
-							<img id="blah" name="imgtag" alt="your image" width="100" height="100" src="<%=request.getContextPath()%>/back-end/shgm/displayimg?shgmno=<%= shgmvo.getShgmno()%>"/>
+							<img id="blah" name="imgtag" alt="your image" width="100" height="100" src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=<%= shgmvo.getShgmno()%>"/>
 						</c:otherwise>
 					</c:choose>
 					</tr>
@@ -83,7 +84,14 @@
 			</tr>
 			<tr>
 				<td>上架時間</td>
-				<td>${(shgmvo.uptime == null)? "尚未上架":shgmvo.uptime}</td>
+				<c:choose>
+        		<c:when test="${shgmvo.uptime == null}">
+        			<td>本商品尚未上架</td>
+        		</c:when>
+        		<c:otherwise>
+	        		<td><fmt:formatDate value="${shgmvo.uptime}" pattern="yyyy/MM/dd HH:mm:ss"/></td>
+        		</c:otherwise>
+        	</c:choose>
 			</tr>
 			<tr>
 				<td>取貨方式</td>
@@ -131,7 +139,14 @@
 			</tr>
 			<tr>
 				<td>售出時間</td>
-				<td>${(shgmvo.soldtime == null)? "尚未賣出":shgmvo.soldtime}</td>
+				<c:choose>
+        		<c:when test="${shgmvo.soldtime == null}">
+        			<td>本商品尚未售出</td>
+        		</c:when>
+        		<c:otherwise>
+	        		<td><fmt:formatDate value="${shgmvo.soldtime}" pattern="yyyy/MM/dd HH:mm:ss"/></td>
+        		</c:otherwise>
+        	</c:choose>
 			</tr>
 			<tr>
 				<td colspan="2">

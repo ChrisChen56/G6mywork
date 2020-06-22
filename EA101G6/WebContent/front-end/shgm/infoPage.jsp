@@ -1,12 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="com.shgm.model.*"%>
 <%@ page import="com.mbrpf.model.*"%>
-<%@ page import="java.io.*"%>
 <%@ page import="java.util.*"%>
-<%@ page import="java.sql.*"%>
 <%
 	MbrpfVO member = (MbrpfVO) session.getAttribute("member");
 	List<ShgmVO> list = (List<ShgmVO>) session.getAttribute("randlist");

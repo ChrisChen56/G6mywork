@@ -3,8 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="com.shgm.model.*" %>
-<%@ page import="java.io.*" %>
-<%@ page import="java.sql.*" %>
 <%
 	ShgmVO shgmvo = (ShgmVO)request.getAttribute("shgmvo");
 %>
@@ -17,7 +15,7 @@
 <style>
 	table{
 		border: 3px solid black;
-		text-align: center;
+		text-align: left;
 	}
 	th, td {
     	border: 1px solid black;
@@ -52,21 +50,35 @@
 		<tr>
 			<td>${shgmvo.shgmno}</td>
 			<td>${shgmvo.sellerno}</td>
-			<td>${shgmvo.buyerno}</td>
+			<td>${(shgmvo.buyerno == null)? "尚未有買家":shgmvo.buyerno}</td>
 			<td>${shgmvo.shgmname}</td>
 			<td>${shgmvo.price}</td>
 			<td width="375">${shgmvo.intro}</td>
 			<td><img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"/></td>
 			<td><%=(shgmvo.getUpcheck() == 0)? "未審核":(shgmvo.getUpcheck() == 1)? "審核通過": "審核未通過" %></td>
-			<td><fmt:formatDate value="${shgmvo.uptime}" pattern="yyyy/MM/dd HH:mm:ss"/></td>
-			<td>${shgmvo.take}</td>
-			<td>${shgmvo.takernm}</td>
-			<td>${shgmvo.takerph}</td>
-			<td>${shgmvo.address}</td>
+			<c:choose>
+        		<c:when test="${shgmvo.uptime == null}">
+        			<td>本商品尚未上架</td>
+        		</c:when>
+        		<c:otherwise>
+	        		<td><fmt:formatDate value="${shgmvo.uptime}" pattern="yyyy/MM/dd HH:mm:ss"/></td>
+        		</c:otherwise>
+        	</c:choose>
+        	<td>${(shgmvo.take == null)? "尚無資料":shgmvo.take}</td>
+			<td>${(shgmvo.takernm == null)? "尚無資料":shgmvo.takernm}</td>
+			<td>${(shgmvo.takerph == null)? "尚無資料":shgmvo.takerph}</td>
+			<td>${(shgmvo.address == null)? "尚無資料":shgmvo.address}</td>
 			<td><%=(shgmvo.getBoxstatus() == 0)? "未出貨": (shgmvo.getBoxstatus() == 1)? "已出貨": "送達" %></td>
 			<td><%=(shgmvo.getPaystatus() == 0)? "未付款": "已付款" %></td>
 			<td><%=(shgmvo.getStatus() == 0)? "未下訂": (shgmvo.getStatus() == 1)? "已下訂": (shgmvo.getStatus() == 2)? "已完成":"取消" %></td>
-			<td>${shgmvo.soldtime}</td>
+			<c:choose>
+        		<c:when test="${shgmvo.soldtime == null}">
+        			<td>本商品尚未售出</td>
+        		</c:when>
+        		<c:otherwise>
+	        		<td><fmt:formatDate value="${shgmvo.soldtime}" pattern="yyyy/MM/dd HH:mm:ss"/></td>
+        		</c:otherwise>
+        	</c:choose>
 		</tr>
 	</table>
 	<a href="<%=request.getContextPath()%>/back-end/shgm/shgm_select_page.jsp">回首頁</a>

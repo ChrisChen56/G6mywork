@@ -2,14 +2,15 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="com.shgm.model.*"%>
+<%@ page import="com.mbrpf.model.*"%>
 <%@ page import="java.util.*"%>
 
 <%
 	byte[] img = (byte[]) session.getAttribute("img");
-	ShgmVO shgmsell = (ShgmVO) request.getAttribute("shgmsell");
 	String imagefailed = (String) request.getAttribute("imagefailed");
+	MbrpfVO member = (MbrpfVO) session.getAttribute("member");
+	ShgmVO shgmsell = (ShgmVO) request.getAttribute("shgmsell");
 %>
-${session.scope }
 <!doctype html>
 <html lang="en">
 <head>
@@ -149,7 +150,7 @@ div.top-info {
 							class="icon" src="images/add-icon.png">註冊</span></a>
 					<div class="float-right">
 						<c:choose>
-						<c:when test="${member.mbrname != ''}">
+						<c:when test="<%=member != null%>">
 						<span class="d-md-inline-block text-white">歡迎你！${member.mbrname}</span>
 						</c:when>
 						<c:otherwise>
@@ -265,7 +266,7 @@ div.top-info {
 					<div id="imgzoom" class="shgm-info-left col-6 rounded float-left">
 						<span class="alert">${errormap.get(4)}</span>
 						<label for="imgfile">
-							<img name="imgtag" id="blah" alt="Click here to upload!" class="img-thumbnail rounded float-left" src="data:image/png;base64,${imagefailed}"/>
+							<img name="imgtag" id="blah" alt="Click here to upload!" class="img-thumbnail rounded float-left" src="<%=request.getContextPath() %>/front-end/shgm/images/logo.gif"/>
 						</label>
 						<div class="uploadwrapper">
 							<input type="file" name="img" id="imgfile" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" accept=".png, .jpg, .jpeg .gif" value="${img}"/>

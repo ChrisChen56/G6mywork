@@ -1,21 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="com.shgm.model.*"%>
-<%@ page import="com.mbrpf.model.*" %>
-<%@ page import="java.io.*"%>
-<%@ page import="java.sql.*"%>
+<%@ page import="com.mbrpf.model.*"%>
 <%@ page import="java.util.*"%>
 <%
 	MbrpfVO member = (MbrpfVO) session.getAttribute("member");
 	ShgmService shgmsvc = new ShgmService();
-	List<ShgmVO> shgmlist = shgmsvc.getAllShgm();
+	List<ShgmVO> shgmlist = shgmsvc.getAllForMain();
 	pageContext.setAttribute("shgmlist", shgmlist);
 %>
 <!doctype html>
 <html lang="en">
 <head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <title>main_page</title>
 <meta charset="utf-8">
 <meta name="viewport"
@@ -233,8 +232,8 @@ div.pageselect-area {
 					<li class="breadcrumb-item"><a href="#">首頁</a></li>
 					<li class="breadcrumb-item active" aria-current="page">市集</li>
 					<li class="awrapper">
-					<a class="btn btn-primary ml-auto" href="<%=request.getContextPath()%>/front-end/shgm/sellPage.jsp" role="button">我要上架</a>
-					<a class="btn btn-primary " href="#" role="button">我的市集商品</a></li>
+					<a id="upshgm" class="btn btn-primary ml-auto" href="<%=request.getContextPath()%>/front-end/shgm/sellPage.jsp" role="button">我要上架</a>
+					<a id="myshgm" class="btn btn-primary " href="#" role="button">我的市集商品</a></li>
 				</ol>
 			</nav>
 		</div>
@@ -279,12 +278,21 @@ div.pageselect-area {
 			</nav>
 		</div>
 	</div>
+	<input id="member" type="hidden" name="member" value="${member.mbrname}">
 
 
 
-
-
-
+	<script>
+	$(document).ready(function(){
+		$("#upshgm").click(function(){
+			if($("#member").val() === ''){
+				alert('您未登入');
+				window.location.href = "<%= request.getContextPath()%>/front-end/shgm/simpleLogin.jsp";
+				return false;
+			}
+		});
+	});
+	</script>
 	<script src="js/jquery-3.3.1.min.js"></script>
 	<!-- 看起來沒屁用 -->
 	<script src="js/popper.min.js"></script>
