@@ -22,7 +22,6 @@ import com.mbrpf.model.MbrpfVO;
 
 import com.shgm.model.ShgmService;
 import com.shgm.model.ShgmVO;
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 7 * 1024 * 1024, maxRequestSize = 5 * 5 * 1024 * 1024)
 public class ShgmServlet extends HttpServlet {

@@ -20,7 +20,7 @@
 	table{
 		border: 3px solid black;
 		text-align: center;
-		width: 2300px;
+		width: 2600px;
 	}
 	th, td {
     	border: 1px solid black;
@@ -70,7 +70,7 @@
 			<td>${(shgmvo.buyerno == null)? "尚未有買家":shgmvo.buyerno}</td>
 			<td>${shgmvo.shgmname}</td>
 			<td>${shgmvo.price}</td>
-			<td width="375" style="text-align:left;">${shgmvo.intro}</td>
+			<td width="250px" style="text-align:left;">${shgmvo.intro}</td>
 			<td class="imgtd"><img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"/></td>
 			<c:choose>
 	            <c:when test="${shgmvo.upcheck == 0}">
