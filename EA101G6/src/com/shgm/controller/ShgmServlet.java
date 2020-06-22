@@ -142,8 +142,6 @@ public class ShgmServlet extends HttpServlet {
 			List<String> errormsgs = new LinkedList<String>();
 			request.setAttribute("errormsgs", errormsgs);
 
-			// 如果有上傳成功，以base64編譯過的圖片會被存入
-			String imagefailed = request.getParameter("imgtag");
 			try {
 
 				String sellerno = request.getParameter("sellerno");
@@ -180,28 +178,13 @@ public class ShgmServlet extends HttpServlet {
 					errormsgs.add("市集商品簡介：簡介文字不得為空");
 
 				byte[] img = null;
-				Part imgreq = request.getPart("imginput");
-				// 上傳檔案大小為零，且session裡面沒有圖片，表示沒有新的上傳、也沒有上傳過
-				if (imgreq.getSize() == 0 && (byte[]) session.getAttribute("img") == null) {
+				Part imgreq = request.getPart("img");
+				if (imgreq.getSize() == 0) {
 					errormsgs.add("市集商品圖片：市集商品圖片不得為空");
-				} else {
-					try {
-						// 有圖片在，判斷要從哪裡拿出
-						// 上傳檔案大小大於零，表示有新的圖片要進行上傳
-						if (imgreq.getSize() > 0) {
-							InputStream is = imgreq.getInputStream();
-							img = new byte[is.available()];
-							is.read(img);
-							System.out.println("上傳成功");
-						} else {
-							// 上傳檔案大小小於零，從session中取出圖片
-							img = (byte[]) session.getAttribute("img");
-						}
-						// 以base64編碼圖片，如果其他欄位發生錯誤，回到新增頁面時，顯示base64編碼的圖片
-						imagefailed = Base64.encode(img);
-					} catch (Exception e) {
-						errormsgs.add("市集商品圖片：" + e.getMessage());
-					}
+				} else if (imgreq.getSize() > 0) {
+					InputStream is = imgreq.getInputStream();
+					img = new byte[is.available()];
+					is.read(img);
 				}
 
 				Integer upcheck = new Integer(request.getParameter("upcheck"));
@@ -225,7 +208,7 @@ public class ShgmServlet extends HttpServlet {
 				Integer status = new Integer(request.getParameter("status"));
 
 				// 只要買家、取貨方式、取貨人姓名、取貨人電話、取貨地址五個欄位任一個有填入資料，其他四個欄位也必須要填
-				// 而且出貨、付款、訂單狀態只要不是初始狀態，其餘欄位就要填寫
+				// 而且出貨、付款、訂單狀態只要不是初始值，其餘欄位就要填寫
 				if (buyerno.trim().length() > 0 || take.trim().length() > 0 || takernm.trim().length() > 0
 						|| takerph.trim().length() > 0 || address.trim().length() > 0 || boxstatus != 0
 						|| paystatus != 0 || status != 0) {
@@ -279,11 +262,6 @@ public class ShgmServlet extends HttpServlet {
 				shgmvo.setStatus(status);
 
 				if (!errormsgs.isEmpty()) {
-					// 出現錯誤
-					// 把上傳成功的圖片放入session
-					session.setAttribute("img", img);
-					// 以base64編譯過的圖片，顯示用的
-					request.setAttribute("imagefailed", imagefailed);
 					// 把存有正確格式的資料轉送回新增頁面
 					request.setAttribute("shgmvo", shgmvo);
 					String url = "/back-end/shgm/addShgm.jsp";
@@ -293,11 +271,11 @@ public class ShgmServlet extends HttpServlet {
 				}
 
 				ShgmService shgmsvc = new ShgmService();
-				// 上架即通過審核，更新上架時間
+				// 上架且通過審核，更新上架時間
 				if (upcheck == 1) {
 					shgmsvc.addShgmCheck1(sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm,
 							takerph, address, boxstatus, paystatus, status);
-					// 上架即通過審核且賣出，更新上架、售出時間
+					// 上架且通過審核並賣出，更新上架、售出時間
 				} else if (upcheck == 1 && boxstatus == 2 && paystatus == 1 && status == 2) {
 					shgmsvc.addShgmSold(sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm, takerph,
 							address, boxstatus, paystatus, status);
@@ -312,9 +290,6 @@ public class ShgmServlet extends HttpServlet {
 					shgmsvc.addShgmNocheck(sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm,
 							takerph, address, boxstatus, paystatus, status);
 				}
-
-				// 新增成功把圖片從session中移除
-				session.removeAttribute("img");
 
 				String url = "/back-end/shgm/listAllShgm.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
@@ -332,7 +307,6 @@ public class ShgmServlet extends HttpServlet {
 			HashMap<Long, String> errormap = new HashMap<Long, String>();
 			request.setAttribute("errormap", errormap);
 
-			String imagefailed = request.getParameter("imgtag");
 			try {
 
 				String sellerno = request.getParameter("sellerno");
@@ -360,29 +334,13 @@ public class ShgmServlet extends HttpServlet {
 					errormap.put((long) 3, "簡介文字不得為空");
 
 				byte[] img = null;
-
 				Part imgreq = request.getPart("img");
-				// 上傳檔案大小為零，且session裡面沒有圖片，表示沒有新的上傳、也沒有上傳過
-				if (imgreq.getSize() == 0 && (byte[]) session.getAttribute("img") == null) {
+				if (imgreq.getSize() == 0) {
 					errormap.put((long) 4, "圖片不得為空");
-				} else {
-					try {
-						// 有圖片在，判斷要從哪裡拿出
-						// 上傳檔案大小大於零，表示有新的圖片要進行上傳
-						if (imgreq.getSize() > 0) {
-							InputStream is = imgreq.getInputStream();
-							img = new byte[is.available()];
-							is.read(img);
-							System.out.println("上傳成功");
-						} else {
-							// 上傳檔案大小小於零，從session中取出圖片
-							img = (byte[]) session.getAttribute("img");
-						}
-						// 以base64編碼圖片，如果其他欄位發生錯誤，回到新增頁面時，顯示base64編碼的圖片
-						imagefailed = Base64.encode(img);
-					} catch (Exception e) {
-						errormap.put((long) 4, "圖片無法上傳");
-					}
+				} else if (imgreq.getSize() > 0) {
+					InputStream is = imgreq.getInputStream();
+					img = new byte[is.available()];
+					is.read(img);
 				}
 
 				ShgmVO shgmvo = new ShgmVO();
@@ -393,10 +351,6 @@ public class ShgmServlet extends HttpServlet {
 				shgmvo.setImg(img);
 
 				if (!errormap.isEmpty()) {
-					// 出現錯誤
-					// session存入圖片資料、轉送顯示用的圖片、市集商品資料
-					session.setAttribute("img", img);
-					request.setAttribute("imagefailed", imagefailed);
 					request.setAttribute("shgmsell", shgmvo);
 					String url = "/front-end/shgm/sellPage.jsp";
 					RequestDispatcher failedview = request.getRequestDispatcher(url);
@@ -407,13 +361,10 @@ public class ShgmServlet extends HttpServlet {
 				ShgmService shgmsvc = new ShgmService();
 				shgmsvc.sellShgm(sellerno, shgmname, price, intro, img);
 
-				session.removeAttribute("img");// 新增成功把顯示用的圖片刪掉
-
 				String url = "/front-end/shgm/mainPage.jsp";// forward到mainPage or myshgamePage??
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 			} catch (Exception e) {
-				request.setAttribute("imagefailed", imagefailed);
 				errormap.put((long) 5, "無法新增您的商品");
 				String url = "/front-end/shgm/sellPage.jsp";
 				RequestDispatcher failedview = request.getRequestDispatcher(url);
@@ -426,6 +377,7 @@ public class ShgmServlet extends HttpServlet {
 
 			HashMap<Long, String> errormap = new HashMap<Long, String>();
 			request.setAttribute("errormap", errormap);
+
 			try {
 				String shgmno = request.getParameter("shgmno");
 
@@ -460,15 +412,11 @@ public class ShgmServlet extends HttpServlet {
 					errormap.put((long) 4, "地址不得為空");
 				}
 
-				// 還有付款要處理 這裡先以正常出貨狀態來跑(0未出貨1已付款1已下訂)
 				Integer boxstatus = new Integer(request.getParameter("boxstatus"));
-				boxstatus = 2;
 
 				Integer paystatus = new Integer(request.getParameter("paystatus"));
-				paystatus = 1;
 
 				Integer status = new Integer(request.getParameter("status"));
-				status = 2;
 
 				shgmvo.setShgmno(shgmno);
 				shgmvo.setBuyerno(buyerno);
@@ -499,7 +447,7 @@ public class ShgmServlet extends HttpServlet {
 					// 把賣家原本的points加上販售之價格
 					mbrsvc.update(sellerno, mbrpfvo.getPoints() + shgmvo.getPrice());
 					// 資料庫更新售出時間
-					shgmsvc.soldShgm(shgmno);
+					shgmsvc.soldtimeCT(shgmno);
 				}
 
 				String url = "/front-end/shgm/mainPage.jsp";
@@ -536,6 +484,7 @@ public class ShgmServlet extends HttpServlet {
 		}
 
 		if ("getone_update".equals(action)) {
+
 			List<String> errorMsgs = new LinkedList<String>();
 			request.setAttribute("errorMsgs", errorMsgs);
 
@@ -559,11 +508,10 @@ public class ShgmServlet extends HttpServlet {
 		}
 
 		if ("update".equals(action)) {
-			System.out.println("-----------------------enter update-----------------------");
+
 			List<String> errormsgs = new LinkedList<String>();
 			request.setAttribute("errormsgs", errormsgs);
 
-			String imagefailed = request.getParameter("imagefailed");
 			try {
 				String shgmno = request.getParameter("shgmno");
 
@@ -600,25 +548,16 @@ public class ShgmServlet extends HttpServlet {
 					errormsgs.add("市集商品簡介：簡介文字不得為空");
 
 				byte[] img = null;
-				Part imgreq = request.getPart("imginput");
-				// 上傳檔案大小大於零，表示有新的圖片要進行上傳
+				Part imgreq = request.getPart("img");
 				if (imgreq.getSize() > 0) {
 					InputStream is = imgreq.getInputStream();
 					img = new byte[is.available()];
 					is.read(img);
-					System.out.println("上傳成功");
 				} else {
-					// 上傳檔案大小小於零，如果session不為空值，取出session裡面的圖片，反之，沿用資料庫原本的圖片
-					if ((byte[]) session.getAttribute("img") == null) {
-						ShgmService shgmsvc = new ShgmService();
-						ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
-						img = shgmvo.getImg();
-					} else {
-						img = (byte[]) session.getAttribute("img");
-					}
+					ShgmService shgmsvc = new ShgmService();
+					ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
+					img = shgmvo.getImg();
 				}
-				// 如果其他欄位發生錯誤，回到新增頁面時，顯示base64編碼的圖片
-				imagefailed = Base64.encode(img);
 
 				Integer upcheck = new Integer(request.getParameter("upcheck"));
 
@@ -677,7 +616,9 @@ public class ShgmServlet extends HttpServlet {
 					if (address.trim().length() == 0)
 						errormsgs.add("取貨地址：地址不得為空");
 				}
-
+				
+				ShgmService shgmsvc = new ShgmService();
+				ShgmVO shgm = shgmsvc.getOneShgm(shgmno);
 				ShgmVO shgmvo = new ShgmVO();
 				shgmvo.setShgmno(shgmno);
 				shgmvo.setSellerno(sellerno);
@@ -687,6 +628,7 @@ public class ShgmServlet extends HttpServlet {
 				shgmvo.setIntro(intro);
 				shgmvo.setImg(img);
 				shgmvo.setUpcheck(upcheck);
+				shgmvo.setUptime(shgm.getUptime());
 				shgmvo.setTake(take);
 				shgmvo.setTakernm(takernm);
 				shgmvo.setTakerph(takerph);
@@ -694,10 +636,9 @@ public class ShgmServlet extends HttpServlet {
 				shgmvo.setBoxstatus(boxstatus);
 				shgmvo.setPaystatus(paystatus);
 				shgmvo.setStatus(status);
+				shgmvo.setSoldtime(shgm.getSoldtime());
 
 				if (!errormsgs.isEmpty()) {
-					request.setAttribute("imagefailed", imagefailed);
-					session.setAttribute("img", img);
 					request.setAttribute("shgmvo", shgmvo);
 					String url = "/back-end/shgm/updateShgm.jsp";
 					RequestDispatcher failedview = request.getRequestDispatcher(url);
@@ -705,7 +646,8 @@ public class ShgmServlet extends HttpServlet {
 					return;
 				}
 
-				ShgmService shgmsvc = new ShgmService();
+				shgmsvc.updateShgm(shgmno, sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm,
+						takerph, address, boxstatus, paystatus, status);
 
 				// 已上架的市集商品，同時修改成已送達、已付款、已完成，即是訂單完成，可以增加賣家的點數了
 				if (upcheck == 1 && boxstatus == 2 && paystatus == 1 && status == 2) {
@@ -716,19 +658,18 @@ public class ShgmServlet extends HttpServlet {
 					// 把賣家原本的points加上販售之價格
 					mbrsvc.update(sellerno, mbrpfvo.getPoints() + shgmvo.getPrice());
 					// 資料庫更新售出時間
-					shgmsvc.soldShgm(shgmno);
+					if(shgm.getUptime() == null)
+						shgmsvc.uptimeCT(shgmno);
+					shgmsvc.soldtimeCT(shgmno);
 				} else if (upcheck == 1) {
 					// 修改後，已通過審查，同時更新上架時間
-					shgmsvc.updateShgmCheck1(shgmno, sellerno, buyerno, shgmname, price, intro, img, upcheck, take,
-							takernm, takerph, address, boxstatus, paystatus, status);
+					shgmsvc.uptimeCT(shgmno);
+					shgmsvc.soldtimeNU(shgmno);
 				} else {
-					// 修改後，未通過審查，上架時間為空值
-					shgmsvc.updateShgm(shgmno, sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm,
-							takerph, address, boxstatus, paystatus, status);
+					// 修改後，未通過審查，上架、審查時間為空值
+					shgmsvc.uptimeNU(shgmno);
+					shgmsvc.soldtimeNU(shgmno);
 				}
-
-				// 新增成功，移除圖片資料
-				session.removeAttribute("img");
 
 				String url = "/back-end/shgm/listAllShgm.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);

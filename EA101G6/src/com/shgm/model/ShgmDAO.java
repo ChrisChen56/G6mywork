@@ -37,12 +37,12 @@ public class ShgmDAO implements ShgmDAO_interface {
 			+ "VALUES" + "('CA'||LPAD(shgame_seq.NEXTVAL,5,'0'),?,null,?,?,?,?,0,null,null,null,null,null,0,0,0,null)";
 	private static final String UPDATE_STMT = "UPDATE SHGM SET sellerno=?,buyerno=?,shgmname=?,price=?,intro=?,img=?,upcheck=?,"
 			+ "take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=? WHERE shgmno=?";
-	private static final String UPDATE_CHECK1_STMT = "UPDATE SHGM SET sellerno=?,buyerno=?,shgmname=?,price=?,intro=?,img=?,upcheck=?,uptime=CURRENT_TIMESTAMP,"
-			+ "take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=? WHERE shgmno=?";
 	private static final String SELLER_UPDATE_STMT = "UPDATE SHGM SET shgmname=?,price=?,intro=?,img=? WHERE shgmno=?";
 	private static final String DEALING_STMT = "UPDATE SHGM SET buyerno=?,take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=? WHERE shgmno=?";
-	private static final String UPTIME_STMT = "UPDATE SHGM SET uptime=CURRENT_TIMESTAMP WHERE shgmno=?";
-	private static final String SOLDTIME_STMT = "UPDATE SHGM SET soldtime=CURRENT_TIMESTAMP WHERE shgmno=?";
+	private static final String UPTIME_CT_STMT = "UPDATE SHGM SET uptime=CURRENT_TIMESTAMP WHERE shgmno=?";
+	private static final String SOLDTIME_CT_STMT = "UPDATE SHGM SET soldtime=CURRENT_TIMESTAMP WHERE shgmno=?";
+	private static final String UPTIME_NU_STMT = "UPDATE SHGM SET uptime=null WHERE shgmno=?";
+	private static final String SOLDTIME_NU_STMT = "UPDATE SHGM SET soldtime=null WHERE shgmno=?";
 	private static final String DELETE_STMT = "DELETE FROM SHGM WHERE shgmno=?";
 	private static final String GET_ONE_STMT = "SELECT * FROM SHGM WHERE shgmno=?";
 	private static final String GET_ONE_INFO = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime FROM SHGM WHERE shgmno=?";
@@ -277,54 +277,6 @@ public class ShgmDAO implements ShgmDAO_interface {
 	}
 
 	@Override
-	public void updateCheck1(ShgmVO shgmvo) {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		try {
-			con = ds.getConnection();
-			pstmt = con.prepareStatement(UPDATE_CHECK1_STMT);
-
-			pstmt.setString(1, shgmvo.getSellerno());
-			pstmt.setString(2, shgmvo.getBuyerno());
-			pstmt.setString(3, shgmvo.getShgmname());
-			pstmt.setInt(4, shgmvo.getPrice());
-			Clob clob = con.createClob();
-			clob.setString(1, shgmvo.getIntro());
-			pstmt.setClob(5, clob);
-			pstmt.setBytes(6, shgmvo.getImg());
-			pstmt.setInt(7, shgmvo.getUpcheck());
-			pstmt.setString(8, shgmvo.getTake());
-			pstmt.setString(9, shgmvo.getTakernm());
-			pstmt.setString(10, shgmvo.getTakerph());
-			pstmt.setString(11, shgmvo.getAddress());
-			pstmt.setInt(12, shgmvo.getBoxstatus());
-			pstmt.setInt(13, shgmvo.getPaystatus());
-			pstmt.setInt(14, shgmvo.getStatus());
-			pstmt.setString(15, shgmvo.getShgmno());
-
-			pstmt.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
-	@Override
 	public void sellerUpdate(ShgmVO shgmvo) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -403,12 +355,43 @@ public class ShgmDAO implements ShgmDAO_interface {
 	}
 
 	@Override
-	public void sold(String shgmno) {
+	public void soldtimeCT(String shgmno) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		try {
 			con = ds.getConnection();
-			pstmt = con.prepareStatement(SOLDTIME_STMT);
+			pstmt = con.prepareStatement(SOLDTIME_CT_STMT);
+
+			pstmt.setString(1, shgmno);
+
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null)
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void soldtimeNU(String shgmno) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		try {
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(SOLDTIME_NU_STMT);
 
 			pstmt.setString(1, shgmno);
 
@@ -434,12 +417,43 @@ public class ShgmDAO implements ShgmDAO_interface {
 	}
 
 	@Override
-	public void up(String shgmno) {
+	public void uptimeCT(String shgmno) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		try {
 			con = ds.getConnection();
-			pstmt = con.prepareStatement(UPTIME_STMT);
+			pstmt = con.prepareStatement(UPTIME_CT_STMT);
+
+			pstmt.setString(1, shgmno);
+
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null)
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void uptimeNU(String shgmno) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		try {
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(UPTIME_NU_STMT);
 
 			pstmt.setString(1, shgmno);
 

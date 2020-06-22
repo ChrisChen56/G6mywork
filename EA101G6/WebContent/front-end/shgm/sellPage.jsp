@@ -6,8 +6,6 @@
 <%@ page import="java.util.*"%>
 
 <%
-	byte[] img = (byte[]) session.getAttribute("img");
-	String imagefailed = (String) request.getAttribute("imagefailed");
 	MbrpfVO member = (MbrpfVO) session.getAttribute("member");
 	ShgmVO shgmsell = (ShgmVO) request.getAttribute("shgmsell");
 %>
@@ -269,7 +267,7 @@ div.top-info {
 							<img name="imgtag" id="blah" alt="Click here to upload!" class="img-thumbnail rounded float-left" src="<%=request.getContextPath() %>/front-end/shgm/images/logo.gif"/>
 						</label>
 						<div class="uploadwrapper">
-							<input type="file" name="img" id="imgfile" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" accept=".png, .jpg, .jpeg .gif" value="${img}"/>
+							<input type="file" name="img" id="imgfile" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" accept=".png, .jpg, .jpeg .gif"/>
 						</div>
 						<br>
 					</div>

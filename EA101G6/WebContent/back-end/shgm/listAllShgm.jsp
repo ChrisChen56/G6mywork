@@ -6,7 +6,6 @@
 <%@ page import="java.io.*" %>
 <%@ page import="java.util.*" %>
 <%
-	session.removeAttribute("img");
 	ShgmService shgmsvc = new ShgmService();
 	List<ShgmVO> list = shgmsvc.getAllShgm();
 	pageContext.setAttribute("shgmlist", list);
@@ -85,6 +84,9 @@
 	            </c:otherwise>
         	</c:choose>
         	<c:choose>
+        		<c:when test="${shgmvo.upcheck == 2}">
+        			<td>本商品已審核下架</td>
+        		</c:when>
         		<c:when test="${shgmvo.uptime == null}">
         			<td>本商品尚未上架</td>
         		</c:when>
@@ -130,6 +132,9 @@
 	            </c:otherwise>
         	</c:choose>
         	<c:choose>
+        		<c:when test="${shgmvo.upcheck == 2}">
+        			<td>本商品已審核下架</td>
+        		</c:when>
         		<c:when test="${shgmvo.soldtime == null}">
         			<td>本商品尚未售出</td>
         		</c:when>

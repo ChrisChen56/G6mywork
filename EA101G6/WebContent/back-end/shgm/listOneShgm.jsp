@@ -57,6 +57,9 @@
 			<td><img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"/></td>
 			<td><%=(shgmvo.getUpcheck() == 0)? "未審核":(shgmvo.getUpcheck() == 1)? "審核通過": "審核未通過" %></td>
 			<c:choose>
+        		<c:when test="${shgmvo.upcheck == 2}">
+        			<td>本商品已審核下架</td>
+        		</c:when>
         		<c:when test="${shgmvo.uptime == null}">
         			<td>本商品尚未上架</td>
         		</c:when>
@@ -72,6 +75,9 @@
 			<td><%=(shgmvo.getPaystatus() == 0)? "未付款": "已付款" %></td>
 			<td><%=(shgmvo.getStatus() == 0)? "未下訂": (shgmvo.getStatus() == 1)? "已下訂": (shgmvo.getStatus() == 2)? "已完成":"取消" %></td>
 			<c:choose>
+        		<c:when test="${shgmvo.upcheck == 2}">
+        			<td>本商品已審核下架</td>
+        		</c:when>
         		<c:when test="${shgmvo.soldtime == null}">
         			<td>本商品尚未售出</td>
         		</c:when>

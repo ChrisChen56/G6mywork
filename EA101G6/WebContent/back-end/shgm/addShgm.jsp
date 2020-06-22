@@ -37,12 +37,12 @@
 			<tr>
 				<td>賣家會員編號</td>
 				<td><input type="text" name="sellerno" size="15"
-					value="<%= (shgmvo == null)? "BM00001": shgmvo.getSellerno()%>"/></td>
+					value="<%= (shgmvo == null)? "BM00009": shgmvo.getSellerno()%>"/></td>
 			</tr>
 			<tr>
 				<td>買家會員編號</td>
 				<td><input type="text" name="buyerno" size="15"
-					value="<%= (shgmvo == null)? "BM00010": shgmvo.getBuyerno()%>"/></td>
+					value="<%= (shgmvo == null)? "BM00008": shgmvo.getBuyerno()%>"/></td>
 			</tr>
 			<tr>
 				<td>市集商品名稱</td>
@@ -62,8 +62,8 @@
 			</tr>
 			<tr>
 				<td>市集商品圖片</td>
-				<td><input type="file" name="imginput" id="imgfile" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" accept=".png, .jpg, .jpeg .gif" value="${img}"/>
-				<img name="imgtag" id="blah" alt="your image" width="100" height="100" src="data:image/png;base64,${imagefailed}"/></td>
+				<td><input type="file" name="img" id="imgfile" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" accept=".png, .jpg, .jpeg .gif"/>
+				<img id="blah" alt="your image" width="100" height="100"/></td>
 		</tr>
 			<tr>
 				<td>上架審核狀態</td>

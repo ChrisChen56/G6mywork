@@ -129,32 +129,6 @@ public class ShgmService {
 		return shgmvo;
 	}
 
-	public ShgmVO updateShgmCheck1(String shgmno, String sellerno, String buyerno, String shgmname, Integer price,
-			String intro, byte[] img, Integer upcheck, String take, String takernm, String takerph, String address,
-			Integer boxstatus, Integer paystatus, Integer status) {
-
-		ShgmVO shgmvo = new ShgmVO();
-		shgmvo.setShgmno(shgmno);
-		shgmvo.setSellerno(sellerno);
-		shgmvo.setBuyerno(buyerno);
-		shgmvo.setShgmname(shgmname);
-		shgmvo.setPrice(price);
-		shgmvo.setIntro(intro);
-		shgmvo.setImg(img);
-		shgmvo.setUpcheck(upcheck);
-		shgmvo.setTake(take);
-		shgmvo.setTakernm(takernm);
-		shgmvo.setTakerph(takerph);
-		shgmvo.setAddress(address);
-		shgmvo.setBoxstatus(boxstatus);
-		shgmvo.setPaystatus(paystatus);
-		shgmvo.setStatus(status);
-
-		dao.updateCheck1(shgmvo);
-
-		return shgmvo;
-	}
-
 //	public ShgmVO sellerUpdate(String shgmno, String shgmname, Integer price, String intro, byte[] img) {
 //
 //		ShgmVO shgmvo = new ShgmVO();
@@ -188,14 +162,24 @@ public class ShgmService {
 		return shgmvo;
 	}
 
-	public void soldShgm(String shgmno) {
+	public void soldtimeCT(String shgmno) {
 
-		dao.sold(shgmno);
+		dao.soldtimeCT(shgmno);
 	}
 
-	public void upShgm(String shgmno) {
+	public void soldtimeNU(String shgmno) {
 
-		dao.up(shgmno);
+		dao.soldtimeNU(shgmno);
+	}
+
+	public void uptimeCT(String shgmno) {
+
+		dao.uptimeCT(shgmno);
+	}
+	
+	public void uptimeNU(String shgmno) {
+
+		dao.uptimeNU(shgmno);
 	}
 
 	public void deleteShgm(String shgmno) {

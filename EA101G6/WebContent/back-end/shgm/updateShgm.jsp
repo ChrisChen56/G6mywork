@@ -64,16 +64,9 @@
 			</tr>
 			<tr>
 				<td>市集商品圖片</td>
-				<td><input type="file" name="imginput" id="img" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" accept=".png, .jpg, .jpeg .gif" value=""/>
-					<c:choose>
-						<c:when test="${img != null }">
-							<img id="blah" name="imgtag" alt="your image" width="100" height="100" src="data:image/png;base64,${imagefailed}"/>
-						</c:when>
-						<c:otherwise>
-							<img id="blah" name="imgtag" alt="your image" width="100" height="100" src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=<%= shgmvo.getShgmno()%>"/>
-						</c:otherwise>
-					</c:choose>
-					</tr>
+				<td><input type="file" name="img" id="img" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" accept=".png, .jpg, .jpeg .gif"/>
+							<img id="blah" alt="your image" width="100" height="100" src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=<%= shgmvo.getShgmno()%>"/>
+			</tr>
 			<tr>
 				<td>上架審核狀態</td>
 				<td><select id="upcheck" name="upcheck">
@@ -85,6 +78,9 @@
 			<tr>
 				<td>上架時間</td>
 				<c:choose>
+        		<c:when test="${shgmvo.upcheck == 2}">
+        			<td>本商品已審核下架</td>
+        		</c:when>
         		<c:when test="${shgmvo.uptime == null}">
         			<td>本商品尚未上架</td>
         		</c:when>
@@ -140,6 +136,9 @@
 			<tr>
 				<td>售出時間</td>
 				<c:choose>
+        		<c:when test="${shgmvo.upcheck == 2}">
+        			<td>本商品已審核下架</td>
+        		</c:when>
         		<c:when test="${shgmvo.soldtime == null}">
         			<td>本商品尚未售出</td>
         		</c:when>

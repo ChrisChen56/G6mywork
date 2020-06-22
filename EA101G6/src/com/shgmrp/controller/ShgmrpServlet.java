@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.shgm.model.ShgmService;
-import com.shgm.model.ShgmVO;
 import com.shgmrp.model.ShgmrpService;
 import com.shgmrp.model.ShgmrpVO;
 

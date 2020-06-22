@@ -1,8 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%
-	session.removeAttribute("img");//只要回到後台首頁就移除session存放中的圖片
-%>
 <!DOCTYPE html>
 <html>
 <head>
