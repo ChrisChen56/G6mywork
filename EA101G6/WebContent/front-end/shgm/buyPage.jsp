@@ -310,9 +310,7 @@ div.top-info {
 							<br>
 							<div class="button-wrapper">
 								<button type="submit" class="btn btn-primary">確定購買</button>
-								<a
-									href="<%=request.getContextPath()%>/front-end/shgm/mainPage.jsp"
-									class="btn btn-primary">取消購買</a>
+								<a href="<%=request.getContextPath()%>/front-end/shgm/mainPage.jsp" class="btn btn-primary">取消購買</a>
 							</div>
 							<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
 							<input type="hidden" name="buyerno" value="${member.mbrno}">

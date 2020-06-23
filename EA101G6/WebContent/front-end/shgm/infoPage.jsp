@@ -152,8 +152,7 @@ div.top-info {
 					<div class="float-right">
 						<c:choose>
 						<c:when test="<%=member != null%>">
-						<span class="d-md-inline-block text-white">歡迎你！</span>
-						<span id="mbrname" class="d-md-inline-block text-white">${member.mbrname}</span>
+						<span id="mbrname" class="d-md-inline-block text-white">歡迎你！${member.mbrname}</span>
 						</c:when>
 						<c:otherwise>
 						<a href="#" class="text-white"><span class="d-md-inline-block"><img
@@ -228,7 +227,7 @@ div.top-info {
 					<li class="breadcrumb-item"><a
 						href="<%=request.getContextPath()%>/front-end/shgm/mainPage.jsp">市集</a></li>
 					<li class="breadcrumb-item active" aria-current="page">商品頁面</li>
-					<li class="awrapper"><span class="rpdiv">${errormap.get(1)}</span><button type="button"
+					<li class="awrapper"><span class="rpdiv">${errormap.get(1)}</span><button id="rp" type="button"
 							class="btn btn-primary ml-auto" data-toggle="modal"
 							data-target="#exampleModal" data-whatever="@mdo">檢舉</button></li>
 				</ol>
@@ -283,9 +282,15 @@ div.top-info {
 							售價
 							<h1 id="price">${shgmvo.price}</h1>
 						</div>
-						<a id="buythis" class="btn btn-primary"
-							href="<%=request.getContextPath()%>/front-end/shgm/buyPage.jsp"
-							role="button">購買</a>
+						<c:choose>
+								<c:when test="${shgmvo.paystatus == 1}">
+								<a id="sold" class="btn btn-primary" role="button">本商品已售出</a>
+								</c:when>
+								<c:otherwise>
+									<a id="buythis" class="btn btn-primary"
+									 href="<%=request.getContextPath()%>/front-end/shgm/buyPage.jsp" role="button">購買</a>
+								</c:otherwise>
+							</c:choose>
 					</div>
 				</div>
 				<br>
@@ -350,6 +355,7 @@ div.top-info {
 			</div>
 		</div>
 		<input type="hidden" id="points" value="${member.points}">
+		<input type="hidden" id="success" value="${buysuccess}">
 	</div>
 
 
@@ -357,12 +363,16 @@ div.top-info {
 
 	<script>
 	$(document).ready(function(){
+		if($("#success").val() != ''){
+			alert('您已購買成功');
+		}
+		var $mbrname = $("#mbrname").text().substr(4);
 		$("#buythis").click(function(){
-			if($("#mbrname").text() == ""){
+			if($mbrname == ""){
 				alert("您未登入");
 				window.location.href = "<%= request.getContextPath()%>/front-end/shgm/simpleLogin.jsp";
 				return false;
-			}
+			};
 			var $price = parseInt($("#price").text());
 			var $points = $("#points").val();
 			if ( $price > $points ){
@@ -375,6 +385,12 @@ div.top-info {
 					  footer: '<a href>沒錢了沒錢了沒錢了沒錢了</a>'
 					});
 				event.preventDefault();
+			}
+		});
+		$("#rp").click(function(){
+			if($mbrname == ""){
+				alert("您未登入");
+				event.stopPropagation();
 			}
 		});
 	});

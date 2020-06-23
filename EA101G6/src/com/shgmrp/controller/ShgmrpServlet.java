@@ -152,7 +152,6 @@ public class ShgmrpServlet extends HttpServlet {
 				}
 
 				String detail = request.getParameter("detail");
-				System.out.println(detail);
 				if (detail.trim().length() == 0) {
 					errormsgs.add("檢舉內容：檢舉內容不得為空");
 				}
@@ -242,7 +241,6 @@ public class ShgmrpServlet extends HttpServlet {
 				}
 
 				String detail = request.getParameter("detail");
-				System.out.println(detail);
 				if (detail.trim().length() == 0) {
 					errormsgs.add("檢舉內容：檢舉內容不得為空");
 				}

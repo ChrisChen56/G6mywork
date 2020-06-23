@@ -61,7 +61,7 @@
 			</form>
 		</li>
 		<li>
-			<a href="<%=request.getContextPath()%>/back-end/shgmrp/shgmrp.do?action=get_All">檢視全部的被檢舉市集商品</a>
+			<a href="<%=request.getContextPath()%>/back-end/shgmrp/listAllShgmrp.jsp">檢視全部的被檢舉市集商品</a>
 		</li>
 	</ul>
 	<a href="<%=request.getContextPath()%>/back-end/shgmrp/shgmrp_select_page.jsp">回首頁</a>

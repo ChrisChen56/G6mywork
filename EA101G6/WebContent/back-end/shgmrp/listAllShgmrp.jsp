@@ -20,7 +20,7 @@
 <style>
 	table{
 		border: 3px solid black;
-		text-align: center;
+		text-align: left;
 	}
 	th, td {
     	border: 1px solid black;
@@ -62,7 +62,7 @@
 			<td>${shgmsvc.getOneShgm(shgmrpvo.shgmno).shgmname}</td>
 			<td>${shgmsvc.getOneShgm(shgmrpvo.shgmno).price}</td>
 			<td style="width:300px">${shgmsvc.getOneShgm(shgmrpvo.shgmno).intro}</td>
-			<td><img src="<%=request.getContextPath() %>/back-end/shgm/displayimg?shgmno=${shgmrpvo.shgmno}"></td>
+			<td><img src="<%=request.getContextPath() %>/shgm/displayimg?shgmno=${shgmrpvo.shgmno}"></td>
 			<td>${shgmrpvo.suiterno}</td>
 			<td>${shgmrpvo.detail}</td>
 			<c:choose>
@@ -77,14 +77,14 @@
 				</c:otherwise>
 			</c:choose>
 			<td>
-				<form method="post" action="<%= request.getContextPath()%>/back-end/shgmrp/shgmrp.do">
+				<form method="post" action="<%= request.getContextPath()%>/shgmrp/shgmrp.do">
 					<input type="hidden" name="shgmrpno" value="${shgmrpvo.shgmrpno}">
 					<input type="hidden" name="action" value="getone_update" >
 					<input type="submit" value="修改">
 				</form>
 			</td>
 			<td>
-				<form method="post" action="<%= request.getContextPath()%>/back-end/shgmrp/shgmrp.do">
+				<form method="post" action="<%= request.getContextPath()%>/shgmrp/shgmrp.do">
 					<input type="hidden" name="shgmrpno" value="${shgmrpvo.shgmrpno}">
 					<input type="hidden" name="action" value="delete" >
 					<input type="submit" value="刪除">

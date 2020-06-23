@@ -21,7 +21,7 @@
 		
 		<li>
 			<form method="post" action="<%=request.getContextPath()%>/shgm/shgm.do" >
-				請選擇市集商品編號(CA00001)：
+				請選擇市集商品編號：
 				<select size="1" name="shgmno">
 					<c:forEach var="shgmvo" items="${shgmsvc.allShgm}">
 						<option value="${shgmvo.shgmno}">${shgmvo.shgmno}

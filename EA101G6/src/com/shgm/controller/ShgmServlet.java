@@ -36,7 +36,6 @@ public class ShgmServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 
 		String action = request.getParameter("action");
-		System.out.println("enter controller");
 
 		if ("login".equals(action)) {
 
@@ -76,9 +75,7 @@ public class ShgmServlet extends HttpServlet {
 			request.setAttribute("errormsgs", errormsgs);
 
 			try {
-				// 請求參數取得市集商品編號
 				String shgmno = request.getParameter("shgmno");
-				// 錯誤處理
 				String strreg = "^CA\\d{5}$";
 				if ((shgmno.trim()).length() == 0) {
 					errormsgs.add("您未輸入市集商品編號");
@@ -86,7 +83,6 @@ public class ShgmServlet extends HttpServlet {
 					errormsgs.add("請依照市集商品編號格式輸入");
 				}
 
-				// 如果參數有問題，轉送到後臺首頁，且程式中斷於此
 				if (!errormsgs.isEmpty()) {
 					String url = "/back-end/shgm/shgm_select_page.jsp";
 					RequestDispatcher failureview = request.getRequestDispatcher(url);
@@ -129,6 +125,7 @@ public class ShgmServlet extends HttpServlet {
 			ShgmService shgmsvc = new ShgmService();
 			ShgmVO shgmvo = shgmsvc.getOneForInfo(shgmno);
 
+			//把當前要瀏覽的市集商品存入session
 			session.setAttribute("shgmvo", shgmvo);
 			String url = "/front-end/shgm/infoPage.jsp";
 			RequestDispatcher nextjsp = request.getRequestDispatcher(url);
@@ -372,6 +369,8 @@ public class ShgmServlet extends HttpServlet {
 		}
 
 		if ("dealingshgm".equals(action)) {
+			
+			//getOneToInfo存入的市集商品在這邊取出
 			ShgmVO shgmvo = (ShgmVO) session.getAttribute("shgmvo");
 
 			HashMap<Long, String> errormap = new HashMap<Long, String>();
@@ -436,7 +435,16 @@ public class ShgmServlet extends HttpServlet {
 
 				ShgmService shgmsvc = new ShgmService();
 				shgmsvc.dealingshgm(shgmno, buyerno, take, takernm, takerph, address, boxstatus, paystatus, status);
-
+				
+				// 已上架的市集商品，同時未出貨、已付款、已下訂，即是購買行為，扣買家點數
+				if (boxstatus == 0 && paystatus == 1 && status == 1) {
+					MbrpfService mbrsvc = new MbrpfService();
+					// 取出買家的mbrpfvo以便對points做更動
+					MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(buyerno);
+					// 把買家原本的points扣掉價格
+					mbrsvc.update(buyerno, mbrpfvo.getPoints() - shgmvo.getPrice());
+				}
+				
 				// 已上架的市集商品，同時也已送達、已付款、已完成，即是訂單完成，可以增加賣家的點數了
 				if (boxstatus == 2 && paystatus == 1 && status == 2) {
 					MbrpfService mbrsvc = new MbrpfService();
@@ -448,8 +456,11 @@ public class ShgmServlet extends HttpServlet {
 					// 資料庫更新售出時間
 					shgmsvc.soldtimeCT(shgmno);
 				}
+				
+				String success = "success";
+				request.setAttribute("buysuccess",success);
 
-				String url = "/front-end/shgm/mainPage.jsp";
+				String url = "/front-end/shgm/infoPage.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 			} catch (Exception e) {

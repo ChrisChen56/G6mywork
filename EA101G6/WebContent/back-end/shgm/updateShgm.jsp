@@ -58,8 +58,7 @@
 			</tr>
 			<tr>
 				<td>市集商品簡介</td>
-				<td><textarea name="intro" cols="32" rows="10"><%= shgmvo.getIntro()%>
-					</textarea></td>
+				<td><textarea name="intro" cols="32" rows="10"><%= shgmvo.getIntro()%></textarea></td>
 			
 			</tr>
 			<tr>

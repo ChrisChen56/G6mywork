@@ -15,7 +15,7 @@
 <head>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<title>main_page</title>
+<title>myShgame</title>
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -239,22 +239,40 @@ div.pageselect-area {
 		</div>
 		<div class="shgm-area-wrapper">
 			<div class="shgm-area ">
-				<div class="card-deck">
-					<c:forEach var="shgmvo" items="${shgmlist}">
-						<div class="mb-4">
-							<a target="_self" href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneToInfo&shgmno=${shgmvo.shgmno}">
-								<div class="card">
-									<img
-										src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"
-										class="card-img-top" alt="Sorry! there's no image...">
-									<div class="card-body">
-										<h5 class="card-title">${shgmvo.shgmname}</h5>
-										<p class="card-text">$${shgmvo.price}</p>
-									</div>
-								</div>
-							</a>
+				<div class="row">
+				  <div class="col-2">
+				    <div class="list-group" id="list-tab" role="tablist">
+				      <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home</a>
+				      <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Profile</a>
+				      <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
+				      <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
+				    </div>
+				  </div>
+				  <div class="col-10">
+				    <div class="tab-content" id="nav-tabContent">
+				      <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+							<ul class="nav nav-tabs" id="myTab" role="tablist">
+							  <li class="nav-item" role="presentation">
+							    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+							  </li>
+							  <li class="nav-item" role="presentation">
+							    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+							  </li>
+							  <li class="nav-item" role="presentation">
+							    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+							  </li>
+							</ul>
+							<div class="tab-content" id="myTabContent">
+							  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">...</div>
+							  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+							  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+							</div>
 						</div>
-					</c:forEach>
+				      <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">bbb</div>
+				      <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">ccc</div>
+				      <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">ddd</div>
+				    </div>
+				  </div>
 				</div>
 			</div>
 		</div>
