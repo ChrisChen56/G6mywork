@@ -43,6 +43,11 @@ public class ShgmrpService {
 		return dao.findByPrimaryKey(shgmrpno);
 	}
 	
+	public ShgmrpVO getOnerpByShgmno(String shgmno) {
+		
+		return dao.findByShgmno(shgmno);
+	}
+	
 	public java.util.List<ShgmrpVO> getAllShgmrp(){
 		
 		return dao.getAll();

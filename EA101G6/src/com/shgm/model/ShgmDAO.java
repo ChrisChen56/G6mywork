@@ -37,6 +37,7 @@ public class ShgmDAO implements ShgmDAO_interface {
 			+ "VALUES" + "('CA'||LPAD(shgame_seq.NEXTVAL,5,'0'),?,null,?,?,?,?,0,null,null,null,null,null,0,0,0,null)";
 	private static final String UPDATE_STMT = "UPDATE SHGM SET sellerno=?,buyerno=?,shgmname=?,price=?,intro=?,img=?,upcheck=?,"
 			+ "take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=? WHERE shgmno=?";
+	private static final String UPCHECK_UPDATE_STMT = "UPDATE SHGM SET upcheck=? where shgmno=?";
 	private static final String SELLER_UPDATE_STMT = "UPDATE SHGM SET shgmname=?,price=?,intro=?,img=? WHERE shgmno=?";
 	private static final String DEALING_STMT = "UPDATE SHGM SET buyerno=?,take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=? WHERE shgmno=?";
 	private static final String UPTIME_CT_STMT = "UPDATE SHGM SET uptime=CURRENT_TIMESTAMP WHERE shgmno=?";
@@ -48,6 +49,10 @@ public class ShgmDAO implements ShgmDAO_interface {
 	private static final String GET_ONE_INFO = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime FROM SHGM WHERE shgmno=?";
 	private static final String GET_ALL_STMT = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
 			+ " FROM SHGM ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
+	private static final String GET_ALL_FOR_SELLER_STMT = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
+			+ " FROM SHGM WHERE sellerno=? ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
+	private static final String GET_ALL_FOR_BUYER_STMT = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
+			+ " FROM SHGM WHERE buyerno=? ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
 	private static final String MAINPAGE_GETALL_STMT = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
 			+ " FROM SHGM WHERE (upcheck=1 AND boxstatus=0 AND paystatus=0 AND status=0) ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
 
@@ -254,6 +259,39 @@ public class ShgmDAO implements ShgmDAO_interface {
 			pstmt.setInt(14, shgmvo.getStatus());
 			pstmt.setString(15, shgmvo.getShgmno());
 
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void upcheckUpdate(Integer upcheck, String shgmno) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		try {
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(UPCHECK_UPDATE_STMT);
+
+			pstmt.setInt(1, upcheck);
+			pstmt.setString(2, shgmno);
+			
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -638,6 +676,130 @@ public class ShgmDAO implements ShgmDAO_interface {
 			con = ds.getConnection();
 			pstmt = con.prepareStatement(GET_ALL_STMT);
 
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				ShgmVO shgmvo = new ShgmVO();
+				shgmvo.setShgmno(rs.getString(1));
+				shgmvo.setSellerno(rs.getString(2));
+				shgmvo.setBuyerno(rs.getString(3));
+				shgmvo.setShgmname(rs.getString(4));
+				shgmvo.setPrice(rs.getInt(5));
+				Clob clob = rs.getClob(6);
+				String intro = clob.getSubString(1, (int) clob.length());
+				shgmvo.setIntro(intro);
+				shgmvo.setImg(rs.getBytes(7));
+				shgmvo.setUpcheck(rs.getInt(8));
+				shgmvo.setUptime(rs.getTimestamp(9));
+				shgmvo.setTake(rs.getString(10));
+				shgmvo.setTakernm(rs.getString(11));
+				shgmvo.setTakerph(rs.getString(12));
+				shgmvo.setAddress(rs.getString(13));
+				shgmvo.setBoxstatus(rs.getInt(14));
+				shgmvo.setPaystatus(rs.getInt(15));
+				shgmvo.setStatus(rs.getInt(16));
+				shgmvo.setSoldtime(rs.getTimestamp(17));
+
+				list.add(shgmvo);
+			}
+
+			rs.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null)
+				try {
+					pstmt.close();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return list;
+	}
+	
+	@Override
+	public List<ShgmVO> allForSeller(String sellerno) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<ShgmVO> list = new ArrayList<ShgmVO>();
+
+		try {
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(GET_ALL_FOR_SELLER_STMT);
+			
+			pstmt.setString(1, sellerno);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				ShgmVO shgmvo = new ShgmVO();
+				shgmvo.setShgmno(rs.getString(1));
+				shgmvo.setSellerno(rs.getString(2));
+				shgmvo.setBuyerno(rs.getString(3));
+				shgmvo.setShgmname(rs.getString(4));
+				shgmvo.setPrice(rs.getInt(5));
+				Clob clob = rs.getClob(6);
+				String intro = clob.getSubString(1, (int) clob.length());
+				shgmvo.setIntro(intro);
+				shgmvo.setImg(rs.getBytes(7));
+				shgmvo.setUpcheck(rs.getInt(8));
+				shgmvo.setUptime(rs.getTimestamp(9));
+				shgmvo.setTake(rs.getString(10));
+				shgmvo.setTakernm(rs.getString(11));
+				shgmvo.setTakerph(rs.getString(12));
+				shgmvo.setAddress(rs.getString(13));
+				shgmvo.setBoxstatus(rs.getInt(14));
+				shgmvo.setPaystatus(rs.getInt(15));
+				shgmvo.setStatus(rs.getInt(16));
+				shgmvo.setSoldtime(rs.getTimestamp(17));
+
+				list.add(shgmvo);
+			}
+
+			rs.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null)
+				try {
+					pstmt.close();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return list;
+	}
+	
+	@Override
+	public List<ShgmVO> allForBuyer(String Buyerno) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<ShgmVO> list = new ArrayList<ShgmVO>();
+
+		try {
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(GET_ALL_FOR_BUYER_STMT);
+
+			pstmt.setString(1, Buyerno);
+			
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {

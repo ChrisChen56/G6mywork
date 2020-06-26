@@ -128,20 +128,25 @@ public class ShgmService {
 
 		return shgmvo;
 	}
+	
+	public void upcheckUpdate(Integer upcheck, String shgmno) {
+		
+		dao.upcheckUpdate(upcheck, shgmno);
+	}
 
-//	public ShgmVO sellerUpdate(String shgmno, String shgmname, Integer price, String intro, byte[] img) {
-//
-//		ShgmVO shgmvo = new ShgmVO();
-//		shgmvo.setShgmno(shgmno);
-//		shgmvo.setShgmname(shgmname);
-//		shgmvo.setPrice(price);
-//		shgmvo.setIntro(intro);
-//		shgmvo.setImg(img);
-//
-//		dao.sellerUpdate(shgmvo);
-//
-//		return shgmvo;
-//	}
+	public ShgmVO sellerUpdate(String shgmno, String shgmname, Integer price, String intro, byte[] img) {
+
+		ShgmVO shgmvo = new ShgmVO();
+		shgmvo.setShgmno(shgmno);
+		shgmvo.setShgmname(shgmname);
+		shgmvo.setPrice(price);
+		shgmvo.setIntro(intro);
+		shgmvo.setImg(img);
+
+		dao.sellerUpdate(shgmvo);
+
+		return shgmvo;
+	}
 
 	public ShgmVO dealingshgm(String shgmno, String buyerno, String take, String takernm, String takerph,
 			String address, Integer boxstatus, Integer paystatus, Integer status) {
@@ -202,9 +207,18 @@ public class ShgmService {
 		return dao.getall();
 	}
 	
+	public java.util.List<ShgmVO> allForSeller(String sellerno) {
+		
+		return dao.allForSeller(sellerno);
+	}
+	
+	public java.util.List<ShgmVO> allForBuyer(String buyerno) {
+		
+		return dao.allForBuyer(buyerno);
+	}
+
 	public java.util.List<ShgmVO> getAllForMain() {
 
 		return dao.getAllForMain();
-		
 	}
 }

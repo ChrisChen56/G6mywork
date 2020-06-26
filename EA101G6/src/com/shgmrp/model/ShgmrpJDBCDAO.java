@@ -20,7 +20,9 @@ public class ShgmrpJDBCDAO implements ShgmrpDAO_interface{
 	private static final String DELETE_STMT = 
 		"DELETE FROM SHGMRP WHERE shgmno = ?";
 	private static final String GET_ONE_STMT = 
-		"SELECT shgmno, suiterno, detail, status FROM SHGMRP WHERE shgmrpno=?";
+		"SELECT * FROM SHGMRP WHERE shgmrpno=?";
+	private static final String GET_ONE_BY_SHGMNO = 
+		"SELECT * FROM SHGMRP WHERE shgmno=?";
 	private static final String GET_ALL_STMT = 
 		"SELECT * FROM SHGMRP";
 	public static void main(String[] args) {
@@ -159,6 +161,54 @@ public class ShgmrpJDBCDAO implements ShgmrpDAO_interface{
 				String detail = clob.getSubString(1, (int)clob.length());
 				shgmrpvo.setDetail(detail);
 				shgmrpvo.setStatus(rs.getInt(4));
+			}
+			
+			rs.close();
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt != null)
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			if(con != null)
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
+		return shgmrpvo;
+	}
+	
+	public ShgmrpVO findByShgmno(String shgmno) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ShgmrpVO shgmrpvo = null;
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url, user, password);
+			pstmt = con.prepareStatement(GET_ONE_BY_SHGMNO);
+			
+			pstmt.setString(1, shgmno);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				shgmrpvo = new ShgmrpVO();
+				shgmrpvo.setShgmrpno(rs.getString(1));
+				shgmrpvo.setShgmno(rs.getString(2));
+				shgmrpvo.setSuiterno(rs.getString(3));
+				java.sql.Clob clob = rs.getClob(4);
+				String detail = clob.getSubString(1, (int)clob.length());
+				shgmrpvo.setDetail(detail);
+				shgmrpvo.setStatus(rs.getInt(5));
 			}
 			
 			rs.close();

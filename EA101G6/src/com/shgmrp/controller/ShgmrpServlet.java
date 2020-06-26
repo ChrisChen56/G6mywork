@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.shgm.model.ShgmService;
+import com.shgm.model.ShgmVO;
 import com.shgmrp.model.ShgmrpService;
 import com.shgmrp.model.ShgmrpVO;
 
@@ -174,6 +175,12 @@ public class ShgmrpServlet extends HttpServlet {
 				
 				ShgmrpService shgmrpsvc = new ShgmrpService();
 				shgmrpvo = shgmrpsvc.addShgmrp(shgmno, suiterno, detail, status);
+				
+				//檢舉審核通過，下架市集商品
+				if(status == 1) {
+					shgmsvc = new ShgmService();
+					shgmsvc.upcheckUpdate(2, shgmno);
+				}
 
 				String url = "/back-end/shgmrp/listAllShgmrp.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
@@ -264,6 +271,12 @@ public class ShgmrpServlet extends HttpServlet {
 				
 				ShgmrpService shgmrpsvc = new ShgmrpService();
 				shgmrpvo = shgmrpsvc.updateShgmrp(shgmrpno, shgmno, suiterno, detail, status);
+				
+				//新增同時檢舉審核通過，下架市集商品
+				if(status == 1) {
+					shgmsvc = new ShgmService();
+					shgmsvc.upcheckUpdate(2, shgmno);
+				}
 
 				String url = "/back-end/shgmrp/listAllShgmrp.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
