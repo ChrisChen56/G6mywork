@@ -573,6 +573,80 @@ public class ShgmServlet extends HttpServlet {
 				failedview.forward(request, response);
 			}
 		}
+		
+		if ("statusUpdate".equals(action)) {
+
+			HashMap<Long, String> errormap = new HashMap<Long, String>();
+			request.setAttribute("errormap", errormap);
+
+			try {
+				String shgmno = request.getParameter("shgmno");
+
+				String sellerno = request.getParameter("sellerno");
+
+				String shgmname = request.getParameter("shgmname");
+				if (shgmname.trim().length() == 0)
+					errormap.put((long) 1, "名稱不得為空");
+
+				Integer price = null;
+				String pricestr = request.getParameter("price");
+				if (pricestr.trim().length() == 0) {
+					errormap.put((long) 2, "價錢不得為空");
+				} else {
+					try {
+						price = new Integer(pricestr);
+						if (price > 999999)
+							errormap.put((long) 2, "金額超過本平台規範");
+					} catch (Exception e) {
+						errormap.put((long) 2, "格式不正確");
+					}
+				}
+
+				String intro = request.getParameter("intro");
+				if (intro.trim().length() == 0)
+					errormap.put((long) 3, "簡介文字不得為空");
+
+				byte[] img = null;
+				Part imgreq = request.getPart("img");
+				if (imgreq.getSize() > 0) {
+					InputStream is = imgreq.getInputStream();
+					img = new byte[is.available()];
+					is.read(img);
+				} else {
+					ShgmService shgmsvc = new ShgmService();
+					ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
+					img = shgmvo.getImg();
+				}
+
+				ShgmVO shgmvo = new ShgmVO();
+				shgmvo.setShgmno(shgmno);
+				shgmvo.setSellerno(sellerno);
+				shgmvo.setShgmname(shgmname);
+				shgmvo.setPrice(price);
+				shgmvo.setIntro(intro);
+				shgmvo.setImg(img);
+
+				if (!errormap.isEmpty()) {
+					request.setAttribute("shgmvo", shgmvo);
+					String url = "/front-end/shgm/sellerUpdate.jsp";
+					RequestDispatcher failedview = request.getRequestDispatcher(url);
+					failedview.forward(request, response);
+					return;
+				}
+
+				ShgmService shgmsvc = new ShgmService();
+				shgmsvc.sellerUpdate(shgmno, shgmname, price, intro, img);
+
+				String url = "/front-end/shgm/sellerPage.jsp";//回到原本的頁面
+				RequestDispatcher successview = request.getRequestDispatcher(url);
+				successview.forward(request, response);
+			} catch (Exception e) {
+				errormap.put((long) 5, "無法新增您的商品");
+				String url = "/front-end/shgm/sellerUpdate.jsp";
+				RequestDispatcher failedview = request.getRequestDispatcher(url);
+				failedview.forward(request, response);
+			}
+		}
 
 		if ("delete".equals(action)) {
 
