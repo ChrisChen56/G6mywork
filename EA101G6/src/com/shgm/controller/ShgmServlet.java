@@ -17,11 +17,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import org.json.JSONObject;
+
 import com.mbrpf.model.MbrpfService;
 import com.mbrpf.model.MbrpfVO;
 
 import com.shgm.model.ShgmService;
 import com.shgm.model.ShgmVO;
+import com.shgmrp.model.ShgmrpService;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 7 * 1024 * 1024, maxRequestSize = 5 * 5 * 1024 * 1024)
 public class ShgmServlet extends HttpServlet {
@@ -575,77 +578,59 @@ public class ShgmServlet extends HttpServlet {
 		}
 		
 		if ("statusUpdate".equals(action)) {
+			System.out.println("-------enter controller---------");
+			response.setContentType("text/html; charset=utf-8");
+			
 
-			HashMap<Long, String> errormap = new HashMap<Long, String>();
-			request.setAttribute("errormap", errormap);
-
-			try {
-				String shgmno = request.getParameter("shgmno");
-
-				String sellerno = request.getParameter("sellerno");
-
-				String shgmname = request.getParameter("shgmname");
-				if (shgmname.trim().length() == 0)
-					errormap.put((long) 1, "名稱不得為空");
-
-				Integer price = null;
-				String pricestr = request.getParameter("price");
-				if (pricestr.trim().length() == 0) {
-					errormap.put((long) 2, "價錢不得為空");
+			String shgmno = request.getParameter("shgmno");
+			System.out.println(shgmno);
+			Integer upcheck = new Integer(request.getParameter("upcheck"));
+			System.out.println("更新前："+upcheck);
+			
+			Writer out = response.getWriter();
+			ShgmService shgmsvc = new ShgmService();
+			
+			ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
+			
+			
+			JSONObject jsonobj = new JSONObject();
+			
+			//待上架、上架中自行下架，變成下架中狀態
+			if(upcheck == 0 || upcheck == 1) {
+				//先更新
+				shgmsvc.upcheckUpdate(2, shgmno);
+				
+				String detail = null;
+				ShgmrpService shgmrpsvc = new ShgmrpService();
+				//判斷是否有被檢舉的內容
+				if(shgmrpsvc.getOnerpByShgmno(shgmno) != null) {
+					detail = shgmrpsvc.getOnerpByShgmno(shgmno).getDetail();
 				} else {
-					try {
-						price = new Integer(pricestr);
-						if (price > 999999)
-							errormap.put((long) 2, "金額超過本平台規範");
-					} catch (Exception e) {
-						errormap.put((long) 2, "格式不正確");
-					}
+					detail = "自行下架";
 				}
-
-				String intro = request.getParameter("intro");
-				if (intro.trim().length() == 0)
-					errormap.put((long) 3, "簡介文字不得為空");
-
-				byte[] img = null;
-				Part imgreq = request.getPart("img");
-				if (imgreq.getSize() > 0) {
-					InputStream is = imgreq.getInputStream();
-					img = new byte[is.available()];
-					is.read(img);
-				} else {
-					ShgmService shgmsvc = new ShgmService();
-					ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
-					img = shgmvo.getImg();
-				}
-
-				ShgmVO shgmvo = new ShgmVO();
-				shgmvo.setShgmno(shgmno);
-				shgmvo.setSellerno(sellerno);
-				shgmvo.setShgmname(shgmname);
-				shgmvo.setPrice(price);
-				shgmvo.setIntro(intro);
-				shgmvo.setImg(img);
-
-				if (!errormap.isEmpty()) {
-					request.setAttribute("shgmvo", shgmvo);
-					String url = "/front-end/shgm/sellerUpdate.jsp";
-					RequestDispatcher failedview = request.getRequestDispatcher(url);
-					failedview.forward(request, response);
-					return;
-				}
-
-				ShgmService shgmsvc = new ShgmService();
-				shgmsvc.sellerUpdate(shgmno, shgmname, price, intro, img);
-
-				String url = "/front-end/shgm/sellerPage.jsp";//回到原本的頁面
-				RequestDispatcher successview = request.getRequestDispatcher(url);
-				successview.forward(request, response);
-			} catch (Exception e) {
-				errormap.put((long) 5, "無法新增您的商品");
-				String url = "/front-end/shgm/sellerUpdate.jsp";
-				RequestDispatcher failedview = request.getRequestDispatcher(url);
-				failedview.forward(request, response);
+				
+				//把jquery動態改變頁面需要的資料放入json
+				jsonobj.put("shgmno", shgmvo.getShgmno());
+				jsonobj.put("shgmname", shgmvo.getShgmname());
+				jsonobj.put("upcheck", 2);
+				jsonobj.put("detail", detail);
+				
+			//重新申請上架，變成待上架狀態
+			} else if (upcheck == 2) {
+				shgmsvc.upcheckUpdate(0, shgmno);
+				
+				//未審核，上架時間更新為空值
+				shgmsvc.uptimeNU(shgmno);
+				
+				jsonobj.put("shgmno", shgmvo.getShgmno());
+				jsonobj.put("shgmname", shgmvo.getShgmname());
+				//upcheck作流程控制用的
+				jsonobj.put("upcheck", 0);
+				jsonobj.put("price", shgmvo.getPrice());
 			}
+				
+				System.out.println(jsonobj.toString());
+				out.write(jsonobj.toString());
 		}
 
 		if ("delete".equals(action)) {
@@ -804,6 +789,7 @@ public class ShgmServlet extends HttpServlet {
 						errormsgs.add("取貨地址：地址不得為空");
 				}
 				
+				//後臺要改變未審核商品的狀態，必須先審核上架或審核下架，確保有審核行為
 				if(upcheck < 1 && (boxstatus != 0 || paystatus != 0 || status != 0)) {
 					errormsgs.add("審核狀態：欲改變狀態，先審核此市集商品");
 				}

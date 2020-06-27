@@ -70,7 +70,7 @@
 				<td>上架審核狀態</td>
 				<td><select id="upcheck" name="upcheck">
 						<c:forEach var="i" begin="0" end="2">
-							<option value="${i}" ${(shgmvo.upcheck == i)? 'selected':'' }>${(i == 0)? "未審核": (i == 1)? "已審核": "審核未通過"}</option>
+							<option value="${i}" ${(shgmvo.upcheck == i)? 'selected':'' }>${(i == 0)? "未審核": (i == 1)? "審核上架": "審核下架"}</option>
 						</c:forEach>
 					</select></td>
 			</tr>

@@ -48,13 +48,13 @@ public class ShgmDAO implements ShgmDAO_interface {
 	private static final String GET_ONE_STMT = "SELECT * FROM SHGM WHERE shgmno=?";
 	private static final String GET_ONE_INFO = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime FROM SHGM WHERE shgmno=?";
 	private static final String GET_ALL_STMT = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
-			+ " FROM SHGM ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
+			+ " FROM SHGM";// ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)
 	private static final String GET_ALL_FOR_SELLER_STMT = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
-			+ " FROM SHGM WHERE sellerno=? ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
+			+ " FROM SHGM WHERE sellerno=?";// ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)
 	private static final String GET_ALL_FOR_BUYER_STMT = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
-			+ " FROM SHGM WHERE buyerno=? ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
+			+ " FROM SHGM WHERE buyerno=?";// ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)
 	private static final String MAINPAGE_GETALL_STMT = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
-			+ " FROM SHGM WHERE (upcheck=1 AND boxstatus=0 AND paystatus=0 AND status=0) ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
+			+ " FROM SHGM WHERE (upcheck=1 AND boxstatus=0 AND paystatus=0 AND status=0)";// ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)
 
 	@Override
 	public void insertSold(ShgmVO shgmvo) {

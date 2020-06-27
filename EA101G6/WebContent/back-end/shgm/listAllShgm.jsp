@@ -77,10 +77,10 @@
 	                <td>未審核</td>
 	            </c:when>
 	            <c:when test="${shgmvo.upcheck == 1}">
-	                <td>已審核</td>
+	                <td>審核上架</td>
 	            </c:when>
 	            <c:otherwise>
-	                 <td>審核未通過</td>
+	                 <td>審核下架</td>
 	            </c:otherwise>
         	</c:choose>
         	<c:choose>
