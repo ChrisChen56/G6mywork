@@ -318,20 +318,19 @@ role="banner">
 									</ul>
 									已上架的市集商品(可自行下架)商品名稱、圖片、售價、上架時間
 									<c:forEach var="shgmvo" items="${shgmlist}">
-									<c:if test="${shgmvo.upcheck == 1 and shgmvo.boxstatus == 0 and shgmvo.paystatus == 0 and shgmvo.status == 0}">
-									<input type="hidden" name="shgmno" value="${shgmvo.shgmno}"/>
-									<ul class="list-group list-group-horizontal four-li">
-										<li class="list-group-item">${shgmvo.shgmname}</li>
-										<li class="list-group-item"><div class="imgwrapper"><img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"></div></li>
-										<li class="list-group-item">${shgmvo.price}</li>
-										<li class="list-group-item">
-											<fmt:formatDate value="${shgmvo.uptime}" pattern="yyyy/MM/dd HH:mm:ss"/><br>
-											<button id="${shgmvo.shgmno}" value="1" type="button" class="btn btn-primary upcheck">自行下架</button>
-										</li>
-									</ul>
-								</c:if>
-							</c:forEach>
-						</div>
+										<c:if test="${shgmvo.upcheck == 1 and shgmvo.boxstatus == 0 and shgmvo.paystatus == 0 and shgmvo.status == 0}">
+											<ul class="list-group list-group-horizontal four-li">
+												<li class="list-group-item">${shgmvo.shgmname}</li>
+												<li class="list-group-item"><div class="imgwrapper"><img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"></div></li>
+												<li class="list-group-item">${shgmvo.price}</li>
+												<li class="list-group-item">
+													<fmt:formatDate value="${shgmvo.uptime}" pattern="yyyy/MM/dd HH:mm:ss"/><br>
+													<button id="${shgmvo.shgmno}" value="1" type="button" class="btn btn-primary upcheck">自行下架</button>
+												</li>
+											</ul>
+										</c:if>
+									</c:forEach>
+								</div>
 						<div class="tab-pane fade" id="upcheck2" role="tabpanel" aria-labelledby="upcheck2-tab">
 							<ul class="list-group list-group-horizontal five-li">
 								<li class="list-group-item firstlis">商品名稱</li>
@@ -341,31 +340,32 @@ role="banner">
 							</ul>
 							已下架的市集商品(自行下架/被檢舉:都顯示可修改的按鈕)商品名稱、圖片、下架原因、修改(用上架頁面修改，內含申請重新上架？)
 							<c:forEach var="shgmvo" items="${shgmlist}">
-							<c:if test="${shgmvo.upcheck == 2 and shgmvo.boxstatus == 0 and shgmvo.paystatus == 0 and shgmvo.status == 0}">
-							<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgm.do">
-								<ul class="list-group list-group-horizontal four-li">
-									<li class="list-group-item">${shgmvo.shgmname}</li>
-									<li class="list-group-item"><div class="imgwrapper"><img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"></div></li>
-									<li class="list-group-item">
-										<c:choose>
-											<c:when test="${shgmrpsvc.getOnerpByShgmno(shgmvo.shgmno) != null}">
-											(檢舉下架)${shgmrpsvc.getOnerpByShgmno(shgmvo.shgmno).detail}
-											</c:when>
-											<c:otherwise>
-											(自行下架)自行下架
-											</c:otherwise>
-										</c:choose>
-									</li>
-						<li class="list-group-item">
-							<input type="submit" class="btn btn-primary" value="修改"><br>
-							<button id="${shgmvo.shgmno}" value="2" type="button" class="btn btn-primary upcheck">重新上架</button></li>
-						</ul>
-						<input type="hidden" name="action" value="oneForSellerUpdate">
-						<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
-					</form>
-				</c:if>
-			</c:forEach>
-		</div>
+								<c:if test="${shgmvo.upcheck == 2 and shgmvo.boxstatus == 0 and shgmvo.paystatus == 0 and shgmvo.status == 0}">
+									<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgm.do">
+										<ul class="list-group list-group-horizontal four-li">
+											<li class="list-group-item">${shgmvo.shgmname}</li>
+											<li class="list-group-item"><div class="imgwrapper"><img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"></div></li>
+											<li class="list-group-item">
+												<c:choose>
+													<c:when test="${shgmrpsvc.getOnerpByShgmno(shgmvo.shgmno) != null}">
+													(檢舉下架)${shgmrpsvc.getOnerpByShgmno(shgmvo.shgmno).detail}
+													</c:when>
+													<c:otherwise>
+													(自行下架)自行下架
+													</c:otherwise>
+												</c:choose>
+											</li>
+											<li class="list-group-item">
+												<input type="submit" class="btn btn-primary" value="修改"><br>
+												<button id="${shgmvo.shgmno}" value="2" type="button" class="btn btn-primary upcheck">重新上架</button>
+											</li>
+										</ul>
+										<input type="hidden" name="action" value="oneForSellerUpdate">
+										<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
+									</form>
+								</c:if>
+							</c:forEach>
+						</div>
 	</div>
 </div>
 <div class="tab-pane fade" id="list-boxstatus" role="tabpanel" aria-labelledby="list-boxstatus-list">
@@ -393,25 +393,20 @@ role="banner">
 				</ul>
 				boxstatus == 0 商品名稱、圖片、買家姓名、電話、地址、更改出貨狀態(0→1)
 				<c:forEach var="shgmvo" items="${shgmlist}">
-				<c:if test="${shgmvo.upcheck == 1 and shgmvo.boxstatus == 0 and shgmvo.paystatus == 1 and shgmvo.status == 1}">
-				<input type="hidden" name="shgmno" value="${shgmvo.shgmno}"/>
-				<ul class="list-group list-group-horizontal six-li">
-					<li class="list-group-item">${shgmvo.shgmname}</li>
-					<li class="list-group-item"><div class="imgwrapper"><img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"></div></li>
-					<li class="list-group-item">${shgmvo.takernm}</li>
-					<li class="list-group-item">${shgmvo.takerph}</li>
-					<li class="list-group-item">${shgmvo.address}</li>
-					<li class="list-group-item">
-						<select id="boxstatus" name="boxstatus">
-							<c:forEach var="i" begin="0" end="1">
-							<option value="${i}" ${(shgmvo.boxstatus == i)? "selected":""}>${(i == 0)? "未出貨":"出貨"}</option>
-						</c:forEach>
-					</select>
-				</li>
-			</ul>
-		</c:if>
-	</c:forEach>
-</div>
+					<c:if test="${shgmvo.upcheck == 1 and shgmvo.boxstatus == 0 and shgmvo.paystatus == 1 and shgmvo.status == 1}">
+						<ul class="list-group list-group-horizontal six-li">
+							<li class="list-group-item">${shgmvo.shgmname}</li>
+							<li class="list-group-item"><div class="imgwrapper"><img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"></div></li>
+							<li class="list-group-item">${shgmvo.takernm}</li>
+							<li class="list-group-item">${shgmvo.takerph}</li>
+							<li class="list-group-item">${shgmvo.address}</li>
+							<li class="list-group-item">未出貨<br>
+								<button id="${shgmvo.shgmno}" value="0" type="button" class="btn btn-primary boxstatus">進行出貨</button>
+							</li>
+						</ul>
+					</c:if>
+				</c:forEach>
+			</div>
 <div class="tab-pane fade" id="boxstatus1" role="tabpanel" aria-labelledby="boxstatus1-tab">
 	<ul class="list-group list-group-horizontal six-li">
 		<li class="list-group-item firstlis">商品名稱</li>
@@ -423,24 +418,19 @@ role="banner">
 	</ul>
 	boxstatus == 1商品名稱、圖片、買家姓名、電話、地址、更改出貨狀態(1→2)
 	<c:forEach var="shgmvo" items="${shgmlist}">
-	<c:if test="${shgmvo.upcheck == 1 and shgmvo.boxstatus == 1 and shgmvo.paystatus == 1 and shgmvo.status == 1}">
-	<input type="hidden" name="shgmno" value="${shgmvo.shgmno}"/>
-	<ul class="list-group list-group-horizontal six-li">
-		<li class="list-group-item"><div class="imgwrapper">${shgmvo.shgmname}</div></li>
-		<li class="list-group-item"><div class="imgwrapper"><img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"></div></li>
-		<li class="list-group-item">${shgmvo.takernm}</li>
-		<li class="list-group-item">${shgmvo.takerph}</li>
-		<li class="list-group-item">${shgmvo.address}</li>
-		<li class="list-group-item">
-			<select id="boxstatus" name="boxstatus">
-				<c:forEach var="i" begin="1" end="2">
-				<option value="${i}" ${(shgmvo.boxstatus == i)? "selected":""}>${(i == 1)? "出貨中":"到達"}</option>
-			</c:forEach>
-		</select>
-	</li>
-</ul>
-</c:if>
-</c:forEach>
+		<c:if test="${shgmvo.upcheck == 1 and shgmvo.boxstatus == 1 and shgmvo.paystatus == 1 and shgmvo.status == 1}">
+			<ul class="list-group list-group-horizontal six-li">
+				<li class="list-group-item">${shgmvo.shgmname}</li>
+				<li class="list-group-item"><div class="imgwrapper"><img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"></div></li>
+				<li class="list-group-item">${shgmvo.takernm}</li>
+				<li class="list-group-item">${shgmvo.takerph}</li>
+				<li class="list-group-item">${shgmvo.address}</li>
+				<li class="list-group-item">出貨中<br>
+					<button id="${shgmvo.shgmno}" value="1" type="button" class="btn btn-primary boxstatus">送達商品</button>
+				</li>
+			</ul>
+		</c:if>
+	</c:forEach>
 </div>
 <div class="tab-pane fade" id="boxstatus2" role="tabpanel" aria-labelledby="boxstatus2-tab">
 	<ul class="list-group list-group-horizontal six-li">
@@ -453,17 +443,17 @@ role="banner">
 	</ul>
 	boxstatus == 2商品名稱、圖片、買家姓名、電話、地址、等待買家收貨中
 	<c:forEach var="shgmvo" items="${shgmlist}">
-	<c:if test="${shgmvo.upcheck == 1 and shgmvo.boxstatus == 2 and shgmvo.paystatus == 1 and shgmvo.status == 1}">
-	<ul class="list-group list-group-horizontal six-li">
-		<li class="list-group-item">${shgmvo.shgmname}</li>
-		<li class="list-group-item"><div class="imgwrapper"><img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"></div></li>
-		<li class="list-group-item">${shgmvo.takernm}</li>
-		<li class="list-group-item">${shgmvo.takerph}</li>
-		<li class="list-group-item">${shgmvo.address}</li>
-		<li class="list-group-item">等待買家收貨中</li>
-	</ul>
-</c:if>
-</c:forEach>
+		<c:if test="${shgmvo.upcheck == 1 and shgmvo.boxstatus == 2 and shgmvo.paystatus == 1 and shgmvo.status == 1}">
+			<ul class="list-group list-group-horizontal six-li">
+				<li class="list-group-item">${shgmvo.shgmname}</li>
+				<li class="list-group-item"><div class="imgwrapper"><img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"></div></li>
+				<li class="list-group-item">${shgmvo.takernm}</li>
+				<li class="list-group-item">${shgmvo.takerph}</li>
+				<li class="list-group-item">${shgmvo.address}</li>
+				<li class="list-group-item">等待買家收貨中</li>
+			</ul>
+		</c:if>
+	</c:forEach>
 </div>
 </div>
 </div>
@@ -559,7 +549,7 @@ role="banner">
 <script>
 	$(document).ready(function(){
 		
-		$(".col-10").on('click','.btn',function(){
+		$(".container").on("click",".upcheck",function(){
 			var $shgmno = $(this).closest("button")[0].id;
 			var $value = $(this).closest("button")[0].value;
 			console.log($shgmno);
@@ -569,7 +559,7 @@ role="banner">
 			$.ajax({
 			    type: "POST",
 			    url: '<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=statusUpdate',
-			    data: {"shgmno": $shgmno,"upcheck": $value},
+			    data: {"shgmno":$shgmno,"upcheck":$value},
 			    dataType: "json",
 			    cache: false,
 			    success: function(response){
@@ -601,6 +591,29 @@ role="banner">
 			});
 		});
 		
+		
+		$(".container").on("click",".boxstatus",function(){
+			var $shgmno = $(this).closest("button")[0].id;
+			var $value = $(this).closest("button")[0].value;
+			console.log($shgmno);
+			console.log($value);
+			<%--$(this).closest("ul")[0].remove();--%>
+			
+			$.ajax({
+				type:"POST",
+				url:"<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=statusUpdate",
+				data:{"shgmno":$shgmno,"boxstatus":$value},
+				dateType:"json",
+				cache:false,
+				success:function(response){
+					
+				},
+				error:function(result){
+					alert(result);
+				}
+			});
+		});
+
 		
 	});
 </script>
