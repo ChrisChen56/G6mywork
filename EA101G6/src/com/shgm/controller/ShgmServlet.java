@@ -157,6 +157,8 @@ public class ShgmServlet extends HttpServlet {
 				String shgmname = request.getParameter("shgmname");
 				if (shgmname.trim().length() == 0)
 					errormsgs.add("市集商品名稱：請勿輸入空白");
+				if (shgmname.trim().length() > 10)
+					errormsgs.add("市集商品名稱：名稱過長");
 
 				Integer price = null;
 				String pricestr = request.getParameter("price");
@@ -313,6 +315,8 @@ public class ShgmServlet extends HttpServlet {
 				String shgmname = request.getParameter("shgmname");
 				if (shgmname.trim().length() == 0)
 					errormap.put((long) 1, "名稱不得為空");
+				if (shgmname.trim().length() > 10)
+					errormap.put((long) 1, "名稱過長");
 
 				Integer price = null;
 				String pricestr = request.getParameter("price");
@@ -413,6 +417,8 @@ public class ShgmServlet extends HttpServlet {
 				String shgmname = request.getParameter("shgmname");
 				if (shgmname.trim().length() == 0)
 					errormap.put((long) 1, "名稱不得為空");
+				if (shgmname.trim().length() > 10)
+					errormap.put((long) 1, "名稱過長");
 
 				Integer price = null;
 				String pricestr = request.getParameter("price");
@@ -585,17 +591,17 @@ public class ShgmServlet extends HttpServlet {
 			System.out.println(shgmno);
 
 			Writer out = response.getWriter();
-			ShgmService shgmsvc = new ShgmService();
 
+			ShgmService shgmsvc = new ShgmService();
 			ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
 
 			JSONObject jsonobj = new JSONObject();
-
+			//改變上架狀態
 			if (request.getParameter("upcheck") != null) {
 
 				Integer upcheck = new Integer(request.getParameter("upcheck"));
 				System.out.println("更新前：" + upcheck);
-				// 待上架、上架中自行下架，變成下架中狀態
+				// 待上架、上架中選擇自行下架，改成下架中狀態
 				if (upcheck == 0 || upcheck == 1) {
 					// 先更新
 					shgmsvc.upcheckUpdate(2, shgmno);
@@ -612,10 +618,10 @@ public class ShgmServlet extends HttpServlet {
 					// 把jquery動態改變頁面需要的資料放入json
 					jsonobj.put("shgmno", shgmvo.getShgmno());
 					jsonobj.put("shgmname", shgmvo.getShgmname());
-					jsonobj.put("upcheck", 2);
 					jsonobj.put("detail", detail);
+					jsonobj.put("upcheck", 2);
 
-					// 重新申請上架，變成待上架狀態
+					// 重新申請上架，下架中改成待上架狀態
 				} else if (upcheck == 2) {
 					shgmsvc.upcheckUpdate(0, shgmno);
 
@@ -624,13 +630,44 @@ public class ShgmServlet extends HttpServlet {
 
 					jsonobj.put("shgmno", shgmvo.getShgmno());
 					jsonobj.put("shgmname", shgmvo.getShgmname());
-					// upcheck作流程控制用的
-					jsonobj.put("upcheck", 0);
 					jsonobj.put("price", shgmvo.getPrice());
+					// upcheck的值在ajax作流程控制用的
+					jsonobj.put("upcheck", 0);
 				}
-			} else if (request.getParameter("boxstatus") != null) {
+			}
+			//改變出貨狀態
+			if (request.getParameter("boxstatus") != null) {
+
 				Integer boxstatus = new Integer(request.getParameter("boxstatus"));
+				System.out.println("更新前：" + boxstatus);
+
+				jsonobj.put("shgmno", shgmvo.getShgmno());
+				jsonobj.put("shgmname", shgmvo.getShgmname());
+				jsonobj.put("takernm", shgmvo.getTakernm());
+				jsonobj.put("takerph", shgmvo.getTakerph());
+				jsonobj.put("address", shgmvo.getAddress());
+
+				// 待出貨選擇進行出貨，改成出貨中
+				if (boxstatus == 0) {
+					shgmsvc.boxstatusUpdate(1, shgmno);
+					jsonobj.put("boxstatus", 1);
+
+					// 出貨中選擇送達商品，改成已送達
+				} else if (boxstatus == 1) {
+					shgmsvc.boxstatusUpdate(2, shgmno);
+					jsonobj.put("boxstatus", 2);
+				}
+			}
+			//回收商品
+			if(request.getParameter("status") != null) {
+				//將買家資料清空，回到待上架狀態
+				shgmsvc.updateShgm(shgmno, shgmvo.getSellerno(), null, shgmvo.getShgmname(), shgmvo.getPrice(),
+						shgmvo.getIntro(), shgmvo.getImg(), 0, null, null, null, null, 0, 0, 0);
+				System.out.println("update shgm to upcheck0 status");
 				
+				jsonobj.put("shgmno", shgmno);
+				jsonobj.put("shgmname", shgmvo.getShgmname());
+				jsonobj.put("price", shgmvo.getPrice());
 			}
 
 			System.out.println(jsonobj.toString());
@@ -705,6 +742,8 @@ public class ShgmServlet extends HttpServlet {
 				String shgmname = request.getParameter("shgmname");
 				if (shgmname.trim().length() == 0)
 					errormsgs.add("市集商品名稱：請勿輸入空白");
+				if (shgmname.trim().length() > 10)
+					errormsgs.add("市集商品名稱：名稱過長");
 
 				Integer price = null;
 				String pricestr = request.getParameter("price");

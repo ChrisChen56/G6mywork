@@ -36,6 +36,8 @@ public class ShgmJDBCDAO implements ShgmDAO_interface {
 			+ "take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=? WHERE shgmno=?";
 	private static final String UPCHECK_UPDATE_STMT = 
 			"UPDATE SHGM SET upcheck=? where shgmno=?";
+	private static final String BOXSTATUS_UPDATE_STMT =
+			"UPDATE SHGM SET boxstatus=? where shgmno=?";
 	private static final String SELLER_UPDATE_STMT = 
 			"UPDATE SHGM SET shgmname=?,price=?,intro=?,img=? WHERE shgmno=?";
 	private static final String DEALING_STMT = 
@@ -318,6 +320,42 @@ public class ShgmJDBCDAO implements ShgmDAO_interface {
 			pstmt = con.prepareStatement(UPCHECK_UPDATE_STMT);
 
 			pstmt.setInt(1, upcheck);
+			pstmt.setString(2, shgmno);
+			
+			pstmt.executeUpdate();
+
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void boxstatusUpdate(Integer boxstatus, String shgmno) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url, user, password);
+			pstmt = con.prepareStatement(BOXSTATUS_UPDATE_STMT);
+
+			pstmt.setInt(1, boxstatus);
 			pstmt.setString(2, shgmno);
 			
 			pstmt.executeUpdate();

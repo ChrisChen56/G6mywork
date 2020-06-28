@@ -133,6 +133,11 @@ public class ShgmService {
 		
 		dao.upcheckUpdate(upcheck, shgmno);
 	}
+	
+	public void boxstatusUpdate(Integer boxstatus, String shgmno) {
+		
+		dao.boxstatusUpdate(boxstatus, shgmno);
+	}
 
 	public ShgmVO sellerUpdate(String shgmno, String shgmname, Integer price, String intro, byte[] img) {
 

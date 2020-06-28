@@ -38,6 +38,7 @@ public class ShgmJNDIDAO implements ShgmDAO_interface {
 	private static final String UPDATE_STMT = "UPDATE SHGM SET sellerno=?,buyerno=?,shgmname=?,price=?,intro=?,img=?,upcheck=?,"
 			+ "take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=? WHERE shgmno=?";
 	private static final String UPCHECK_UPDATE_STMT = "UPDATE SHGM SET upcheck=? where shgmno=?";
+	private static final String BOXSTATUS_UPDATE_STMT = "UPDATE SHGM SET boxstatus=? where shgmno=?";
 	private static final String SELLER_UPDATE_STMT = "UPDATE SHGM SET shgmname=?,price=?,intro=?,img=? WHERE shgmno=?";
 	private static final String DEALING_STMT = "UPDATE SHGM SET buyerno=?,take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=? WHERE shgmno=?";
 	private static final String UPTIME_CT_STMT = "UPDATE SHGM SET uptime=CURRENT_TIMESTAMP WHERE shgmno=?";
@@ -314,6 +315,39 @@ public class ShgmJNDIDAO implements ShgmDAO_interface {
 		}
 	}
 
+	@Override
+	public void boxstatusUpdate(Integer boxstatus, String shgmno) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		try {
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(BOXSTATUS_UPDATE_STMT);
+
+			pstmt.setInt(1, boxstatus);
+			pstmt.setString(2, shgmno);
+			
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 	@Override
 	public void sellerUpdate(ShgmVO shgmvo) {
 		Connection con = null;

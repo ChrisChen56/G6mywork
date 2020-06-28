@@ -7,6 +7,7 @@ public interface ShgmDAO_interface {
 	public void sellshgm(ShgmVO shgmvo);
 	public void update(ShgmVO shgmvo);
 	public void upcheckUpdate(Integer upcheck, String shgmno);
+	public void boxstatusUpdate(Integer boxstatus, String shgmno);
 	public void sellerUpdate(ShgmVO shgmvo);
 	public void dealingshgm(ShgmVO shgmvo);
 	public void soldtimeCT(String shgmno);

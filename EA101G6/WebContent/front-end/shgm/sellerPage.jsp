@@ -19,7 +19,7 @@ pageEncoding="UTF-8"%>
 <head>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-	<title>myShgame</title>
+	<title>sellerPage</title>
 	<meta charset="utf-8">
 	<meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -488,12 +488,12 @@ role="banner">
 	</ul>
 	status == 3
 	<c:forEach var="shgmvo" items="${shgmlist}">
-	<c:if test="${shgmvo.upcheck == 1 and shgmvo.boxstatus == 2 and shgmvo.paystatus == 1 and shgmvo.status == 3}">
+	<c:if test="${shgmvo.status == 3}">
 	<ul class="list-group list-group-horizontal four-li">
 		<li class="list-group-item">${shgmvo.shgmname}</li>
 		<li class="list-group-item"><div class="imgwrapper"><img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"></div></li>
 		<li class="list-group-item">${shgmvo.price}</li>
-		<li class="list-group-item"><button type="button" class="btn btn-primary">回收商品</button></li>
+		<li class="list-group-item"><button id="${shgmvo.shgmno}"type="button" class="btn btn-primary status">回收商品</button></li>
 	</ul>
 </c:if>
 </c:forEach>
@@ -545,7 +545,6 @@ role="banner">
 <script src="js/aos.js"></script>
 
 <script src="js/main.js"></script>
-要拿到shgmno
 <script>
 	$(document).ready(function(){
 		
@@ -554,7 +553,9 @@ role="banner">
 			var $value = $(this).closest("button")[0].value;
 			console.log($shgmno);
 			console.log($value);
-			$(this).closest("ul").remove();
+			$(this).closest("ul").fadeOut(function(){
+				$(this).closest("ul")[0].remove();
+			});
 			
 			$.ajax({
 			    type: "POST",
@@ -591,25 +592,75 @@ role="banner">
 			});
 		});
 		
-		
 		$(".container").on("click",".boxstatus",function(){
 			var $shgmno = $(this).closest("button")[0].id;
 			var $value = $(this).closest("button")[0].value;
 			console.log($shgmno);
 			console.log($value);
-			<%--$(this).closest("ul")[0].remove();--%>
+			$(this).closest("ul").fadeOut(function(){
+				$(this).closest("ul")[0].remove();
+			});
 			
 			$.ajax({
-				type:"POST",
-				url:"<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=statusUpdate",
-				data:{"shgmno":$shgmno,"boxstatus":$value},
-				dateType:"json",
-				cache:false,
-				success:function(response){
-					
+				type: "POST",
+				url: "<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=statusUpdate",
+				data: {"shgmno":$shgmno,"boxstatus":$value},
+				dataType: "json",
+			    cache: false,
+				success: function(response){
+					if(response.boxstatus == 1){
+						$("#boxstatus1 ul:eq(1)").before('<ul class="list-group list-group-horizontal six-li"></ul>');
+						$("#boxstatus1 ul:eq(1)").append('<li class="list-group-item">'+response.shgmname+'</li>');
+						$("#boxstatus1 ul:eq(1)").append('<li class="list-group-item"><div class="imgwrapper">'+
+								'<img src="/EA101G6/shgm/displayimg?shgmno='+response.shgmno+'"></div></li>');
+						$("#boxstatus1 ul:eq(1)").append('<li class="list-group-item">'+response.takernm+'</li>');
+						$("#boxstatus1 ul:eq(1)").append('<li class="list-group-item">'+response.takerph+'</li>');
+						$("#boxstatus1 ul:eq(1)").append('<li class="list-group-item">'+response.address+'</li>');
+						$("#boxstatus1 ul:eq(1)").append('<li class="list-group-item">出貨中</li>');
+						$("#boxstatus1 ul:eq(1) li:eq(5)").append('<br>');
+						$("#boxstatus1 ul:eq(1) li:eq(5)").append('<button id="'+response.shgmno+'" value="1" type="button" class="btn btn-primary boxstatus">送達商品</button>');
+					} else if(response.boxstatus == 2){
+						$("#boxstatus2 ul:eq(1)").before('<ul class="list-group list-group-horizontal six-li"></ul>');
+						$("#boxstatus2 ul:eq(1)").append('<li class="list-group-item">'+response.shgmname+'</li>');
+						$("#boxstatus2 ul:eq(1)").append('<li class="list-group-item"><div class="imgwrapper">'+
+								'<img src="/EA101G6/shgm/displayimg?shgmno='+response.shgmno+'"></div></li>');
+						$("#boxstatus2 ul:eq(1)").append('<li class="list-group-item">'+response.takernm+'</li>');
+						$("#boxstatus2 ul:eq(1)").append('<li class="list-group-item">'+response.takerph+'</li>');
+						$("#boxstatus2 ul:eq(1)").append('<li class="list-group-item">'+response.address+'</li>');
+						$("#boxstatus2 ul:eq(1)").append('<li class="list-group-item">等待買家收貨中</li>');
+					}
 				},
 				error:function(result){
-					alert(result);
+					console.log(result);
+				}
+			});
+		});
+		
+		$(".container").on("click",".status",function(){
+			var $shgmno = $(this).closest("button")[0].id;
+			console.log($shgmno);
+			$(this).closest("ul").fadeOut(function(){
+				$(this).closest("ul")[0].remove();
+			});
+			
+			$.ajax({
+				type: "POST",
+				url: "<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=statusUpdate",
+				data: {"shgmno":$shgmno,"status":3},
+				dataType: "json",
+				cache: false,
+				success: function(response){
+					$('#upcheck0 ul').eq(1).before('<ul class="list-group list-group-horizontal four-li"></ul>');
+					$('#upcheck0 ul').eq(1).append('<li class="list-group-item">'+response.shgmname+'</li>');
+					$('#upcheck0 ul').eq(1).append('<li class="list-group-item"><div class="imgwrapper">'+
+							'<img src="/EA101G6/shgm/displayimg?shgmno='+response.shgmno+'"></div></li>');
+					$('#upcheck0 ul').eq(1).append('<li class="list-group-item">'+response.price+'</li>');
+					$('#upcheck0 ul').eq(1).append('<li class="list-group-item">上架審核中</li>');
+					$('#upcheck0 ul:eq(1) li:eq(3)').append('<br>');
+					$('#upcheck0 ul:eq(1) li:eq(3)').append('<button id="'+response.shgmno+'" value="0" type="button" class="btn btn-primary upcheck">自行下架</button>');
+				},
+				error: function(result){
+					console.log(result);
 				}
 			});
 		});

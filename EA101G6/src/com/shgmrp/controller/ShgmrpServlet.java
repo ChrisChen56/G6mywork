@@ -176,7 +176,7 @@ public class ShgmrpServlet extends HttpServlet {
 				ShgmrpService shgmrpsvc = new ShgmrpService();
 				shgmrpvo = shgmrpsvc.addShgmrp(shgmno, suiterno, detail, status);
 				
-				//檢舉審核通過，下架市集商品
+				//新增同時檢舉審核通過，下架市集商品
 				if(status == 1) {
 					shgmsvc = new ShgmService();
 					shgmsvc.upcheckUpdate(2, shgmno);
@@ -272,7 +272,7 @@ public class ShgmrpServlet extends HttpServlet {
 				ShgmrpService shgmrpsvc = new ShgmrpService();
 				shgmrpvo = shgmrpsvc.updateShgmrp(shgmrpno, shgmno, suiterno, detail, status);
 				
-				//新增同時檢舉審核通過，下架市集商品
+				//檢舉審核通過，下架市集商品
 				if(status == 1) {
 					shgmsvc = new ShgmService();
 					shgmsvc.upcheckUpdate(2, shgmno);
