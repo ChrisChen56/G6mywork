@@ -57,6 +57,7 @@ pageEncoding="UTF-8"%>
 		border: black 1px solid;
 		background-color: white;
 		margin: 2% auto;
+		height: 1500px;
 	}
 
 	.top-info-wrapper {
@@ -290,13 +291,13 @@ role="banner">
 									</ul>
 									<div class="tab-content" id="myTabContent">
 										<div class="tab-pane fade show active" id="upcheck0" role="tabpanel" aria-labelledby="upcheck0-tab">
+											未經審核的市集商品(可自行下架)商品名稱、圖片、售價、下架選項
 											<ul class="list-group list-group-horizontal four-li">
 												<li class="list-group-item firstlis">商品名稱</li>
 												<li class="list-group-item firstlis">圖片</li>
 												<li class="list-group-item firstlis">售價</li>
 												<li class="list-group-item firstlis">市集商品狀態</li>
 											</ul>
-											未經審核的市集商品(可自行下架)商品名稱、圖片、售價、下架選項
 											<c:forEach var="shgmvo" items="${shgmlist}">
 											<c:if test="${shgmvo.upcheck == 0 and shgmvo.boxstatus == 0 and shgmvo.paystatus == 0 and shgmvo.status == 0}">
 											<ul class="list-group list-group-horizontal four-li">
@@ -310,13 +311,13 @@ role="banner">
 									</c:forEach>
 								</div>
 								<div class="tab-pane fade" id="upcheck1" role="tabpanel" aria-labelledby="upcheck1-tab">
+									已上架的市集商品(可自行下架)商品名稱、圖片、售價、上架時間
 									<ul class="list-group list-group-horizontal four-li">
 										<li class="list-group-item firstlis">商品名稱</li>
 										<li class="list-group-item firstlis">圖片</li>
 										<li class="list-group-item firstlis">售價</li>
 										<li class="list-group-item firstlis">上架時間</li>
 									</ul>
-									已上架的市集商品(可自行下架)商品名稱、圖片、售價、上架時間
 									<c:forEach var="shgmvo" items="${shgmlist}">
 										<c:if test="${shgmvo.upcheck == 1 and shgmvo.boxstatus == 0 and shgmvo.paystatus == 0 and shgmvo.status == 0}">
 											<ul class="list-group list-group-horizontal four-li">
@@ -332,13 +333,13 @@ role="banner">
 									</c:forEach>
 								</div>
 						<div class="tab-pane fade" id="upcheck2" role="tabpanel" aria-labelledby="upcheck2-tab">
+							已下架的市集商品(自行下架/被檢舉:都顯示可修改的按鈕)商品名稱、圖片、下架原因、修改(用上架頁面修改，內含申請重新上架？)
 							<ul class="list-group list-group-horizontal five-li">
 								<li class="list-group-item firstlis">商品名稱</li>
 								<li class="list-group-item firstlis">圖片</li>
 								<li class="list-group-item firstlis">下架原因</li>
 								<li class="list-group-item firstlis">更新商品狀態</li>
 							</ul>
-							已下架的市集商品(自行下架/被檢舉:都顯示可修改的按鈕)商品名稱、圖片、下架原因、修改(用上架頁面修改，內含申請重新上架？)
 							<c:forEach var="shgmvo" items="${shgmlist}">
 								<c:if test="${shgmvo.upcheck == 2 and shgmvo.boxstatus == 0 and shgmvo.paystatus == 0 and shgmvo.status == 0}">
 									<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgm.do">
@@ -383,6 +384,7 @@ role="banner">
 		</ul>
 		<div class="tab-content" id="myTabContent">
 			<div class="tab-pane fade show active" id="boxstatus0" role="tabpanel" aria-labelledby="boxstatus0-tab">
+				boxstatus == 0 商品名稱、圖片、買家姓名、電話、地址、更改出貨狀態(0→1)
 				<ul class="list-group list-group-horizontal six-li">
 					<li class="list-group-item firstlis">商品名稱</li>
 					<li class="list-group-item firstlis">圖片</li>
@@ -391,7 +393,6 @@ role="banner">
 					<li class="list-group-item firstlis">地址</li>
 					<li class="list-group-item firstlis">出貨狀態</li>
 				</ul>
-				boxstatus == 0 商品名稱、圖片、買家姓名、電話、地址、更改出貨狀態(0→1)
 				<c:forEach var="shgmvo" items="${shgmlist}">
 					<c:if test="${shgmvo.upcheck == 1 and shgmvo.boxstatus == 0 and shgmvo.paystatus == 1 and shgmvo.status == 1}">
 						<ul class="list-group list-group-horizontal six-li">
@@ -408,6 +409,7 @@ role="banner">
 				</c:forEach>
 			</div>
 <div class="tab-pane fade" id="boxstatus1" role="tabpanel" aria-labelledby="boxstatus1-tab">
+	boxstatus == 1商品名稱、圖片、買家姓名、電話、地址、更改出貨狀態(1→2)
 	<ul class="list-group list-group-horizontal six-li">
 		<li class="list-group-item firstlis">商品名稱</li>
 		<li class="list-group-item firstlis">圖片</li>
@@ -416,7 +418,6 @@ role="banner">
 		<li class="list-group-item firstlis">地址</li>
 		<li class="list-group-item firstlis">出貨狀態</li>
 	</ul>
-	boxstatus == 1商品名稱、圖片、買家姓名、電話、地址、更改出貨狀態(1→2)
 	<c:forEach var="shgmvo" items="${shgmlist}">
 		<c:if test="${shgmvo.upcheck == 1 and shgmvo.boxstatus == 1 and shgmvo.paystatus == 1 and shgmvo.status == 1}">
 			<ul class="list-group list-group-horizontal six-li">
@@ -433,6 +434,7 @@ role="banner">
 	</c:forEach>
 </div>
 <div class="tab-pane fade" id="boxstatus2" role="tabpanel" aria-labelledby="boxstatus2-tab">
+	boxstatus == 2商品名稱、圖片、買家姓名、電話、地址、等待買家收貨中
 	<ul class="list-group list-group-horizontal six-li">
 		<li class="list-group-item firstlis">商品名稱</li>
 		<li class="list-group-item firstlis">圖片</li>
@@ -441,7 +443,6 @@ role="banner">
 		<li class="list-group-item firstlis">地址</li>
 		<li class="list-group-item firstlis">出貨狀態</li>
 	</ul>
-	boxstatus == 2商品名稱、圖片、買家姓名、電話、地址、等待買家收貨中
 	<c:forEach var="shgmvo" items="${shgmlist}">
 		<c:if test="${shgmvo.upcheck == 1 and shgmvo.boxstatus == 2 and shgmvo.paystatus == 1 and shgmvo.status == 1}">
 			<ul class="list-group list-group-horizontal six-li">
@@ -459,6 +460,7 @@ role="banner">
 </div>
 </div>
 <div class="tab-pane fade" id="list-status2" role="tabpanel" aria-labelledby="list-status2-list">
+	status == 2商品名稱、圖片、售價、上架日期、售出日期
 	<ul class="list-group list-group-horizontal five-li">
 		<li class="list-group-item firstlis">商品名稱</li>
 		<li class="list-group-item firstlis">圖片</li>
@@ -466,7 +468,6 @@ role="banner">
 		<li class="list-group-item firstlis">上架日期</li>
 		<li class="list-group-item firstlis">售出日期</li>
 	</ul>
-	status == 2商品名稱、圖片、售價、上架日期、售出日期
 	<c:forEach var="shgmvo" items="${shgmlist}">
 	<c:if test="${shgmvo.upcheck == 1 and shgmvo.boxstatus == 2 and shgmvo.paystatus == 1 and shgmvo.status == 2}">
 	<ul class="list-group list-group-horizontal five-li">
@@ -480,13 +481,13 @@ role="banner">
 </c:forEach>
 </div>
 <div class="tab-pane fade" id="list-status3" role="tabpanel" aria-labelledby="list-status3-list">
+	status == 3
 	<ul class="list-group list-group-horizontal four-li">
 		<li class="list-group-item firstlis">商品名稱</li>
 		<li class="list-group-item firstlis">圖片</li>
 		<li class="list-group-item firstlis">售價</li>
 		<li class="list-group-item firstlis">回收商品</li>
 	</ul>
-	status == 3
 	<c:forEach var="shgmvo" items="${shgmlist}">
 	<c:if test="${shgmvo.status == 3}">
 	<ul class="list-group list-group-horizontal four-li">
@@ -565,7 +566,7 @@ role="banner">
 			    cache: false,
 			    success: function(response){
 			    	if(response.upcheck == 2){
-			    		$("form:first").before('<form method="post" action="/EA101G6/front-end/shgm/shgm.do"></form>');
+			    		$("#upcheck2 ul:eq(0)").after('<form method="post" action="/EA101G6/front-end/shgm/shgm.do"></form>');
 						$("form:first").append('<ul class="list-group list-group-horizontal four-li"></ul>');
 						$("form:first ul").append('<li class="list-group-item">'+response.shgmname+'</li>');
 						$("form:first ul").append('<li class="list-group-item"><div class="imgwrapper">'+
@@ -576,7 +577,7 @@ role="banner">
 						$("form:first").append('<input type="hidden" name="action" value="oneForSellerUpdate">');
 						$("form:first").append('<input type="hidden" name="shgmno" value="'+response.shgmno+'">');
 			    	} else if(response.upcheck == 0){
-			    		$('#upcheck0 ul').eq(1).before('<ul class="list-group list-group-horizontal four-li"></ul>');
+			    		$('#upcheck0 ul').eq(0).after('<ul class="list-group list-group-horizontal four-li"></ul>');
 						$('#upcheck0 ul').eq(1).append('<li class="list-group-item">'+response.shgmname+'</li>');
 						$('#upcheck0 ul').eq(1).append('<li class="list-group-item"><div class="imgwrapper">'+
 								'<img src="/EA101G6/shgm/displayimg?shgmno='+response.shgmno+'"></div></li>');
@@ -609,7 +610,7 @@ role="banner">
 			    cache: false,
 				success: function(response){
 					if(response.boxstatus == 1){
-						$("#boxstatus1 ul:eq(1)").before('<ul class="list-group list-group-horizontal six-li"></ul>');
+						$("#boxstatus1 ul:eq(0)").after('<ul class="list-group list-group-horizontal six-li"></ul>');
 						$("#boxstatus1 ul:eq(1)").append('<li class="list-group-item">'+response.shgmname+'</li>');
 						$("#boxstatus1 ul:eq(1)").append('<li class="list-group-item"><div class="imgwrapper">'+
 								'<img src="/EA101G6/shgm/displayimg?shgmno='+response.shgmno+'"></div></li>');
@@ -620,7 +621,7 @@ role="banner">
 						$("#boxstatus1 ul:eq(1) li:eq(5)").append('<br>');
 						$("#boxstatus1 ul:eq(1) li:eq(5)").append('<button id="'+response.shgmno+'" value="1" type="button" class="btn btn-primary boxstatus">送達商品</button>');
 					} else if(response.boxstatus == 2){
-						$("#boxstatus2 ul:eq(1)").before('<ul class="list-group list-group-horizontal six-li"></ul>');
+						$("#boxstatus2 ul:eq(0)").after('<ul class="list-group list-group-horizontal six-li"></ul>');
 						$("#boxstatus2 ul:eq(1)").append('<li class="list-group-item">'+response.shgmname+'</li>');
 						$("#boxstatus2 ul:eq(1)").append('<li class="list-group-item"><div class="imgwrapper">'+
 								'<img src="/EA101G6/shgm/displayimg?shgmno='+response.shgmno+'"></div></li>');
@@ -650,7 +651,7 @@ role="banner">
 				dataType: "json",
 				cache: false,
 				success: function(response){
-					$('#upcheck0 ul').eq(1).before('<ul class="list-group list-group-horizontal four-li"></ul>');
+					$('#upcheck0 ul').eq(0).after('<ul class="list-group list-group-horizontal four-li"></ul>');
 					$('#upcheck0 ul').eq(1).append('<li class="list-group-item">'+response.shgmname+'</li>');
 					$('#upcheck0 ul').eq(1).append('<li class="list-group-item"><div class="imgwrapper">'+
 							'<img src="/EA101G6/shgm/displayimg?shgmno='+response.shgmno+'"></div></li>');

@@ -272,39 +272,35 @@ div.pageselect-area {
 								id="list-boxstatus1-list" data-toggle="list" href="#list-boxstatus1"
 								role="tab" aria-controls="boxstatus1">出貨中</a> 
 							<a class="list-group-item list-group-item-action"
-								id="list-boxstatus2-list" data-toggle="list"
-								href="#list-boxstatus2" role="tab" aria-controls="boxstatus2">待收貨</a>
+								id="list-boxstatus2-list" data-toggle="list" href="#list-boxstatus2" 
+								role="tab" aria-controls="boxstatus2">待收貨</a>
 							<a class="list-group-item list-group-item-action"
 								id="list-status2-list" data-toggle="list" href="#list-status2"
-								role="tab" aria-controls="status2">已完成</a> <a
-								class="list-group-item list-group-item-action"
+								role="tab" aria-controls="status2">已完成</a>
+							<a class="list-group-item list-group-item-action"
 								id="list-status3-list" data-toggle="list" href="#list-status3"
 								role="tab" aria-controls="status3">取消</a>
 						</div>
 					</div>
 					<div class="col-10">
 						<div class="tab-content" id="nav-tabContent">
-							<div class="tab-pane fade" id="list-boxstatus1" role="tabpanel"
+							<div class="tab-pane fade active show" id="list-boxstatus1" role="tabpanel"
 								aria-labelledby="list-boxstatus1-list">
 								<ul class="list-group list-group-horizontal four-li">
 									<li class="list-group-item firstlis">商品名稱</li>
 									<li class="list-group-item firstlis">圖片</li>
 									<li class="list-group-item firstlis">售價</li>
-									<li class="list-group-item firstlis">回收商品</li>
+									<li class="list-group-item firstlis">商品狀態</li>
 								</ul>
-								status == 3
+								boxstatus1
 								<c:forEach var="shgmvo" items="${shgmlist}">
-									<c:if test="${shgmvo.status == 3}">
+									<c:if test="${shgmvo.upcheck == 1 && shgmvo.boxstatus == 1 && shgmvo.paystatus == 1 && shgmvo.status == 1}">
 										<ul class="list-group list-group-horizontal four-li">
 											<li class="list-group-item">${shgmvo.shgmname}</li>
 											<li class="list-group-item"><div class="imgwrapper">
-													<img
-														src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}">
-												</div></li>
+													<img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"></div></li>
 											<li class="list-group-item">${shgmvo.price}</li>
-											<li class="list-group-item"><button
-													id="${shgmvo.shgmno}" type="button"
-													class="btn btn-primary boxstatus1">回收商品</button></li>
+											<li class="list-group-item">商品配送中</li>
 										</ul>
 									</c:if>
 								</c:forEach>
@@ -315,21 +311,21 @@ div.pageselect-area {
 									<li class="list-group-item firstlis">商品名稱</li>
 									<li class="list-group-item firstlis">圖片</li>
 									<li class="list-group-item firstlis">售價</li>
-									<li class="list-group-item firstlis">回收商品</li>
+									<li class="list-group-item firstlis">商品狀態</li>
 								</ul>
-								status == 3
+								boxstatus2
 								<c:forEach var="shgmvo" items="${shgmlist}">
-									<c:if test="${shgmvo.status == 3}">
+									<c:if test="${shgmvo.upcheck == 1 && shgmvo.boxstatus == 2 && shgmvo.paystatus == 1 && shgmvo.status == 1}">
 										<ul class="list-group list-group-horizontal four-li">
 											<li class="list-group-item">${shgmvo.shgmname}</li>
 											<li class="list-group-item"><div class="imgwrapper">
-													<img
-														src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}">
-												</div></li>
+													<img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"></div></li>
 											<li class="list-group-item">${shgmvo.price}</li>
 											<li class="list-group-item"><button
 													id="${shgmvo.shgmno}" type="button"
-													class="btn btn-primary boxstatus2">回收商品</button></li>
+													class="btn btn-primary boxstatus2">確認收貨</button><br><button
+													id="${shgmvo.shgmno}" type="button"
+													class="btn btn-primary boxstatus2">取消訂單</button></li>
 										</ul>
 									</c:if>
 								</c:forEach>
@@ -368,7 +364,7 @@ div.pageselect-area {
 									<li class="list-group-item firstlis">商品名稱</li>
 									<li class="list-group-item firstlis">圖片</li>
 									<li class="list-group-item firstlis">售價</li>
-									<li class="list-group-item firstlis">回收商品</li>
+									<li class="list-group-item firstlis">商品狀態</li>
 								</ul>
 								status == 3
 								<c:forEach var="shgmvo" items="${shgmlist}">
@@ -380,9 +376,7 @@ div.pageselect-area {
 														src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}">
 												</div></li>
 											<li class="list-group-item">${shgmvo.price}</li>
-											<li class="list-group-item"><button
-													id="${shgmvo.shgmno}" type="button"
-													class="btn btn-primary status">回收商品</button></li>
+											<li class="list-group-item">已取消</li>
 										</ul>
 									</c:if>
 								</c:forEach>

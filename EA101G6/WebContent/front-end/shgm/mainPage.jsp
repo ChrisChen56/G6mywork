@@ -233,7 +233,8 @@ div.pageselect-area {
 					<li class="breadcrumb-item active" aria-current="page">市集</li>
 					<li class="awrapper">
 					<a id="upshgm" class="btn btn-primary ml-auto" href="<%=request.getContextPath()%>/front-end/shgm/sellPage.jsp" role="button">我要上架</a>
-					<a id="myshgm" class="btn btn-primary " href="#" role="button">我的市集商品</a></li>
+					<a id="myshgm" class="btn btn-primary " href="<%=request.getContextPath()%>/front-end/shgm/myShgm.jsp" role="button">我的市集商品</a>
+					<a id="seller" class="btn btn-primary" href="<%=request.getContextPath()%>/front-end/shgm/sellerPage.jsp" role="button">賣家專區</a></li>
 				</ol>
 			</nav>
 		</div>
@@ -284,8 +285,8 @@ div.pageselect-area {
 
 	<script>
 	$(document).ready(function(){
-		$("#upshgm").click(function(){
-			if($("#member").val() === ''){
+		$("#upshgm,#myshgm,#seller").click(function(){
+			if($('#member').val() === ''){
 				alert('您未登入');
 				window.location.href = "<%= request.getContextPath()%>/front-end/shgm/simpleLogin.jsp";
 				return false;
