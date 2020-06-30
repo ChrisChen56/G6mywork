@@ -272,7 +272,7 @@ role="banner">
 								<a class="list-group-item list-group-item-action active" id="list-upcheck-list" data-toggle="list" href="#list-upcheck" role="tab" aria-controls="upcheck">上架狀態</a>
 								<a class="list-group-item list-group-item-action" id="list-boxstatus-list" data-toggle="list" href="#list-boxstatus" role="tab" aria-controls="boxstatus">出貨狀態</a>
 								<a class="list-group-item list-group-item-action" id="list-status2-list" data-toggle="list" href="#list-status2" role="tab" aria-controls="status2">已完成</a>
-								<a class="list-group-item list-group-item-action" id="list-status3-list" data-toggle="list" href="#list-status3" role="tab" aria-controls="status3">取消</a>
+								<a class="list-group-item list-group-item-action" id="list-status3-list" data-toggle="list" href="#list-status3" role="tab" aria-controls="status3">被取消的市集商品</a>
 							</div>
 						</div>
 						<div class="col-10">
@@ -348,7 +348,7 @@ role="banner">
 											<li class="list-group-item"><div class="imgwrapper"><img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"></div></li>
 											<li class="list-group-item">
 												<c:choose>
-													<c:when test="${shgmrpsvc.getOnerpByShgmno(shgmvo.shgmno) != null}">
+													<c:when test="${shgmrpsvc.getOnerpByShgmno(shgmvo.shgmno).status == 1}">
 													(檢舉下架)${shgmrpsvc.getOnerpByShgmno(shgmvo.shgmno).detail}
 													</c:when>
 													<c:otherwise>

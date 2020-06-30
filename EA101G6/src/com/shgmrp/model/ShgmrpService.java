@@ -33,6 +33,11 @@ public class ShgmrpService {
 		return shgmrpvo;
 	}
 	
+	public void updateStatus(Integer status, String shgmrpno) {
+		
+		dao.updateStatus(status, shgmrpno);
+	}
+	
 	public void deleteShgmrp(String shgmrpno) {
 		
 		dao.delete(shgmrpno);

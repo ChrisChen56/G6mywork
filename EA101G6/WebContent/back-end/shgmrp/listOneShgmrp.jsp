@@ -51,7 +51,7 @@
 			<td><img src="<%=request.getContextPath() %>/shgm/displayimg?shgmno=${shgmrpvo.shgmno}"></td>
 			<td>${shgmrpvo.suiterno}</td>
 			<td>${shgmrpvo.detail}</td>
-			<td>${(shgmrpvo.status == 0)? "未審核":(shgmrpvo.status == 1)? "審核通過": "審核未通過"}</td>
+			<td>${(shgmrpvo.status == 0)? "未審核":(shgmrpvo.status == 1)? "確認檢舉": "取消檢舉"}</td>
 		</tr>
 	</table>
 	<a href="<%=request.getContextPath()%>/back-end/shgmrp/shgmrp_select_page.jsp">回首頁</a>

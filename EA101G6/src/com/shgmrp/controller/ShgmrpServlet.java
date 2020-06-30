@@ -120,7 +120,7 @@ public class ShgmrpServlet extends HttpServlet {
 			} catch (Exception e) {
 				errormap.put((long) 1, "無法檢舉市集商品");
 				String url = "/front-end/shgm/infoPage.jsp";
-				RequestDispatcher failedview = request.getRequestDispatcher("infoPage.jsp");
+				RequestDispatcher failedview = request.getRequestDispatcher(url);
 				failedview.forward(request, response);
 			}
 		}
@@ -272,10 +272,15 @@ public class ShgmrpServlet extends HttpServlet {
 				ShgmrpService shgmrpsvc = new ShgmrpService();
 				shgmrpvo = shgmrpsvc.updateShgmrp(shgmrpno, shgmno, suiterno, detail, status);
 				
-				//檢舉審核通過，下架市集商品
+				//確定檢舉，下架市集商品
 				if(status == 1) {
 					shgmsvc = new ShgmService();
 					shgmsvc.upcheckUpdate(2, shgmno);
+					//取消檢舉，上架市集商品，更新上架時間
+				} else if(status == 2) {
+					shgmsvc = new ShgmService();
+					shgmsvc.upcheckUpdate(1, shgmno);
+					shgmsvc.uptimeCT(shgmno);
 				}
 
 				String url = "/back-end/shgmrp/listAllShgmrp.jsp";

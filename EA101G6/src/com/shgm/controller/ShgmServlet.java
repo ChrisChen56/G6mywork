@@ -557,17 +557,17 @@ public class ShgmServlet extends HttpServlet {
 					mbrsvc.update(buyerno, mbrpfvo.getPoints() - shgmvo.getPrice());
 				}
 
-				// 已上架的市集商品，同時也已送達、已付款、已完成，即是訂單完成，可以增加賣家的點數了
-				if (boxstatus == 2 && paystatus == 1 && status == 2) {
-					MbrpfService mbrsvc = new MbrpfService();
-					String sellerno = shgmvo.getSellerno();
-					// 取出賣家的mbrpfvo以便對points做更動
-					MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(sellerno);
-					// 把賣家原本的points加上販售之價格
-					mbrsvc.update(sellerno, mbrpfvo.getPoints() + shgmvo.getPrice());
-					// 資料庫更新售出時間
-					shgmsvc.soldtimeCT(shgmno);
-				}
+//				// 已上架的市集商品，同時也已送達、已付款、已完成，即是訂單完成，可以增加賣家的點數了
+//				if (boxstatus == 2 && paystatus == 1 && status == 2) {
+//					MbrpfService mbrsvc = new MbrpfService();
+//					String sellerno = shgmvo.getSellerno();
+//					// 取出賣家的mbrpfvo以便對points做更動
+//					MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(sellerno);
+//					// 把賣家原本的points加上販售之價格
+//					mbrsvc.update(sellerno, mbrpfvo.getPoints() + shgmvo.getPrice());
+//					// 資料庫更新售出時間
+//					shgmsvc.soldtimeCT(shgmno);
+//				}
 
 				String success = "success";
 				request.setAttribute("buysuccess", success);
@@ -622,7 +622,8 @@ public class ShgmServlet extends HttpServlet {
 					jsonobj.put("upcheck", 2);
 
 					// 重新申請上架，下架中改成待上架狀態
-				} else if (upcheck == 2) {
+				}
+				if (upcheck == 2) {
 					shgmsvc.upcheckUpdate(0, shgmno);
 
 					// 未審核，上架時間更新為空值
@@ -651,24 +652,67 @@ public class ShgmServlet extends HttpServlet {
 				if (boxstatus == 0) {
 					shgmsvc.boxstatusUpdate(1, shgmno);
 					jsonobj.put("boxstatus", 1);
-
-					// 出貨中選擇送達商品，改成已送達
-				} else if (boxstatus == 1) {
+				}
+				// 出貨中選擇送達商品，改成已送達
+				if (boxstatus == 1) {
 					shgmsvc.boxstatusUpdate(2, shgmno);
 					jsonobj.put("boxstatus", 2);
 				}
 			}
-			//回收商品
+			//訂單狀態
 			if(request.getParameter("status") != null) {
-				//將買家資料清空，回到待上架狀態
-				shgmsvc.updateShgm(shgmno, shgmvo.getSellerno(), null, shgmvo.getShgmname(), shgmvo.getPrice(),
-						shgmvo.getIntro(), shgmvo.getImg(), 0, null, null, null, null, 0, 0, 0);
-				System.out.println("update shgm to upcheck0 status");
 				
-				jsonobj.put("shgmno", shgmno);
-				jsonobj.put("shgmname", shgmvo.getShgmname());
-				jsonobj.put("price", shgmvo.getPrice());
+				Integer status = new Integer(request.getParameter("status"));
+				//將買家資料清空，回到待上架狀態
+				if (status == 3) {
+					shgmsvc.updateShgm(shgmno, shgmvo.getSellerno(), null, shgmvo.getShgmname(), shgmvo.getPrice(),
+							shgmvo.getIntro(), shgmvo.getImg(), 0, null, null, null, null, 0, 0, 0);
+					System.out.println("update shgm to upcheck0 status");
+					
+					jsonobj.put("shgmno", shgmno);
+					jsonobj.put("shgmname", shgmvo.getShgmname());
+					jsonobj.put("price", shgmvo.getPrice());
+				}
+				//已送達，買家確認收貨，下訂改成完成
+				if(status == 2) {
+					
+					//增加賣家點數
+					MbrpfService mbrsvc = new MbrpfService();
+					String sellerno = shgmvo.getSellerno();
+					MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(sellerno);
+					mbrsvc.update(sellerno, mbrpfvo.getPoints() + shgmvo.getPrice());
+					
+					java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+					Timestamp uptimeCT = shgmsvc.getOneShgm(shgmno).getUptime();
+					String uptime = df.format(uptimeCT);
+					Timestamp soldtimeCT = shgmsvc.soldtimeCT(shgmno);
+					String soldtime = df.format(soldtimeCT);
+					shgmsvc.statusUpdate(2, shgmno);
+					System.out.println(soldtimeCT);
+					
+					jsonobj.put("shgmno", shgmno);
+					jsonobj.put("shgmname", shgmvo.getShgmname());
+					jsonobj.put("price", shgmvo.getPrice());
+					jsonobj.put("uptime", uptime);
+					jsonobj.put("soldtime", soldtime);
+				}
+				//不論訂單狀態，買家取消訂單
+				if(status == 8) {
+					shgmsvc.statusUpdate(3, shgmno);
+
+					//退款給買家
+					MbrpfService mbrsvc = new MbrpfService();
+					String buyerno = shgmvo.getBuyerno();
+					MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(buyerno);
+					mbrsvc.update(buyerno, mbrpfvo.getPoints() + shgmvo.getPrice());
+					
+					jsonobj.put("shgmno", shgmno);
+					jsonobj.put("shgmname", shgmvo.getShgmname());
+					jsonobj.put("price", shgmvo.getPrice());
+				}
+				
 			}
+			
 
 			System.out.println(jsonobj.toString());
 			out.write(jsonobj.toString());
@@ -882,9 +926,14 @@ public class ShgmServlet extends HttpServlet {
 						shgmsvc.uptimeCT(shgmno);
 					shgmsvc.soldtimeCT(shgmno);
 				} else if (upcheck == 1) {
-					// 修改後，已通過審查，同時更新上架時間
+					// 修改後，已通過審查，同時更新上架時間，被檢舉的市集商品取消檢舉
 					shgmsvc.uptimeCT(shgmno);
 					shgmsvc.soldtimeNU(shgmno);
+					ShgmrpService shgmrpsvc = new ShgmrpService();
+					if(shgmrpsvc.getOnerpByShgmno(shgmno) != null) {
+						String shgmrpno = shgmrpsvc.getOnerpByShgmno(shgmno).getShgmrpno();
+						shgmrpsvc.updateStatus(2, shgmrpno);
+					}
 				} else {
 					// 修改後，未通過審查，上架、審查時間為空值
 					shgmsvc.uptimeNU(shgmno);

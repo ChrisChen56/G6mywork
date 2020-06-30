@@ -52,7 +52,7 @@
 				<td>檢舉狀態</td>
 				<td><select name="status">
 						<c:forEach var="i" begin="0" end="2">
-							<option value="${i}" ${(shgmrpvo.status == i)? 'selected':''}>${(i == 0)? "未審查": (i == 1)? "已審查": "審查未通過"}</option>
+							<option value="${i}" ${(shgmrpvo.status == i)? 'selected':''}>${(i == 0)? "未審查": (i == 1)? "確認檢舉": "取消檢舉"}</option>
 						</c:forEach>
 					</select></td>
 			</tr>

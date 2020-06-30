@@ -305,7 +305,7 @@ div.pageselect-area {
 											<li class="list-group-item">${shgmvo.price}</li>
 											<li class="list-group-item">賣家出貨中<br>
 											<button id="${shgmvo.shgmno}" type="button"
-													class="btn btn-primary status3">取消訂單</button></li>
+													class="btn btn-primary status3" value="cancel">取消訂單</button></li>
 										</ul>
 									</c:if>
 								</c:forEach>
@@ -328,7 +328,7 @@ div.pageselect-area {
 											<li class="list-group-item">${shgmvo.price}</li>
 											<li class="list-group-item">商品配送中<br>
 											<button id="${shgmvo.shgmno}" type="button"
-													class="btn btn-primary status3">取消訂單</button></li>
+													class="btn btn-primary status3" value="cancel">取消訂單</button></li>
 										</ul>
 									</c:if>
 								</c:forEach>
@@ -353,7 +353,7 @@ div.pageselect-area {
 													id="${shgmvo.shgmno}" type="button"
 													class="btn btn-primary boxstatus2">確認收貨</button><br><button
 													id="${shgmvo.shgmno}" type="button"
-													class="btn btn-primary status3">取消訂單</button></li>
+													class="btn btn-primary status3" value="cancel">取消訂單</button></li>
 										</ul>
 									</c:if>
 								</c:forEach>
@@ -458,11 +458,9 @@ div.pageselect-area {
 	<script>
 	$(document).ready(function(){
 		
-		$(".container").on("click",".upcheck",function(){
+		$(".container").on("click",".boxstatus2",function(){
 			var $shgmno = $(this).closest("button")[0].id;
-			var $value = $(this).closest("button")[0].value;
 			console.log($shgmno);
-			console.log($value);
 			$(this).closest("ul").fadeOut(function(){
 				$(this).closest("ul")[0].remove();
 			});
@@ -470,7 +468,29 @@ div.pageselect-area {
 			$.ajax({
 			    type: "POST",
 			    url: '<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=statusUpdate',
-			    data: {"shgmno":$shgmno,"upcheck":$value},
+			    data: {"shgmno":$shgmno,"status":2},
+			    dataType: "json",
+			    cache: false,
+			    success: function(response){
+			    	$("#list-status2 ul:eq(0)").after('<ul class="list-group list-group-horizontal five-li"></ul>');
+					$("#list-status2 ul:eq(1)").append('<li class="list-group-item">'+response.shgmname+'</li>');			    	
+					$("#list-status2 ul:eq(1)").append('<li class="list-group-item"><div class="imgwrapper">'+
+							'<img src="/EA101G6/shgm/displayimg?shgmno='+response.shgmno+'"></div></li>');			    	
+					$("#list-status2 ul:eq(1)").append('<li class="list-group-item">'+response.price+'</li>');
+					$("#list-status2 ul:eq(1)").append('<li class="list-group-item">'+response.uptime+'</li>');
+					$("#list-status2 ul:eq(1)").append('<li class="list-group-item">'+response.soldtime+'</li>');
+			    },
+			    error: function(result) {
+                    console.log(result);
+                }
+			});
+			
+			
+			<%--
+			$.ajax({
+			    type: "POST",
+			    url: '<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=statusUpdate',
+			    data: {"shgmno":$shgmno,"status":2},
 			    dataType: "json",
 			    cache: false,
 			    success: function(response){
@@ -500,49 +520,34 @@ div.pageselect-area {
                     console.log(result);
                 }
 			});
+			--%>
+			
 		});
 		
-		$(".container").on("click",".boxstatus",function(){
+		$(".container").on("click",".status3",function(){
 			var $shgmno = $(this).closest("button")[0].id;
-			var $value = $(this).closest("button")[0].value;
 			console.log($shgmno);
-			console.log($value);
 			$(this).closest("ul").fadeOut(function(){
 				$(this).closest("ul")[0].remove();
 			});
 			
 			$.ajax({
-				type: "POST",
-				url: "<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=statusUpdate",
-				data: {"shgmno":$shgmno,"boxstatus":$value},
-				dataType: "json",
+			    type: "POST",
+			    url: '<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=statusUpdate',
+			    data: {"shgmno":$shgmno,"status":8},
+			    dataType: "json",
 			    cache: false,
-				success: function(response){
-					if(response.boxstatus == 1){
-						$("#boxstatus1 ul:eq(1)").before('<ul class="list-group list-group-horizontal six-li"></ul>');
-						$("#boxstatus1 ul:eq(1)").append('<li class="list-group-item">'+response.shgmname+'</li>');
-						$("#boxstatus1 ul:eq(1)").append('<li class="list-group-item"><div class="imgwrapper">'+
-								'<img src="/EA101G6/shgm/displayimg?shgmno='+response.shgmno+'"></div></li>');
-						$("#boxstatus1 ul:eq(1)").append('<li class="list-group-item">'+response.takernm+'</li>');
-						$("#boxstatus1 ul:eq(1)").append('<li class="list-group-item">'+response.takerph+'</li>');
-						$("#boxstatus1 ul:eq(1)").append('<li class="list-group-item">'+response.address+'</li>');
-						$("#boxstatus1 ul:eq(1)").append('<li class="list-group-item">出貨中</li>');
-						$("#boxstatus1 ul:eq(1) li:eq(5)").append('<br>');
-						$("#boxstatus1 ul:eq(1) li:eq(5)").append('<button id="'+response.shgmno+'" value="1" type="button" class="btn btn-primary boxstatus">送達商品</button>');
-					} else if(response.boxstatus == 2){
-						$("#boxstatus2 ul:eq(1)").before('<ul class="list-group list-group-horizontal six-li"></ul>');
-						$("#boxstatus2 ul:eq(1)").append('<li class="list-group-item">'+response.shgmname+'</li>');
-						$("#boxstatus2 ul:eq(1)").append('<li class="list-group-item"><div class="imgwrapper">'+
-								'<img src="/EA101G6/shgm/displayimg?shgmno='+response.shgmno+'"></div></li>');
-						$("#boxstatus2 ul:eq(1)").append('<li class="list-group-item">'+response.takernm+'</li>');
-						$("#boxstatus2 ul:eq(1)").append('<li class="list-group-item">'+response.takerph+'</li>');
-						$("#boxstatus2 ul:eq(1)").append('<li class="list-group-item">'+response.address+'</li>');
-						$("#boxstatus2 ul:eq(1)").append('<li class="list-group-item">等待買家收貨中</li>');
-					}
-				},
-				error:function(result){
-					console.log(result);
-				}
+			    success: function(response){
+			    	$("#list-status3 ul:eq(0)").after('<ul class="list-group list-group-horizontal five-li"></ul>');
+					$("#list-status3 ul:eq(1)").append('<li class="list-group-item">'+response.shgmname+'</li>');			    	
+					$("#list-status3 ul:eq(1)").append('<li class="list-group-item"><div class="imgwrapper">'+
+							'<img src="/EA101G6/shgm/displayimg?shgmno='+response.shgmno+'"></div></li>');			    	
+					$("#list-status3 ul:eq(1)").append('<li class="list-group-item">'+response.price+'</li>');
+					$("#list-status3 ul:eq(1)").append('<li class="list-group-item">已取消</li>');
+			    },
+			    error: function(result) {
+                    console.log(result);
+                }
 			});
 		});
 	});

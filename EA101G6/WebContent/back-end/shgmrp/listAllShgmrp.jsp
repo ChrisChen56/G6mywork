@@ -70,10 +70,10 @@
 					<td>未審核</td>
 				</c:when>
 				<c:when test="${shgmrpvo.status == 1}">
-					<td>審核通過</td>
+					<td>確認檢舉</td>
 				</c:when>
 				<c:otherwise>
-					<td>審核未通過</td>
+					<td>取消檢舉</td>
 				</c:otherwise>
 			</c:choose>
 			<td>
