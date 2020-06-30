@@ -276,16 +276,21 @@ public class ShgmServlet extends HttpServlet {
 				if (upcheck == 1) {
 					shgmsvc.addShgmCheck1(sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm,
 							takerph, address, boxstatus, paystatus, status);
-					// 上架且通過審核並賣出，更新上架、售出時間
+					// 上架且通過審核並賣出，更新上架、售出時間，即是訂單完成，可以扣掉買家點數、增加賣家的點數了
 				} else if (upcheck == 1 && boxstatus == 2 && paystatus == 1 && status == 2) {
 					shgmsvc.addShgmSold(sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm, takerph,
 							address, boxstatus, paystatus, status);
+
 					MbrpfService mbrsvc = new MbrpfService();
-					sellerno = shgmvo.getSellerno();
+					// 取出買家的mbrpfvo以便對points做更動
+					MbrpfVO buyerVO = mbrsvc.getOneMbrpf(buyerno);
+					// 把買家原本的points扣掉販售之價格
+					mbrsvc.update(buyerno, buyerVO.getPoints() - shgmvo.getPrice());
+
 					// 取出賣家的mbrpfvo以便對points做更動
-					MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(sellerno);
+					MbrpfVO sellerVO = mbrsvc.getOneMbrpf(sellerno);
 					// 把賣家原本的points加上販售之價格
-					mbrsvc.update(sellerno, mbrpfvo.getPoints() + shgmvo.getPrice());
+					mbrsvc.update(sellerno, sellerVO.getPoints() + shgmvo.getPrice());
 				} else {
 					// 正常上架未通過審查，上架、售出時間為空值
 					shgmsvc.addShgmNocheck(sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm,
@@ -548,26 +553,11 @@ public class ShgmServlet extends HttpServlet {
 				ShgmService shgmsvc = new ShgmService();
 				shgmsvc.dealingshgm(shgmno, buyerno, take, takernm, takerph, address, boxstatus, paystatus, status);
 
-				// 已上架的市集商品，同時未出貨、已付款、已下訂，即是購買行為，扣買家點數
-				if (boxstatus == 0 && paystatus == 1 && status == 1) {
-					MbrpfService mbrsvc = new MbrpfService();
-					// 取出買家的mbrpfvo以便對points做更動
-					MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(buyerno);
-					// 把買家原本的points扣掉價格
-					mbrsvc.update(buyerno, mbrpfvo.getPoints() - shgmvo.getPrice());
-				}
-
-//				// 已上架的市集商品，同時也已送達、已付款、已完成，即是訂單完成，可以增加賣家的點數了
-//				if (boxstatus == 2 && paystatus == 1 && status == 2) {
-//					MbrpfService mbrsvc = new MbrpfService();
-//					String sellerno = shgmvo.getSellerno();
-//					// 取出賣家的mbrpfvo以便對points做更動
-//					MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(sellerno);
-//					// 把賣家原本的points加上販售之價格
-//					mbrsvc.update(sellerno, mbrpfvo.getPoints() + shgmvo.getPrice());
-//					// 資料庫更新售出時間
-//					shgmsvc.soldtimeCT(shgmno);
-//				}
+				MbrpfService mbrsvc = new MbrpfService();
+				// 取出買家的mbrpfvo以便對points做更動
+				MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(buyerno);
+				// 把買家原本的points扣掉價格
+				mbrsvc.update(buyerno, mbrpfvo.getPoints() - shgmvo.getPrice());
 
 				String success = "success";
 				request.setAttribute("buysuccess", success);
@@ -596,7 +586,7 @@ public class ShgmServlet extends HttpServlet {
 			ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
 
 			JSONObject jsonobj = new JSONObject();
-			//改變上架狀態
+			// 改變上架狀態
 			if (request.getParameter("upcheck") != null) {
 
 				Integer upcheck = new Integer(request.getParameter("upcheck"));
@@ -636,7 +626,7 @@ public class ShgmServlet extends HttpServlet {
 					jsonobj.put("upcheck", 0);
 				}
 			}
-			//改變出貨狀態
+			// 改變出貨狀態
 			if (request.getParameter("boxstatus") != null) {
 
 				Integer boxstatus = new Integer(request.getParameter("boxstatus"));
@@ -659,29 +649,29 @@ public class ShgmServlet extends HttpServlet {
 					jsonobj.put("boxstatus", 2);
 				}
 			}
-			//訂單狀態
-			if(request.getParameter("status") != null) {
-				
+			// 訂單狀態
+			if (request.getParameter("status") != null) {
+
 				Integer status = new Integer(request.getParameter("status"));
-				//將買家資料清空，回到待上架狀態
+				// 將買家資料清空，回到待上架狀態
 				if (status == 3) {
 					shgmsvc.updateShgm(shgmno, shgmvo.getSellerno(), null, shgmvo.getShgmname(), shgmvo.getPrice(),
 							shgmvo.getIntro(), shgmvo.getImg(), 0, null, null, null, null, 0, 0, 0);
 					System.out.println("update shgm to upcheck0 status");
-					
+
 					jsonobj.put("shgmno", shgmno);
 					jsonobj.put("shgmname", shgmvo.getShgmname());
 					jsonobj.put("price", shgmvo.getPrice());
 				}
-				//已送達，買家確認收貨，下訂改成完成
-				if(status == 2) {
-					
-					//增加賣家點數
+				// 已送達，買家確認收貨，下訂改成完成
+				if (status == 2) {
+
+					// 增加賣家點數
 					MbrpfService mbrsvc = new MbrpfService();
 					String sellerno = shgmvo.getSellerno();
 					MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(sellerno);
 					mbrsvc.update(sellerno, mbrpfvo.getPoints() + shgmvo.getPrice());
-					
+
 					java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 					Timestamp uptimeCT = shgmsvc.getOneShgm(shgmno).getUptime();
 					String uptime = df.format(uptimeCT);
@@ -689,30 +679,29 @@ public class ShgmServlet extends HttpServlet {
 					String soldtime = df.format(soldtimeCT);
 					shgmsvc.statusUpdate(2, shgmno);
 					System.out.println(soldtimeCT);
-					
+
 					jsonobj.put("shgmno", shgmno);
 					jsonobj.put("shgmname", shgmvo.getShgmname());
 					jsonobj.put("price", shgmvo.getPrice());
 					jsonobj.put("uptime", uptime);
 					jsonobj.put("soldtime", soldtime);
 				}
-				//不論訂單狀態，買家取消訂單
-				if(status == 8) {
+				// 不論訂單狀態，買家取消訂單
+				if (status == 8) {
 					shgmsvc.statusUpdate(3, shgmno);
 
-					//退款給買家
+					// 退款給買家
 					MbrpfService mbrsvc = new MbrpfService();
 					String buyerno = shgmvo.getBuyerno();
 					MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(buyerno);
 					mbrsvc.update(buyerno, mbrpfvo.getPoints() + shgmvo.getPrice());
-					
+
 					jsonobj.put("shgmno", shgmno);
 					jsonobj.put("shgmname", shgmvo.getShgmname());
 					jsonobj.put("price", shgmvo.getPrice());
 				}
-				
+
 			}
-			
 
 			System.out.println(jsonobj.toString());
 			out.write(jsonobj.toString());
@@ -916,12 +905,19 @@ public class ShgmServlet extends HttpServlet {
 				// 已上架的市集商品，同時修改成已送達、已付款、已完成，即是訂單完成，可以增加賣家的點數了
 				if (upcheck == 1 && boxstatus == 2 && paystatus == 1 && status == 2) {
 					MbrpfService mbrsvc = new MbrpfService();
-					sellerno = shgmvo.getSellerno();
-					// 取出賣家的mbrpfvo以便對points做更動
-					MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(sellerno);
-					// 把賣家原本的points加上販售之價格
-					mbrsvc.update(sellerno, mbrpfvo.getPoints() + shgmvo.getPrice());
-					// 資料庫更新售出時間
+						// 取出買家的mbrpfvo以便對points做更動
+						MbrpfVO buyerVO = mbrsvc.getOneMbrpf(buyerno);
+						// 把買家原本的points扣掉販售之價格
+						mbrsvc.update(buyerno, buyerVO.getPoints() - shgmvo.getPrice());
+						
+						// 取出賣家的mbrpfvo以便對points做更動
+						MbrpfVO sellerVO = mbrsvc.getOneMbrpf(sellerno);
+						// 把賣家原本的points加上販售之價格
+						mbrsvc.update(sellerno, sellerVO.getPoints() + shgmvo.getPrice());
+						
+						// 資料庫更新售出時間
+						shgmsvc.soldtimeCT(shgmno);
+						
 					if (shgm.getUptime() == null)
 						shgmsvc.uptimeCT(shgmno);
 					shgmsvc.soldtimeCT(shgmno);
@@ -930,7 +926,7 @@ public class ShgmServlet extends HttpServlet {
 					shgmsvc.uptimeCT(shgmno);
 					shgmsvc.soldtimeNU(shgmno);
 					ShgmrpService shgmrpsvc = new ShgmrpService();
-					if(shgmrpsvc.getOnerpByShgmno(shgmno) != null) {
+					if (shgmrpsvc.getOnerpByShgmno(shgmno) != null) {
 						String shgmrpno = shgmrpsvc.getOnerpByShgmno(shgmno).getShgmrpno();
 						shgmrpsvc.updateStatus(2, shgmrpno);
 					}
