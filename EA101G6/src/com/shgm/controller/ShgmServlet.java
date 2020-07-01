@@ -200,9 +200,11 @@ public class ShgmServlet extends HttpServlet {
 				String takerph = request.getParameter("takerph");
 
 				// 取貨地址可為空字串
+				String city = request.getParameter("city");
+				String area = request.getParameter("area");
 				String ads = request.getParameter("ads");
 				String address = request.getParameter("address");
-
+				
 				Integer boxstatus = new Integer(request.getParameter("boxstatus"));
 
 				Integer paystatus = new Integer(request.getParameter("paystatus"));
@@ -243,6 +245,8 @@ public class ShgmServlet extends HttpServlet {
 						errormsgs.add("取貨人電話：請輸入符合格式的電話號碼");
 
 					// 取貨地址
+					if (ads.equals(address))
+						errormsgs.add("取貨地址：請選擇鄉鎮縣市");
 					if (ads.trim().length() == 0)
 						errormsgs.add("取貨地址：地址不得為空");
 				}
@@ -258,12 +262,17 @@ public class ShgmServlet extends HttpServlet {
 				shgmvo.setTake(take);
 				shgmvo.setTakernm(takernm);
 				shgmvo.setTakerph(takerph);
-				shgmvo.setAddress(ads);
+				shgmvo.setAddress(address);
 				shgmvo.setBoxstatus(boxstatus);
 				shgmvo.setPaystatus(paystatus);
 				shgmvo.setStatus(status);
 
 				if (!errormsgs.isEmpty()) {
+					HashMap<String, String> hashmap = new HashMap<String, String>();
+					hashmap.put("city", city);
+					hashmap.put("area", area);
+					hashmap.put("ads", ads);
+					request.setAttribute("cityarea", hashmap);
 					// 把存有正確格式的資料轉送回新增頁面
 					request.setAttribute("shgmvo", shgmvo);
 					String url = "/back-end/shgm/addShgm.jsp";
@@ -507,16 +516,18 @@ public class ShgmServlet extends HttpServlet {
 					errormap.put((long) 3, "請輸入符合格式的電話號碼");
 				}
 
+				String city = request.getParameter("city");
+				String area = request.getParameter("area");
 				String ads = request.getParameter("ads");
 				String address = request.getParameter("address");
-				if(ads.equals(address)) {
-					errormap.put((long) 4, "請選擇縣市、鄉鎮");
-				}
 				if (ads.trim().length() > 10) {// 還需要修改
 					errormap.put((long) 4, "長度不正確");
 				}
 				if (ads.trim().length() == 0) {
 					errormap.put((long) 4, "地址不得為空");
+				}
+				if(ads.equals(address)) {
+					errormap.put((long) 4, "請選擇縣市、鄉鎮");
 				}
 
 				Integer boxstatus = null;
@@ -530,12 +541,17 @@ public class ShgmServlet extends HttpServlet {
 				shgmvo.setTake(take);
 				shgmvo.setTakernm(takernm);
 				shgmvo.setTakerph(takerph);
-				shgmvo.setAddress(ads);
+				shgmvo.setAddress(address);
 				shgmvo.setBoxstatus(boxstatus);
 				shgmvo.setPaystatus(paystatus);
 				shgmvo.setStatus(status);
 
 				if (!errormap.isEmpty()) {
+					HashMap<String, String> hashmap = new HashMap<String, String>();
+					hashmap.put("city", city);
+					hashmap.put("area", area);
+					hashmap.put("ads", ads);
+					request.setAttribute("cityarea", hashmap);
 					String url = "/front-end/shgm/buyPage.jsp";
 					RequestDispatcher failedview = request.getRequestDispatcher(url);
 					failedview.forward(request, response);
@@ -731,6 +747,30 @@ public class ShgmServlet extends HttpServlet {
 
 				ShgmService shgmsvc = new ShgmService();
 				ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
+				//將address分割為city、area、ads
+				String[] citylevel = {"縣","市","島"};
+				String[] arealevel = {"鄉","鎮","島","區","市"};
+				String city = null;
+				String area = null;
+				String ads = null;
+				String address = shgmvo.getAddress();
+				for(String clevel:citylevel) {
+					if(address.contains(clevel)) {
+						city = address.substring(0, address.indexOf(clevel)+1);
+						address = address.substring(address.indexOf(clevel)+1, address.length());
+						for(String alevel:arealevel) {
+							if(address.contains(alevel)) {
+								area = address.substring(0, address.indexOf(alevel)+1);
+								ads = address.substring(address.indexOf(alevel)+1, address.length());
+							}
+						}
+					}
+				};
+				HashMap<String, String> hashmap = new HashMap<String, String>();
+				hashmap.put("city", city);
+				hashmap.put("area", area);
+				hashmap.put("ads", ads);
+				request.setAttribute("cityarea", hashmap);
 
 				request.setAttribute("shgmvo", shgmvo);
 				String url = "/back-end/shgm/updateShgm.jsp";
@@ -811,6 +851,9 @@ public class ShgmServlet extends HttpServlet {
 				String takerph = request.getParameter("takerph");
 
 				// 取貨地址可為空字串
+				String city = request.getParameter("city");
+				String area = request.getParameter("area");
+				String ads = request.getParameter("ads");
 				String address = request.getParameter("address");
 
 				Integer boxstatus = new Integer(request.getParameter("boxstatus"));
@@ -853,6 +896,8 @@ public class ShgmServlet extends HttpServlet {
 						errormsgs.add("取貨人電話：請輸入符合格式的電話號碼");
 
 					// 取貨地址
+					if(ads.equals(address))
+						errormsgs.add("取貨地址：請選擇鄉鎮縣市");
 					if (address.trim().length() == 0)
 						errormsgs.add("取貨地址：地址不得為空");
 				}
@@ -884,6 +929,11 @@ public class ShgmServlet extends HttpServlet {
 				shgmvo.setSoldtime(shgm.getSoldtime());
 
 				if (!errormsgs.isEmpty()) {
+					HashMap<String, String> hashmap = new HashMap<String, String>();
+					hashmap.put("city", city);
+					hashmap.put("area", area);
+					hashmap.put("ads", ads);
+					request.setAttribute("cityarea", hashmap);
 					request.setAttribute("shgmvo", shgmvo);
 					String url = "/back-end/shgm/updateShgm.jsp";
 					RequestDispatcher failedview = request.getRequestDispatcher(url);

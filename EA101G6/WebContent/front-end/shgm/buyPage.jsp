@@ -4,6 +4,7 @@
 <%@ page import="com.shgm.model.*"%>
 <%@ page import="com.mbrpf.model.*"%>
 <%
+	java.util.HashMap<String, String> hashmap = (java.util.HashMap<String, String>) request.getAttribute("cityarea");
 	MbrpfVO member = (MbrpfVO) session.getAttribute("member");
 	ShgmVO shgmvo = (ShgmVO) session.getAttribute("shgmvo");
 %>
@@ -302,10 +303,10 @@ div.top-info {
 							<br>
 							<div class="form-group">
 								<label for="ads">取貨地址</label><span class="alert">${errormap.get(4)}</span><br>
-								<select id="縣市1" class="address"></select>
-								<select id="鄉鎮市區1" class="address"></select>
-								<input id="ads" name="ads" type="text" class="form-control address" value="<%= (shgmvo == null)? "":shgmvo.getAddress() %>"/>
-								<input id="address" name="address" type="hidden" value="<%= (shgmvo == null)? "":shgmvo.getAddress() %>"/>
+								<select id="縣市1" name="city" class="address"></select>
+								<select id="鄉鎮市區1" name="area" class="address"></select>
+								<input id="ads" name="ads" type="text" class="form-control address" value="<%= (hashmap == null)? "":hashmap.get("ads") %>"/>
+								<input id="address" name="address" type="hidden" value="<%= (shgmvo.getAddress() == null)? "":shgmvo.getAddress() %>"/>
 							</div>
 							<br>
 							<div class="button-wrapper">
@@ -333,7 +334,7 @@ div.top-info {
 	window.onload = function () {
 	       //當頁面載完之後，用AddressSeleclList.Initialize()，
 	       //傳入要綁定的縣市下拉選單ID及鄉鎮市區下拉選單ID
-	       AddressSeleclList.Initialize('縣市1', '鄉鎮市區1');
+	       AddressSeleclList.Initialize('縣市1', '鄉鎮市區1'<%= (hashmap == null)? "":",'"+hashmap.get("city")+"'"%><%= (hashmap == null)? "": ",'"+hashmap.get("area")+"'"%>);
 	       var addressClass = document.getElementsByClassName("address");
 	       var address = document.getElementById("address");
 	       

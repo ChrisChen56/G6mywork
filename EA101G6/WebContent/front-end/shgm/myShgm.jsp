@@ -484,44 +484,6 @@ div.pageselect-area {
                     console.log(result);
                 }
 			});
-			
-			
-			<%--
-			$.ajax({
-			    type: "POST",
-			    url: '<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=statusUpdate',
-			    data: {"shgmno":$shgmno,"status":2},
-			    dataType: "json",
-			    cache: false,
-			    success: function(response){
-			    	if(response.upcheck == 2){
-			    		$("form:first").before('<form method="post" action="/EA101G6/front-end/shgm/shgm.do"></form>');
-						$("form:first").append('<ul class="list-group list-group-horizontal four-li"></ul>');
-						$("form:first ul").append('<li class="list-group-item">'+response.shgmname+'</li>');
-						$("form:first ul").append('<li class="list-group-item"><div class="imgwrapper">'+
-								'<img src="/EA101G6/shgm/displayimg?shgmno='+response.shgmno+'"></div></li>');
-						$("form:first ul").append('<li class="list-group-item">'+response.detail+'</li>');
-						$("form:first ul").append('<li class="list-group-item"><input type="submit" class="btn btn-primary" value="修改"><br>'+
-								'<button id="'+response.shgmno+'"value="2" type="button" class="btn btn-primary upcheck">重新上架</button></li>');
-						$("form:first").append('<input type="hidden" name="action" value="oneForSellerUpdate">');
-						$("form:first").append('<input type="hidden" name="shgmno" value="'+response.shgmno+'">');
-			    	} else if(response.upcheck == 0){
-			    		$('#upcheck0 ul').eq(1).before('<ul class="list-group list-group-horizontal four-li"></ul>');
-						$('#upcheck0 ul').eq(1).append('<li class="list-group-item">'+response.shgmname+'</li>');
-						$('#upcheck0 ul').eq(1).append('<li class="list-group-item"><div class="imgwrapper">'+
-								'<img src="/EA101G6/shgm/displayimg?shgmno='+response.shgmno+'"></div></li>');
-						$('#upcheck0 ul').eq(1).append('<li class="list-group-item">'+response.price+'</li>');
-						$('#upcheck0 ul').eq(1).append('<li class="list-group-item">上架審核中</li>');
-						$('#upcheck0 ul:eq(1) li:eq(3)').append('<br>');
-						$('#upcheck0 ul:eq(1) li:eq(3)').append('<button id="'+response.shgmno+'" value="0" type="button" class="btn btn-primary upcheck">自行下架</button>');
-			    	}
-			    },
-			    error: function(result) {
-                    console.log(result);
-                }
-			});
-			--%>
-			
 		});
 		
 		$(".container").on("click",".status3",function(){

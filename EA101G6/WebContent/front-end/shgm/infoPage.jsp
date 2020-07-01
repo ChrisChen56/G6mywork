@@ -4,9 +4,10 @@
 <%@ page import="com.shgm.model.*"%>
 <%@ page import="com.mbrpf.model.*"%>
 <%@ page import="java.util.*"%>
+
 <%
 	MbrpfVO member = (MbrpfVO) session.getAttribute("member");
-	List<ShgmVO> list = (List<ShgmVO>) session.getAttribute("randlist");
+	List<ShgmVO> list = (List<ShgmVO>) request.getAttribute("randlist");
 	pageContext.setAttribute("list", list);
 %>
 <!doctype html>
@@ -14,8 +15,8 @@
 <head>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<title>${shgmvo.shgmname}</title>
 <meta charset="utf-8">
+<title>${shgmvo.shgmname}</title>
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 

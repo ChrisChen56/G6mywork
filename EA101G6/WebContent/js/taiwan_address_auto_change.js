@@ -1,3 +1,5 @@
+var selcityText = null;
+var selareaText = null;
 var app = window.AddressSeleclList =
 {
     AdrressArray: [
@@ -31,34 +33,55 @@ var app = window.AddressSeleclList =
                   ]
     ,
 
-    defaultOptionCityText: '請選擇縣市',
-    defaultOptionCityValue: '',
+    defaultOptionCityText: '請選擇縣市',//「請選擇縣市」的text
+    defaultOptionCityValue: '',//「請選擇縣市」的value
     defaultOptionAreaText: '請選擇鄉鎮',
     defaultOptionAreaValue: '',
-    
-    Initialize: function (city, area, defaultCityText, defaultCityValue, defaultAreaText, defaultAreaValue) {
+    selectedCityText: '',
+    selectedAreaText: '',
+    //自選要不要加入default的option(有text和value)會覆蓋掉「請選擇縣市」
+    Initialize: function (city, area, selectedCityText, selectedAreaText,defaultCityText, defaultCityValue, defaultAreaText, defaultAreaValue) {
 
+    	selcityText = selectedCityText ? selectedCityText: this.selectedCityText;
+    	selareaText = selectedAreaText ? selectedAreaText: this.selectedAreaText;
         var cityText = defaultCityText ? defaultCityText : this.defaultOptionCityText;
-        var cityValue = defaultAreaValue ? defaultAreaValue : this.defaultOptionCityValue;
+        var cityValue = defaultCityValue ? defaultCityValue : this.defaultOptionCityValue;
         var areaText = defaultAreaText ? defaultAreaText : this.defaultOptionAreaText;
         var areaValue = defaultAreaValue ? defaultAreaValue : this.defaultOptionAreaValue;
 
         var citySelect = document.getElementById(city);
         var areaSelect = document.getElementById(area);
 
-        citySelect.options[0] = new Option(cityText, cityValue);
+        citySelect.options[0] = new Option(cityText, cityValue);//new 一個option在最前面
         areaSelect.options[0] = new Option(areaText, areaValue);
-        for (var i = 0; i < this.AdrressArray.length; i++) {
-            citySelect.options[i + 1] = new Option(this.AdrressArray[i][0], this.AdrressArray[i][0]);
+        for (let i = 0; i < this.AdrressArray.length; i++) {
+        	if(selcityText == this.AdrressArray[i][0]){
+        		citySelect.options[i + 1] = new Option(this.AdrressArray[i][0], this.AdrressArray[i][0], false, true);//根據地址陣列跑迴圈(縣市的部分)
+        		
+        		for (let j = 1; j < this.AdrressArray[i].length; j++) {
+        			if(selareaText == this.AdrressArray[i][j]){
+                		console.log(selareaText);
+                		areaSelect.options[j - 1] = new Option(this.AdrressArray[i][j], this.AdrressArray[i][j], true, true);//根據地址陣列跑迴圈(鄉鎮的部分)
+                	} else{
+                		areaSelect.options[j - 1] = new Option(this.AdrressArray[i][j], this.AdrressArray[i][j]);
+                	}
+                }
+        	} else{
+        		citySelect.options[i + 1] = new Option(this.AdrressArray[i][0], this.AdrressArray[i][0]);
+        	}
         }
-        citySelect.addEventListener ? citySelect.addEventListener('change', function (e) { app.AppendArea(e, areaSelect, areaText, areaValue) }, false) : citySelect.attachEvent('onchange', function (e) { app.AppendArea(e, areaSelect, areaText, areaValue) });
+        
+        citySelect.addEventListener ? citySelect.addEventListener('change', function (e) { 
+        	app.AppendArea(e, areaSelect, areaText, areaValue) }, false) : citySelect.attachEvent('onchange', function (e) { 
+        		app.AppendArea(e, areaSelect, areaText, areaValue) });
     },
 
     AppendArea: function (e, AreaSelect, areaText, areaValue) {
+    	
         var target = e.target ? e.target : e.srcElement;
         if (target.selectedIndex == 0) {
             AreaSelect.options.length = 0;
-            AreaSelect.options[0] = new Option(areaText, areaValue);
+            AreaSelect.options[0] = new Option(areaText, areaValue);//如果選擇其他縣市又按回「請選擇縣市」，則重新建立「請選擇鄉鎮」
             return;
         }
         AreaSelect.options.length = this.AdrressArray[target.selectedIndex - 1].length - 1;

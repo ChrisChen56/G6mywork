@@ -22,7 +22,6 @@ public class RandListFilter extends HttpServlet implements Filter {
     public void doFilter(ServletRequest request1, ServletResponse response1, FilterChain chain) throws java.io.IOException, javax.servlet.ServletException { 
     	HttpServletRequest request = (HttpServletRequest) request1;
     	HttpServletResponse response = (HttpServletResponse) response1;
-    	HttpSession session = request.getSession();
     	
     	ShgmService shgmsvc = new ShgmService();
     	String shgmno = request.getParameter("shgmno");
@@ -39,7 +38,7 @@ public class RandListFilter extends HttpServlet implements Filter {
     		}
     	}
     	Collections.shuffle(list);//打亂
-    	session.setAttribute("randlist", list);
+    	request.setAttribute("randlist", list);
     	chain.doFilter(request1, response1);
     }
 
