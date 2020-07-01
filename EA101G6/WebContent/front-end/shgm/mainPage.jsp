@@ -281,8 +281,6 @@ div.pageselect-area {
 	</div>
 	<input type="hidden" id="member" value="${member.mbrname}">
 
-
-
 	<script>
 	$(document).ready(function(){
 		$("#upshgm,#myshgm,#seller").click(function(){

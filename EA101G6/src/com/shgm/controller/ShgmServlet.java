@@ -580,6 +580,139 @@ public class ShgmServlet extends HttpServlet {
 				failedview.forward(request, response);
 			}
 		}
+		
+		if ("oneForBuyerUpdate".equals(action)) {
+
+			List<String> errorMsgs = new LinkedList<String>();
+			request.setAttribute("errorMsgs", errorMsgs);
+
+			try {
+				String shgmno = request.getParameter("shgmno");
+
+				ShgmService shgmsvc = new ShgmService();
+				ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
+				//將address分割為city、area、ads
+				String[] citylevel = {"縣","市","島"};
+				String[] arealevel = {"鄉","鎮","島","區","市"};
+				String city = null;
+				String area = null;
+				String ads = null;
+				String address = shgmvo.getAddress();
+				for(String clevel:citylevel) {
+					if(address.contains(clevel)) {
+						city = address.substring(0, address.indexOf(clevel)+1);
+						address = address.substring(address.indexOf(clevel)+1, address.length());
+						for(String alevel:arealevel) {
+							if(address.contains(alevel)) {
+								area = address.substring(0, address.indexOf(alevel)+1);
+								ads = address.substring(address.indexOf(alevel)+1, address.length());
+							}
+						}
+					}
+				};
+				HashMap<String, String> hashmap = new HashMap<String, String>();
+				hashmap.put("city", city);
+				hashmap.put("area", area);
+				hashmap.put("ads", ads);
+				request.setAttribute("cityarea", hashmap);
+
+				request.setAttribute("shgmvo", shgmvo);
+				String url = "/front-end/shgm/buyerUpdate.jsp";
+				RequestDispatcher successview = request.getRequestDispatcher(url);
+				successview.forward(request, response);
+
+			} catch (Exception e) {
+				errorMsgs.add("無法取得要修改的資料:" + e.getMessage());
+				String url = "/front-end/shgm/myShgm.jsp";//回到我的市集商品，要再加上顯示錯誤
+				RequestDispatcher failureView = request.getRequestDispatcher(url);
+				failureView.forward(request, response);
+			}
+		}
+		
+		if ("buyerUpdate".equals(action)) {
+
+			HashMap<Long, String> errormap = new HashMap<Long, String>();
+			request.setAttribute("errormap", errormap);
+
+			try {
+				String shgmno = request.getParameter("shgmno");
+
+				// 從會員資料取得，不需要錯誤處理
+				String buyerno = request.getParameter("buyerno");
+
+				String take = request.getParameter("take");
+				if (take.trim().length() > 3)// 還需要修改
+					errormap.put((long) 1, "長度不正確");
+				if (take.trim().length() == 0)
+					errormap.put((long) 1, "請勿輸入空白");
+
+				String takernm = request.getParameter("takernm");
+				if (takernm.trim().length() > 3)// 還需要修改
+					errormap.put((long) 2, "長度不正確");
+				if (takernm.trim().length() == 0)
+					errormap.put((long) 2, "請勿輸入空白");
+
+				String takerph = request.getParameter("takerph");
+				String takerphreg = "^09\\d{8}$";
+				if (takerph.trim().length() == 0) {
+					errormap.put((long) 3, "請勿輸入空白");
+				} else if (!takerph.trim().matches(takerphreg)) {
+					errormap.put((long) 3, "請輸入符合格式的電話號碼");
+				}
+
+				String city = request.getParameter("city");
+				String area = request.getParameter("area");
+				String ads = request.getParameter("ads");
+				String address = request.getParameter("address");
+				if (ads.trim().length() > 10) {// 還需要修改
+					errormap.put((long) 4, "長度不正確");
+				}
+				if (ads.trim().length() == 0) {
+					errormap.put((long) 4, "地址不得為空");
+				}
+				if(ads.equals(address)) {
+					errormap.put((long) 4, "請選擇縣市、鄉鎮");
+				}
+
+				ShgmVO shgmvo = new ShgmVO();
+				shgmvo.setShgmno(shgmno);
+				shgmvo.setBuyerno(buyerno);
+				shgmvo.setTake(take);
+				shgmvo.setTakernm(takernm);
+				shgmvo.setTakerph(takerph);
+				shgmvo.setAddress(address);
+
+				if (!errormap.isEmpty()) {
+					HashMap<String, String> hashmap = new HashMap<String, String>();
+					hashmap.put("city", city);
+					hashmap.put("area", area);
+					hashmap.put("ads", ads);
+					request.setAttribute("cityarea", hashmap);
+					request.setAttribute("buyerUpdate", shgmvo);
+					String url = "/front-end/shgm/buyerUpdate.jsp";
+					RequestDispatcher failedview = request.getRequestDispatcher(url);
+					failedview.forward(request, response);
+					return;
+				}
+
+				ShgmService shgmsvc = new ShgmService();
+				shgmvo = shgmsvc.getOneShgm(shgmno);
+				shgmsvc.dealingshgm(shgmno, buyerno, take, takernm, takerph, address, 
+						shgmvo.getBoxstatus(), shgmvo.getPaystatus(), shgmvo.getStatus());
+
+				String success = "success";
+				request.setAttribute("updateSuccess", success);
+
+				String url = "/front-end/shgm/myShgm.jsp";
+				RequestDispatcher successview = request.getRequestDispatcher(url);
+				successview.forward(request, response);
+			} catch (Exception e) {
+				errormap.put((long) 5, "無法修改此商品");
+				String url = "/front-end/shgm/buyerUpdate.jsp";
+				RequestDispatcher failedview = request.getRequestDispatcher(url);
+				failedview.forward(request, response);
+			}
+		}
 
 		if ("statusUpdate".equals(action)) {
 			System.out.println("-------enter controller---------");

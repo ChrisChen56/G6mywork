@@ -303,7 +303,9 @@ div.pageselect-area {
 											<li class="list-group-item"><div class="imgwrapper">
 													<img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"></div></li>
 											<li class="list-group-item">${shgmvo.price}</li>
-											<li class="list-group-item">賣家出貨中<br>
+											<li class="list-group-item">賣家尚未出貨<br>
+											<a href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=oneForBuyerUpdate&shgmno=${shgmvo.shgmno}"
+												 class="btn btn-primary">修改取貨資訊</a>
 											<button id="${shgmvo.shgmno}" type="button"
 													class="btn btn-primary status3" value="cancel">取消訂單</button></li>
 										</ul>
@@ -349,10 +351,10 @@ div.pageselect-area {
 											<li class="list-group-item"><div class="imgwrapper">
 													<img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"></div></li>
 											<li class="list-group-item">${shgmvo.price}</li>
-											<li class="list-group-item"><button
-													id="${shgmvo.shgmno}" type="button"
-													class="btn btn-primary boxstatus2">確認收貨</button><br><button
-													id="${shgmvo.shgmno}" type="button"
+											<li class="list-group-item">商品已送達<br>
+											<button id="${shgmvo.shgmno}" type="button"
+													class="btn btn-primary boxstatus2">確認收貨</button>
+											<button id="${shgmvo.shgmno}" type="button"
 													class="btn btn-primary status3" value="cancel">取消訂單</button></li>
 										</ul>
 									</c:if>

@@ -6,13 +6,13 @@
 <%
 	java.util.HashMap<String, String> hashmap = (java.util.HashMap<String, String>) request.getAttribute("cityarea");
 	MbrpfVO member = (MbrpfVO) session.getAttribute("member");
-	ShgmVO shgmvo = (ShgmVO) session.getAttribute("shgmvo");
+	ShgmVO shgmvo = (ShgmVO) request.getAttribute("shgmvo");
 %>
 <!doctype html>
 <html lang="en">
 <head>
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/taiwan_address_auto_change.js"></script>
-<title>buy_page</title>
+<title>buyerUpdate</title>
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -67,7 +67,7 @@ div.main-area {
 	width: 150px;
 	display: inline;
 	text-align: right;
-	margin-left: 70%;
+	margin-left: 65.5%;
 }
 
 div.top-info {
@@ -221,8 +221,8 @@ div.top-info {
 					<li class="breadcrumb-item"><a
 						href="<%=request.getContextPath()%>/front-end/shgm/mainPage.jsp">市集</a></li>
 					<li class="breadcrumb-item"><a
-						href="<%=request.getContextPath()%>/front-end/shgm/infoPage.jsp?shgmno=${shgmvo.shgmno}">商品頁面</a></li>
-					<li class="breadcrumb-item active" aria-current="page">購買頁面</li>
+						href="<%=request.getContextPath()%>/front-end/shgm/myShgm.jsp">我的市集商品</a></li>
+					<li class="breadcrumb-item active" aria-current="page">修改出貨資訊</li>
 					<li class="awrapper"><button type="button"
 							class="btn btn-primary" data-toggle="modal"
 							data-target="#exampleModal" data-whatever="@mdo">檢舉</button></li>
@@ -309,12 +309,12 @@ div.top-info {
 								<input id="address" name="address" type="hidden" value="<%= (shgmvo.getAddress() == null)? "":shgmvo.getAddress() %>"/>
 							</div>
 							<div class="button-wrapper">
-								<button type="submit" class="btn btn-primary">確定購買</button>
-								<a href="<%=request.getContextPath()%>/front-end/shgm/mainPage.jsp" class="btn btn-primary">取消購買</a>
+								<button type="submit" class="btn btn-primary">確定修改</button>
+								<a href="<%=request.getContextPath()%>/front-end/shgm/myShgm.jsp" class="btn btn-primary">取消修改</a>
 							</div>
 							<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
 							<input type="hidden" name="buyerno" value="${member.mbrno}">
-							<input type="hidden" name="action" value="dealingshgm">
+							<input type="hidden" name="action" value="buyerUpdate">
 						</form>
 						<b><span class="alert">${errormap.get(5)}</span></b>
 					</div>
