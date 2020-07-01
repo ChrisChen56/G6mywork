@@ -200,6 +200,7 @@ public class ShgmServlet extends HttpServlet {
 				String takerph = request.getParameter("takerph");
 
 				// 取貨地址可為空字串
+				String ads = request.getParameter("ads");
 				String address = request.getParameter("address");
 
 				Integer boxstatus = new Integer(request.getParameter("boxstatus"));
@@ -211,7 +212,7 @@ public class ShgmServlet extends HttpServlet {
 				// 只要買家、取貨方式、取貨人姓名、取貨人電話、取貨地址五個欄位任一個有填入資料，其他四個欄位也必須要填
 				// 而且出貨、付款、訂單狀態只要不是初始值，其餘欄位就要填寫
 				if (buyerno.trim().length() > 0 || take.trim().length() > 0 || takernm.trim().length() > 0
-						|| takerph.trim().length() > 0 || address.trim().length() > 0 || boxstatus != 0
+						|| takerph.trim().length() > 0 || ads.trim().length() > 0 || boxstatus != 0
 						|| paystatus != 0 || status != 0) {
 
 					// 買家編號錯誤處理
@@ -242,7 +243,7 @@ public class ShgmServlet extends HttpServlet {
 						errormsgs.add("取貨人電話：請輸入符合格式的電話號碼");
 
 					// 取貨地址
-					if (address.trim().length() == 0)
+					if (ads.trim().length() == 0)
 						errormsgs.add("取貨地址：地址不得為空");
 				}
 
@@ -257,7 +258,7 @@ public class ShgmServlet extends HttpServlet {
 				shgmvo.setTake(take);
 				shgmvo.setTakernm(takernm);
 				shgmvo.setTakerph(takerph);
-				shgmvo.setAddress(address);
+				shgmvo.setAddress(ads);
 				shgmvo.setBoxstatus(boxstatus);
 				shgmvo.setPaystatus(paystatus);
 				shgmvo.setStatus(status);
@@ -280,17 +281,6 @@ public class ShgmServlet extends HttpServlet {
 				} else if (upcheck == 1 && boxstatus == 2 && paystatus == 1 && status == 2) {
 					shgmsvc.addShgmSold(sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm, takerph,
 							address, boxstatus, paystatus, status);
-
-					MbrpfService mbrsvc = new MbrpfService();
-					// 取出買家的mbrpfvo以便對points做更動
-					MbrpfVO buyerVO = mbrsvc.getOneMbrpf(buyerno);
-					// 把買家原本的points扣掉販售之價格
-					mbrsvc.update(buyerno, buyerVO.getPoints() - shgmvo.getPrice());
-
-					// 取出賣家的mbrpfvo以便對points做更動
-					MbrpfVO sellerVO = mbrsvc.getOneMbrpf(sellerno);
-					// 把賣家原本的points加上販售之價格
-					mbrsvc.update(sellerno, sellerVO.getPoints() + shgmvo.getPrice());
 				} else {
 					// 正常上架未通過審查，上架、售出時間為空值
 					shgmsvc.addShgmNocheck(sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm,
@@ -395,8 +385,6 @@ public class ShgmServlet extends HttpServlet {
 				System.out.println(shgmvo.getShgmno());
 
 				request.setAttribute("shgmvo", shgmvo);
-
-				System.out.println("1111111111111111111111");
 
 				String url = "/front-end/shgm/sellerUpdate.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
@@ -519,26 +507,30 @@ public class ShgmServlet extends HttpServlet {
 					errormap.put((long) 3, "請輸入符合格式的電話號碼");
 				}
 
+				String ads = request.getParameter("ads");
 				String address = request.getParameter("address");
-				if (address.trim().length() > 10) {// 還需要修改
+				if(ads.equals(address)) {
+					errormap.put((long) 4, "請選擇縣市、鄉鎮");
+				}
+				if (ads.trim().length() > 10) {// 還需要修改
 					errormap.put((long) 4, "長度不正確");
 				}
-				if (address.trim().length() == 0) {
+				if (ads.trim().length() == 0) {
 					errormap.put((long) 4, "地址不得為空");
 				}
 
-				Integer boxstatus = new Integer(request.getParameter("boxstatus"));
+				Integer boxstatus = null;
 
-				Integer paystatus = new Integer(request.getParameter("paystatus"));
+				Integer paystatus = null;
 
-				Integer status = new Integer(request.getParameter("status"));
+				Integer status = null;
 
 				shgmvo.setShgmno(shgmno);
 				shgmvo.setBuyerno(buyerno);
 				shgmvo.setTake(take);
 				shgmvo.setTakernm(takernm);
 				shgmvo.setTakerph(takerph);
-				shgmvo.setAddress(address);
+				shgmvo.setAddress(ads);
 				shgmvo.setBoxstatus(boxstatus);
 				shgmvo.setPaystatus(paystatus);
 				shgmvo.setStatus(status);
@@ -551,7 +543,7 @@ public class ShgmServlet extends HttpServlet {
 				}
 
 				ShgmService shgmsvc = new ShgmService();
-				shgmsvc.dealingshgm(shgmno, buyerno, take, takernm, takerph, address, boxstatus, paystatus, status);
+				shgmsvc.dealingshgm(shgmno, buyerno, take, takernm, takerph, address, 0, 1, 1);
 
 				MbrpfService mbrsvc = new MbrpfService();
 				// 取出買家的mbrpfvo以便對points做更動
@@ -899,41 +891,44 @@ public class ShgmServlet extends HttpServlet {
 					return;
 				}
 
-				shgmsvc.updateShgm(shgmno, sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm,
-						takerph, address, boxstatus, paystatus, status);
+				if(status == 3) {
+					upcheck = 0;
+					boxstatus = 0;
+					paystatus = 0;
+					status = 0;
+					shgmsvc.updateShgm(shgmno, sellerno, null, shgmname, price,
+							intro, img, 0, null, null, null, null, 0, 0, 0);
+				} else {
+					shgmsvc.updateShgm(shgmno, sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm,
+							takerph, address, boxstatus, paystatus, status);
+				}
 
-				// 已上架的市集商品，同時修改成已送達、已付款、已完成，即是訂單完成，可以增加賣家的點數了
-				if (upcheck == 1 && boxstatus == 2 && paystatus == 1 && status == 2) {
-					MbrpfService mbrsvc = new MbrpfService();
-						// 取出買家的mbrpfvo以便對points做更動
-						MbrpfVO buyerVO = mbrsvc.getOneMbrpf(buyerno);
-						// 把買家原本的points扣掉販售之價格
-						mbrsvc.update(buyerno, buyerVO.getPoints() - shgmvo.getPrice());
-						
-						// 取出賣家的mbrpfvo以便對points做更動
-						MbrpfVO sellerVO = mbrsvc.getOneMbrpf(sellerno);
-						// 把賣家原本的points加上販售之價格
-						mbrsvc.update(sellerno, sellerVO.getPoints() + shgmvo.getPrice());
-						
-						// 資料庫更新售出時間
-						shgmsvc.soldtimeCT(shgmno);
-						
-					if (shgm.getUptime() == null)
-						shgmsvc.uptimeCT(shgmno);
-					shgmsvc.soldtimeCT(shgmno);
-				} else if (upcheck == 1) {
-					// 修改後，已通過審查，同時更新上架時間，被檢舉的市集商品取消檢舉
-					shgmsvc.uptimeCT(shgmno);
+					
+				if(upcheck == 0) {
+					shgmsvc.uptimeNU(shgmno);
 					shgmsvc.soldtimeNU(shgmno);
+				}
+				if (upcheck == 1) {
+					//修改後，已通過審查，被檢舉的市集商品取消檢舉
 					ShgmrpService shgmrpsvc = new ShgmrpService();
 					if (shgmrpsvc.getOnerpByShgmno(shgmno) != null) {
 						String shgmrpno = shgmrpsvc.getOnerpByShgmno(shgmno).getShgmrpno();
 						shgmrpsvc.updateStatus(2, shgmrpno);
 					}
-				} else {
-					// 修改後，未通過審查，上架、審查時間為空值
-					shgmsvc.uptimeNU(shgmno);
-					shgmsvc.soldtimeNU(shgmno);
+					// 上架的市集商品，同時修改成已送達、已付款、已完成，即是訂單完成
+					if(boxstatus == 2 && paystatus == 1 && status == 2) {
+						// 資料庫更新上架時間、售出時間，如果之前就是上架中，沿用上架時間
+						if (shgm.getUptime() == null)
+							shgmsvc.uptimeCT(shgmno);
+						shgmsvc.soldtimeCT(shgmno);
+					} else {
+						// 上架的市集商品，更新上架時間
+						shgmsvc.uptimeCT(shgmno);
+						shgmsvc.soldtimeNU(shgmno);
+					}
+				}
+				if(upcheck == 2) {
+					;//do nothing
 				}
 
 				String url = "/back-end/shgm/listAllShgm.jsp";

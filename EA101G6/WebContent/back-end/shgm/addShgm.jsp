@@ -11,8 +11,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/taiwan_address_auto_change.js"></script>
 <title>Add_Shgame</title>
+<meta charset="UTF-8">
 <style>
 	table, td,tr{
 		text-align:center;
@@ -94,8 +95,12 @@
 			</tr>
 			<tr>
 				<td>取貨地址</td>
-				<td><input type="text" name="address" size="15"
-					value="<%= (shgmvo == null)? "中壢區中央路216巷8號":shgmvo.getAddress()%>"/></td>
+				<td>
+					<select id="縣市1" class="address"></select>
+					<select id="鄉鎮市區1" class="address"></select>
+					<input id="ads" name="ads" type="text" class="address" value="<%= (shgmvo == null)? "":shgmvo.getAddress() %>"/>
+					<input id="address" name="address" type="hidden" value="<%= (shgmvo == null)? "":shgmvo.getAddress() %>"/>
+				</td>
 			</tr>
 			<tr>
 				<td>出貨狀態</td>
@@ -134,5 +139,26 @@
 </form>
 	<a href="<%=request.getContextPath() %>/back-end/shgm/shgm_select_page.jsp">回首頁</a>
 </body>
+
+<script type="text/javascript">
+   window.onload = function () {
+       //當頁面載完之後，用AddressSeleclList.Initialize()，
+       //傳入要綁定的縣市下拉選單ID及鄉鎮市區下拉選單ID
+       AddressSeleclList.Initialize('縣市1', '鄉鎮市區1');
+       var addressClass = document.getElementsByClassName("address");
+       var address = document.getElementById("address");
+       
+       for (i = 0; i < addressClass.length; i++) {
+    	   addressClass[i].addEventListener("change", addressValues);
+    	}
+       function addressValues(){
+	       var city = document.getElementById("縣市1").value;
+	       var area = document.getElementById("鄉鎮市區1").value;
+	       var location = document.getElementById("ads").value;
+	       address.value = city + area + location;
+	       console.log(address.value);
+       };
+  }
+</script>
 
 </html>
