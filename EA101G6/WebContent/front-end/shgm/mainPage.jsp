@@ -7,8 +7,8 @@
 <%
 	MbrpfVO member = (MbrpfVO) session.getAttribute("member");
 	ShgmService shgmsvc = new ShgmService();
-	List<ShgmVO> shgmlist = shgmsvc.getAllForMain();
-	pageContext.setAttribute("shgmlist", shgmlist);
+	List<ShgmVO> list = shgmsvc.getAllForMain();
+	pageContext.setAttribute("shgmlist", list);
 %>
 <!doctype html>
 <html lang="en">
@@ -50,6 +50,10 @@ div.main-area {
 	background-color: white;
 	max-height: 100%;
 	margin: 2% auto;
+}
+
+div.card-body{
+	height:127px;
 }
 
 .top-info-wrapper {
@@ -238,10 +242,11 @@ div.pageselect-area {
 				</ol>
 			</nav>
 		</div>
+		<%@ include file="page1.file" %> 
 		<div class="shgm-area-wrapper">
 			<div class="shgm-area ">
 				<div class="card-deck">
-					<c:forEach var="shgmvo" items="${shgmlist}">
+					<c:forEach var="shgmvo" items="${shgmlist}"  begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
 						<div class="mb-4">
 							<a target="_self" href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneToInfo&shgmno=${shgmvo.shgmno}">
 								<div class="card">
@@ -259,25 +264,7 @@ div.pageselect-area {
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="pageselect-area-wrapper">
-		<div class="pageselect-area ">
-			<nav aria-label="Page navigation example">
-				<ul class="pagination">
-					<li class="page-item"><a class="page-link" href="#"
-						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-							<span class="sr-only">Previous</span>
-					</a></li>
-					<li class="page-item"><a class="page-link" href="#">1</a></li>
-					<li class="page-item"><a class="page-link" href="#">2</a></li>
-					<li class="page-item"><a class="page-link" href="#">3</a></li>
-					<li class="page-item"><a class="page-link" href="#"
-						aria-label="Next"> <span aria-hidden="true">&raquo;</span> <span
-							class="sr-only">Next</span>
-					</a></li>
-				</ul>
-			</nav>
-		</div>
+	<%@ include file="page2.file" %>
 	</div>
 	<input type="hidden" id="member" value="${member.mbrname}">
 

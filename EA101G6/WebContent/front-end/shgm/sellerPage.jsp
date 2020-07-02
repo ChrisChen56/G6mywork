@@ -588,7 +588,7 @@ role="banner">
 			    	}
 			    },
 			    error: function(result) {
-                    console.log(result);
+			    	alert("目前不允許此操作");
                 }
 			});
 		});
@@ -632,7 +632,7 @@ role="banner">
 					}
 				},
 				error:function(result){
-					console.log(result);
+					alert("目前不允許此操作");
 				}
 			});
 		});
@@ -661,7 +661,7 @@ role="banner">
 					$('#upcheck0 ul:eq(1) li:eq(3)').append('<button id="'+response.shgmno+'" value="0" type="button" class="btn btn-primary upcheck">自行下架</button>');
 				},
 				error: function(result){
-					console.log(result);
+					alert("目前不允許此操作");
 				}
 			});
 		});

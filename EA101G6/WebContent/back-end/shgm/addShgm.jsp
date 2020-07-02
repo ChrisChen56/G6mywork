@@ -81,7 +81,7 @@
 			<tr>
 				<td>取貨方式</td>
 				<td><input type="text" name="take" size="15"
-					value="<%= (shgmvo == null)? "全家取": shgmvo.getTake()%>"/></td>
+					value="<%= (shgmvo == null)? "宅配到府": shgmvo.getTake()%>"/></td>
 			</tr>
 			<tr>
 				<td>取貨人姓名</td>

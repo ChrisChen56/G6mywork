@@ -204,7 +204,7 @@ public class ShgmServlet extends HttpServlet {
 				String area = request.getParameter("area");
 				String ads = request.getParameter("ads");
 				String address = request.getParameter("address");
-				
+
 				Integer boxstatus = new Integer(request.getParameter("boxstatus"));
 
 				Integer paystatus = new Integer(request.getParameter("paystatus"));
@@ -214,8 +214,8 @@ public class ShgmServlet extends HttpServlet {
 				// 只要買家、取貨方式、取貨人姓名、取貨人電話、取貨地址五個欄位任一個有填入資料，其他四個欄位也必須要填
 				// 而且出貨、付款、訂單狀態只要不是初始值，其餘欄位就要填寫
 				if (buyerno.trim().length() > 0 || take.trim().length() > 0 || takernm.trim().length() > 0
-						|| takerph.trim().length() > 0 || ads.trim().length() > 0 || boxstatus != 0
-						|| paystatus != 0 || status != 0) {
+						|| takerph.trim().length() > 0 || ads.trim().length() > 0 || boxstatus != 0 || paystatus != 0
+						|| status != 0) {
 
 					// 買家編號錯誤處理
 					if (buyerno.trim().length() == 0) {
@@ -526,7 +526,7 @@ public class ShgmServlet extends HttpServlet {
 				if (ads.trim().length() == 0) {
 					errormap.put((long) 4, "地址不得為空");
 				}
-				if(ads.equals(address)) {
+				if (ads.equals(address)) {
 					errormap.put((long) 4, "請選擇縣市、鄉鎮");
 				}
 
@@ -580,7 +580,7 @@ public class ShgmServlet extends HttpServlet {
 				failedview.forward(request, response);
 			}
 		}
-		
+
 		if ("oneForBuyerUpdate".equals(action)) {
 
 			List<String> errorMsgs = new LinkedList<String>();
@@ -591,25 +591,26 @@ public class ShgmServlet extends HttpServlet {
 
 				ShgmService shgmsvc = new ShgmService();
 				ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
-				//將address分割為city、area、ads
-				String[] citylevel = {"縣","市","島"};
-				String[] arealevel = {"鄉","鎮","島","區","市"};
+				// 將address分割為city、area、ads
+				String[] citylevel = { "縣", "市", "島" };
+				String[] arealevel = { "鄉", "鎮", "島", "區", "市" };
 				String city = null;
 				String area = null;
 				String ads = null;
 				String address = shgmvo.getAddress();
-				for(String clevel:citylevel) {
-					if(address.contains(clevel)) {
-						city = address.substring(0, address.indexOf(clevel)+1);
-						address = address.substring(address.indexOf(clevel)+1, address.length());
-						for(String alevel:arealevel) {
-							if(address.contains(alevel)) {
-								area = address.substring(0, address.indexOf(alevel)+1);
-								ads = address.substring(address.indexOf(alevel)+1, address.length());
+				for (String clevel : citylevel) {
+					if (address.contains(clevel)) {
+						city = address.substring(0, address.indexOf(clevel) + 1);
+						address = address.substring(address.indexOf(clevel) + 1, address.length());
+						for (String alevel : arealevel) {
+							if (address.contains(alevel)) {
+								area = address.substring(0, address.indexOf(alevel) + 1);
+								ads = address.substring(address.indexOf(alevel) + 1, address.length());
 							}
 						}
 					}
-				};
+				}
+				;
 				HashMap<String, String> hashmap = new HashMap<String, String>();
 				hashmap.put("city", city);
 				hashmap.put("area", area);
@@ -623,12 +624,12 @@ public class ShgmServlet extends HttpServlet {
 
 			} catch (Exception e) {
 				errorMsgs.add("無法取得要修改的資料:" + e.getMessage());
-				String url = "/front-end/shgm/myShgm.jsp";//回到我的市集商品，要再加上顯示錯誤
+				String url = "/front-end/shgm/myShgm.jsp";// 回到我的市集商品，要再加上顯示錯誤
 				RequestDispatcher failureView = request.getRequestDispatcher(url);
 				failureView.forward(request, response);
 			}
 		}
-		
+
 		if ("buyerUpdate".equals(action)) {
 
 			HashMap<Long, String> errormap = new HashMap<Long, String>();
@@ -670,7 +671,7 @@ public class ShgmServlet extends HttpServlet {
 				if (ads.trim().length() == 0) {
 					errormap.put((long) 4, "地址不得為空");
 				}
-				if(ads.equals(address)) {
+				if (ads.equals(address)) {
 					errormap.put((long) 4, "請選擇縣市、鄉鎮");
 				}
 
@@ -697,8 +698,8 @@ public class ShgmServlet extends HttpServlet {
 
 				ShgmService shgmsvc = new ShgmService();
 				shgmvo = shgmsvc.getOneShgm(shgmno);
-				shgmsvc.dealingshgm(shgmno, buyerno, take, takernm, takerph, address, 
-						shgmvo.getBoxstatus(), shgmvo.getPaystatus(), shgmvo.getStatus());
+				shgmsvc.dealingshgm(shgmno, buyerno, take, takernm, takerph, address, shgmvo.getBoxstatus(),
+						shgmvo.getPaystatus(), shgmvo.getStatus());
 
 				String success = "success";
 				request.setAttribute("updateSuccess", success);
@@ -715,137 +716,136 @@ public class ShgmServlet extends HttpServlet {
 		}
 
 		if ("statusUpdate".equals(action)) {
-			System.out.println("-------enter controller---------");
 			response.setContentType("text/html; charset=utf-8");
+			Writer out = response.getWriter();
+			JSONObject jsonobj = new JSONObject();
 
 			String shgmno = request.getParameter("shgmno");
-			System.out.println(shgmno);
-
-			Writer out = response.getWriter();
-
 			ShgmService shgmsvc = new ShgmService();
 			ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
+			try {
+				// 改變上架狀態
+				if (request.getParameter("upcheck") != null) {
 
-			JSONObject jsonobj = new JSONObject();
-			// 改變上架狀態
-			if (request.getParameter("upcheck") != null) {
+					Integer upcheck = new Integer(request.getParameter("upcheck"));
+					System.out.println("更新前：" + upcheck);
+					// 待上架、上架中選擇自行下架，改成下架中狀態
+					if (upcheck == 0 || upcheck == 1) {
+						// 先更新
+						shgmsvc.upcheckUpdate(2, shgmno);
 
-				Integer upcheck = new Integer(request.getParameter("upcheck"));
-				System.out.println("更新前：" + upcheck);
-				// 待上架、上架中選擇自行下架，改成下架中狀態
-				if (upcheck == 0 || upcheck == 1) {
-					// 先更新
-					shgmsvc.upcheckUpdate(2, shgmno);
+						String detail = null;
+						ShgmrpService shgmrpsvc = new ShgmrpService();
+						// 判斷是否有被檢舉的內容
+						if (shgmrpsvc.getOnerpByShgmno(shgmno) != null) {
+							detail = shgmrpsvc.getOnerpByShgmno(shgmno).getDetail();
+						} else {
+							detail = "自行下架";
+						}
 
-					String detail = null;
-					ShgmrpService shgmrpsvc = new ShgmrpService();
-					// 判斷是否有被檢舉的內容
-					if (shgmrpsvc.getOnerpByShgmno(shgmno) != null) {
-						detail = shgmrpsvc.getOnerpByShgmno(shgmno).getDetail();
-					} else {
-						detail = "自行下架";
+						// 把jquery動態改變頁面需要的資料放入json
+						jsonobj.put("shgmno", shgmvo.getShgmno());
+						jsonobj.put("shgmname", shgmvo.getShgmname());
+						jsonobj.put("detail", detail);
+						jsonobj.put("upcheck", 2);
+
 					}
-
-					// 把jquery動態改變頁面需要的資料放入json
-					jsonobj.put("shgmno", shgmvo.getShgmno());
-					jsonobj.put("shgmname", shgmvo.getShgmname());
-					jsonobj.put("detail", detail);
-					jsonobj.put("upcheck", 2);
-
 					// 重新申請上架，下架中改成待上架狀態
-				}
-				if (upcheck == 2) {
-					shgmsvc.upcheckUpdate(0, shgmno);
+					if (upcheck == 2) {
+						shgmsvc.upcheckUpdate(0, shgmno);
 
-					// 未審核，上架時間更新為空值
-					shgmsvc.uptimeNU(shgmno);
+						// 未審核，上架時間更新為空值
+						shgmsvc.uptimeNU(shgmno);
+
+						jsonobj.put("shgmno", shgmvo.getShgmno());
+						jsonobj.put("shgmname", shgmvo.getShgmname());
+						jsonobj.put("price", shgmvo.getPrice());
+						// upcheck的值在ajax作流程控制用的
+						jsonobj.put("upcheck", 0);
+					}
+				}
+				// 改變出貨狀態
+				if (request.getParameter("boxstatus") != null) {
+
+					Integer boxstatus = new Integer(request.getParameter("boxstatus"));
+					System.out.println("更新前：" + boxstatus);
 
 					jsonobj.put("shgmno", shgmvo.getShgmno());
 					jsonobj.put("shgmname", shgmvo.getShgmname());
-					jsonobj.put("price", shgmvo.getPrice());
-					// upcheck的值在ajax作流程控制用的
-					jsonobj.put("upcheck", 0);
+					jsonobj.put("takernm", shgmvo.getTakernm());
+					jsonobj.put("takerph", shgmvo.getTakerph());
+					jsonobj.put("address", shgmvo.getAddress());
+
+					// 待出貨選擇進行出貨，改成出貨中
+					if (boxstatus == 0) {
+						shgmsvc.boxstatusUpdate(1, shgmno);
+						jsonobj.put("boxstatus", 1);
+					}
+					// 出貨中選擇送達商品，改成已送達
+					if (boxstatus == 1) {
+						shgmsvc.boxstatusUpdate(2, shgmno);
+						jsonobj.put("boxstatus", 2);
+					}
 				}
+				// 訂單狀態
+				if (request.getParameter("status") != null) {
+
+					Integer status = new Integer(request.getParameter("status"));
+					// 將買家資料清空，回到待上架狀態
+					if (status == 3) {
+						shgmsvc.updateShgm(shgmno, shgmvo.getSellerno(), null, shgmvo.getShgmname(), shgmvo.getPrice(),
+								shgmvo.getIntro(), shgmvo.getImg(), 0, null, null, null, null, 0, 0, 0);
+						System.out.println("update shgm to upcheck0 status");
+
+						jsonobj.put("shgmno", shgmno);
+						jsonobj.put("shgmname", shgmvo.getShgmname());
+						jsonobj.put("price", shgmvo.getPrice());
+					}
+					// 已送達，買家確認收貨，下訂改成完成
+					if (status == 2) {
+
+						// 增加賣家點數
+						MbrpfService mbrsvc = new MbrpfService();
+						String sellerno = shgmvo.getSellerno();
+						MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(sellerno);
+						mbrsvc.update(sellerno, mbrpfvo.getPoints() + shgmvo.getPrice());
+
+						java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+						Timestamp uptimeCT = shgmsvc.getOneShgm(shgmno).getUptime();
+						String uptime = df.format(uptimeCT);
+						Timestamp soldtimeCT = shgmsvc.soldtimeCT(shgmno);
+						String soldtime = df.format(soldtimeCT);
+						shgmsvc.statusUpdate(2, shgmno);
+						System.out.println(soldtimeCT);
+
+						jsonobj.put("shgmno", shgmno);
+						jsonobj.put("shgmname", shgmvo.getShgmname());
+						jsonobj.put("price", shgmvo.getPrice());
+						jsonobj.put("uptime", uptime);
+						jsonobj.put("soldtime", soldtime);
+					}
+					// 不論訂單狀態，買家取消訂單
+					if (status == 8) {
+						shgmsvc.statusUpdate(3, shgmno);
+
+						// 退款給買家
+						MbrpfService mbrsvc = new MbrpfService();
+						String buyerno = shgmvo.getBuyerno();
+						MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(buyerno);
+						mbrsvc.update(buyerno, mbrpfvo.getPoints() + shgmvo.getPrice());
+
+						jsonobj.put("shgmno", shgmno);
+						jsonobj.put("shgmname", shgmvo.getShgmname());
+						jsonobj.put("price", shgmvo.getPrice());
+					}
+				}
+
+				System.out.println(jsonobj.toString());
+				out.write(jsonobj.toString());
+
+			} catch (org.json.JSONException e) {
+				System.out.println(e.getMessage());
 			}
-			// 改變出貨狀態
-			if (request.getParameter("boxstatus") != null) {
-
-				Integer boxstatus = new Integer(request.getParameter("boxstatus"));
-				System.out.println("更新前：" + boxstatus);
-
-				jsonobj.put("shgmno", shgmvo.getShgmno());
-				jsonobj.put("shgmname", shgmvo.getShgmname());
-				jsonobj.put("takernm", shgmvo.getTakernm());
-				jsonobj.put("takerph", shgmvo.getTakerph());
-				jsonobj.put("address", shgmvo.getAddress());
-
-				// 待出貨選擇進行出貨，改成出貨中
-				if (boxstatus == 0) {
-					shgmsvc.boxstatusUpdate(1, shgmno);
-					jsonobj.put("boxstatus", 1);
-				}
-				// 出貨中選擇送達商品，改成已送達
-				if (boxstatus == 1) {
-					shgmsvc.boxstatusUpdate(2, shgmno);
-					jsonobj.put("boxstatus", 2);
-				}
-			}
-			// 訂單狀態
-			if (request.getParameter("status") != null) {
-
-				Integer status = new Integer(request.getParameter("status"));
-				// 將買家資料清空，回到待上架狀態
-				if (status == 3) {
-					shgmsvc.updateShgm(shgmno, shgmvo.getSellerno(), null, shgmvo.getShgmname(), shgmvo.getPrice(),
-							shgmvo.getIntro(), shgmvo.getImg(), 0, null, null, null, null, 0, 0, 0);
-					System.out.println("update shgm to upcheck0 status");
-
-					jsonobj.put("shgmno", shgmno);
-					jsonobj.put("shgmname", shgmvo.getShgmname());
-					jsonobj.put("price", shgmvo.getPrice());
-				}
-				// 已送達，買家確認收貨，下訂改成完成
-				if (status == 2) {
-
-					// 增加賣家點數
-					MbrpfService mbrsvc = new MbrpfService();
-					String sellerno = shgmvo.getSellerno();
-					MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(sellerno);
-					mbrsvc.update(sellerno, mbrpfvo.getPoints() + shgmvo.getPrice());
-
-					java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-					Timestamp uptimeCT = shgmsvc.getOneShgm(shgmno).getUptime();
-					String uptime = df.format(uptimeCT);
-					Timestamp soldtimeCT = shgmsvc.soldtimeCT(shgmno);
-					String soldtime = df.format(soldtimeCT);
-					shgmsvc.statusUpdate(2, shgmno);
-					System.out.println(soldtimeCT);
-
-					jsonobj.put("shgmno", shgmno);
-					jsonobj.put("shgmname", shgmvo.getShgmname());
-					jsonobj.put("price", shgmvo.getPrice());
-					jsonobj.put("uptime", uptime);
-					jsonobj.put("soldtime", soldtime);
-				}
-				// 不論訂單狀態，買家取消訂單
-				if (status == 8) {
-					shgmsvc.statusUpdate(3, shgmno);
-
-					// 退款給買家
-					MbrpfService mbrsvc = new MbrpfService();
-					String buyerno = shgmvo.getBuyerno();
-					MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(buyerno);
-					mbrsvc.update(buyerno, mbrpfvo.getPoints() + shgmvo.getPrice());
-
-					jsonobj.put("shgmno", shgmno);
-					jsonobj.put("shgmname", shgmvo.getShgmname());
-					jsonobj.put("price", shgmvo.getPrice());
-				}
-
-			}
-
-			System.out.println(jsonobj.toString());
-			out.write(jsonobj.toString());
 		}
 
 		if ("delete".equals(action)) {
@@ -880,25 +880,26 @@ public class ShgmServlet extends HttpServlet {
 
 				ShgmService shgmsvc = new ShgmService();
 				ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
-				//將address分割為city、area、ads
-				String[] citylevel = {"縣","市","島"};
-				String[] arealevel = {"鄉","鎮","島","區","市"};
+				// 將address分割為city、area、ads
+				String[] citylevel = { "縣", "市", "島" };
+				String[] arealevel = { "鄉", "鎮", "島", "區", "市" };
 				String city = null;
 				String area = null;
 				String ads = null;
 				String address = shgmvo.getAddress();
-				for(String clevel:citylevel) {
-					if(address.contains(clevel)) {
-						city = address.substring(0, address.indexOf(clevel)+1);
-						address = address.substring(address.indexOf(clevel)+1, address.length());
-						for(String alevel:arealevel) {
-							if(address.contains(alevel)) {
-								area = address.substring(0, address.indexOf(alevel)+1);
-								ads = address.substring(address.indexOf(alevel)+1, address.length());
+				for (String clevel : citylevel) {
+					if (address.contains(clevel)) {
+						city = address.substring(0, address.indexOf(clevel) + 1);
+						address = address.substring(address.indexOf(clevel) + 1, address.length());
+						for (String alevel : arealevel) {
+							if (address.contains(alevel)) {
+								area = address.substring(0, address.indexOf(alevel) + 1);
+								ads = address.substring(address.indexOf(alevel) + 1, address.length());
 							}
 						}
 					}
-				};
+				}
+				;
 				HashMap<String, String> hashmap = new HashMap<String, String>();
 				hashmap.put("city", city);
 				hashmap.put("area", area);
@@ -1027,9 +1028,9 @@ public class ShgmServlet extends HttpServlet {
 						errormsgs.add("取貨人電話：不得為空");
 					} else if (!takerph.trim().matches(takerphreg))
 						errormsgs.add("取貨人電話：請輸入符合格式的電話號碼");
-					// 
+					//
 					// 取貨地址
-					if(ads.equals(address))
+					if (ads.equals(address))
 						errormsgs.add("取貨地址：請選擇鄉鎮縣市");
 					if (address.trim().length() == 0)
 						errormsgs.add("取貨地址：地址不得為空");
@@ -1074,32 +1075,31 @@ public class ShgmServlet extends HttpServlet {
 					return;
 				}
 
-				if(status == 3) {
+				if (status == 3) {
 					upcheck = 0;
 					boxstatus = 0;
 					paystatus = 0;
 					status = 0;
-					shgmsvc.updateShgm(shgmno, sellerno, null, shgmname, price,
-							intro, img, 0, null, null, null, null, 0, 0, 0);
+					shgmsvc.updateShgm(shgmno, sellerno, null, shgmname, price, intro, img, 0, null, null, null, null,
+							0, 0, 0);
 				} else {
 					shgmsvc.updateShgm(shgmno, sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm,
 							takerph, address, boxstatus, paystatus, status);
 				}
 
-					
-				if(upcheck == 0) {
+				if (upcheck == 0) {
 					shgmsvc.uptimeNU(shgmno);
 					shgmsvc.soldtimeNU(shgmno);
 				}
 				if (upcheck == 1) {
-					//修改後，已通過審查，被檢舉的市集商品取消檢舉
+					// 修改後，已通過審查，被檢舉的市集商品取消檢舉
 					ShgmrpService shgmrpsvc = new ShgmrpService();
 					if (shgmrpsvc.getOnerpByShgmno(shgmno) != null) {
 						String shgmrpno = shgmrpsvc.getOnerpByShgmno(shgmno).getShgmrpno();
 						shgmrpsvc.updateStatus(2, shgmrpno);
 					}
 					// 上架的市集商品，同時修改成已送達、已付款、已完成，即是訂單完成
-					if(boxstatus == 2 && paystatus == 1 && status == 2) {
+					if (boxstatus == 2 && paystatus == 1 && status == 2) {
 						// 資料庫更新上架時間、售出時間，如果之前就是上架中，沿用上架時間
 						if (shgm.getUptime() == null)
 							shgmsvc.uptimeCT(shgmno);
@@ -1110,8 +1110,8 @@ public class ShgmServlet extends HttpServlet {
 						shgmsvc.soldtimeNU(shgmno);
 					}
 				}
-				if(upcheck == 2) {
-					;//do nothing
+				if (upcheck == 2) {
+					;// do nothing
 				}
 
 				String url = "/back-end/shgm/listAllShgm.jsp";
