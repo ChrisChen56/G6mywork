@@ -25,6 +25,10 @@
 	th, td {
     	border: 1px solid black;
   	}
+  	td.intro{
+	  	width:300px;
+	  	text-align:left;
+  	}
   	.imgtd img{
   		width:200px;
   		height:150px;
@@ -63,14 +67,16 @@
 			<td>刪除市集商品</td>
 		</tr>
 		
-		<c:forEach var="shgmvo" items="${shgmlist}">
+		<%@ include file="page1.file" %> 
+		
+		<c:forEach var="shgmvo" items="${shgmlist}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
 		<tr>
 			<td>${shgmvo.shgmno}</td>
 			<td>${shgmvo.sellerno}</td>
 			<td>${(shgmvo.buyerno == null)? "尚未有買家":shgmvo.buyerno}</td>
 			<td>${shgmvo.shgmname}</td>
 			<td>${shgmvo.price}</td>
-			<td width="250px" style="text-align:left;">${shgmvo.intro}</td>
+			<td class="intro">${shgmvo.intro}</td>
 			<td class="imgtd"><img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"/></td>
 			<c:choose>
 	            <c:when test="${shgmvo.upcheck == 0}">
@@ -158,6 +164,9 @@
 			</td>
 		</tr>
 		</c:forEach>
+		
+		<%@ include file="page2.file" %>
+		
 	</table>
 	<a href="<%= request.getContextPath()%>/back-end/shgm/shgm_select_page.jsp">回首頁</a>
 </body>

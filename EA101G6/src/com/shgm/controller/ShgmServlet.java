@@ -872,8 +872,8 @@ public class ShgmServlet extends HttpServlet {
 
 		if ("getone_update".equals(action)) {
 
-			List<String> errorMsgs = new LinkedList<String>();
-			request.setAttribute("errorMsgs", errorMsgs);
+			List<String> errormsgs = new LinkedList<String>();
+			request.setAttribute("errormsgs", errormsgs);
 
 			try {
 				String shgmno = request.getParameter("shgmno");
@@ -911,7 +911,7 @@ public class ShgmServlet extends HttpServlet {
 				successview.forward(request, response);
 
 			} catch (Exception e) {
-				errorMsgs.add("無法取得要修改的資料:" + e.getMessage());
+				errormsgs.add("無法取得要修改的資料:" + e.getMessage());
 				String url = "/back-end/shgm/shgm_select_page.jsp";
 				RequestDispatcher failureView = request.getRequestDispatcher(url);
 				failureView.forward(request, response);
