@@ -1027,7 +1027,7 @@ public class ShgmServlet extends HttpServlet {
 						errormsgs.add("取貨人電話：不得為空");
 					} else if (!takerph.trim().matches(takerphreg))
 						errormsgs.add("取貨人電話：請輸入符合格式的電話號碼");
-
+					// 
 					// 取貨地址
 					if(ads.equals(address))
 						errormsgs.add("取貨地址：請選擇鄉鎮縣市");
