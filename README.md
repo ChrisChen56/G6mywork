@@ -16,3 +16,5 @@ L.要把假資料地址的部分做更改、地址連動的資料也要更新√
 M.要再增加多一點假資料，版面才不會太空√
 N.infoPage.jsp增加賣家圖示(and個人市集)？
 O.做footer
+P.後台做新版本，詳細資料額外顯示
+Q.getone_update、oneForBuyerUpdate做好從哪裡來從哪裡回去
