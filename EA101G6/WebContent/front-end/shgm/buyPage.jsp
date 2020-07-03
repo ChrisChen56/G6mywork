@@ -120,6 +120,9 @@ div.top-info {
 .alert{
 	color: #FF4500;
 }
+.modal-footer{
+	height:70px;
+}
 </style>
 
 

@@ -4,7 +4,6 @@
 <%@ page import="com.shgm.model.*"%>
 <%@ page import="com.mbrpf.model.*"%>
 <%@ page import="java.util.*"%>
-
 <%
 	MbrpfVO member = (MbrpfVO) session.getAttribute("member");
 	List<ShgmVO> list = (List<ShgmVO>) request.getAttribute("randlist");
@@ -364,8 +363,13 @@ div.top-info {
 
 	<script>
 	$(document).ready(function(){
-		if($("#success").val() != ''){
-			alert('您已購買成功');
+		if($("#success").val() == "success"){
+			Swal.fire({
+				  icon: 'success',
+				  title: '您已購買成功！',
+				  showConfirmButton: false,
+				  timer: 1500
+				})
 		}
 		var $mbrname = $("#mbrname").text().substr(4);
 		$("#buythis").click(function(){

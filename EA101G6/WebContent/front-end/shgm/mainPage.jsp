@@ -69,7 +69,6 @@ div.card-body{
 .awrapper {
 	width: 350px;
 	display: inline;
-	/* position: absolute; */
 	text-align: right;
 	margin-left: 70%;
 }
@@ -161,7 +160,7 @@ div.pageselect-area {
 							class="icon" src="images/add-icon.png">註冊</span></a>
 					<div class="float-right">
 						<c:choose>
-						<c:when test="<%=member != null%>">
+						<c:when test="${member.mbrname != null}">
 						<span class="d-md-inline-block text-white">歡迎你！${member.mbrname}</span>
 						</c:when>
 						<c:otherwise>
