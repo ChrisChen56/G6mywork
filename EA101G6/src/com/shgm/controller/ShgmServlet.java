@@ -581,55 +581,6 @@ public class ShgmServlet extends HttpServlet {
 			}
 		}
 
-		if ("oneForBuyerUpdate".equals(action)) {
-
-			List<String> errorMsgs = new LinkedList<String>();
-			request.setAttribute("errorMsgs", errorMsgs);
-
-			try {
-				String shgmno = request.getParameter("shgmno");
-
-				ShgmService shgmsvc = new ShgmService();
-				ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
-				// 將address分割為city、area、ads
-				String[] citylevel = { "縣", "市", "島" };
-				String[] arealevel = { "鄉", "鎮", "島", "區", "市" };
-				String city = null;
-				String area = null;
-				String ads = null;
-				String address = shgmvo.getAddress();
-				for (String clevel : citylevel) {
-					if (address.contains(clevel)) {
-						city = address.substring(0, address.indexOf(clevel) + 1);
-						address = address.substring(address.indexOf(clevel) + 1, address.length());
-						for (String alevel : arealevel) {
-							if (address.contains(alevel)) {
-								area = address.substring(0, address.indexOf(alevel) + 1);
-								ads = address.substring(address.indexOf(alevel) + 1, address.length());
-							}
-						}
-					}
-				}
-				;
-				HashMap<String, String> hashmap = new HashMap<String, String>();
-				hashmap.put("city", city);
-				hashmap.put("area", area);
-				hashmap.put("ads", ads);
-				request.setAttribute("cityarea", hashmap);
-
-				request.setAttribute("shgmvo", shgmvo);
-				String url = "/front-end/shgm/buyerUpdate.jsp";
-				RequestDispatcher successview = request.getRequestDispatcher(url);
-				successview.forward(request, response);
-
-			} catch (Exception e) {
-				errorMsgs.add("無法取得要修改的資料:" + e.getMessage());
-				String url = "/front-end/shgm/myShgm.jsp";// 回到我的市集商品，要再加上顯示錯誤
-				RequestDispatcher failureView = request.getRequestDispatcher(url);
-				failureView.forward(request, response);
-			}
-		}
-
 		if ("buyerUpdate".equals(action)) {
 
 			HashMap<Long, String> errormap = new HashMap<Long, String>();
@@ -875,31 +826,36 @@ public class ShgmServlet extends HttpServlet {
 			List<String> errormsgs = new LinkedList<String>();
 			request.setAttribute("errormsgs", errormsgs);
 
+			String requestURL = request.getParameter("requestURL");
+			String url = null;
 			try {
 				String shgmno = request.getParameter("shgmno");
+
+				String city = null;
+				String area = null;
+				String ads = null;
+				String address = null;
 
 				ShgmService shgmsvc = new ShgmService();
 				ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
 				// 將address分割為city、area、ads
-				String[] citylevel = { "縣", "市", "島" };
-				String[] arealevel = { "鄉", "鎮", "島", "區", "市" };
-				String city = null;
-				String area = null;
-				String ads = null;
-				String address = shgmvo.getAddress();
-				for (String clevel : citylevel) {
-					if (address.contains(clevel)) {
-						city = address.substring(0, address.indexOf(clevel) + 1);
-						address = address.substring(address.indexOf(clevel) + 1, address.length());
-						for (String alevel : arealevel) {
-							if (address.contains(alevel)) {
-								area = address.substring(0, address.indexOf(alevel) + 1);
-								ads = address.substring(address.indexOf(alevel) + 1, address.length());
+				if (shgmvo.getAddress() != null) {
+					address = shgmvo.getAddress();
+					String[] citylevel = { "縣", "市", "島" };
+					String[] arealevel = { "鄉", "鎮", "島", "區", "市" };
+					for (String clevel : citylevel) {
+						if (address.contains(clevel)) {
+							city = address.substring(0, address.indexOf(clevel) + 1);
+							address = address.substring(address.indexOf(clevel) + 1, address.length());
+							for (String alevel : arealevel) {
+								if (address.contains(alevel)) {
+									area = address.substring(0, address.indexOf(alevel) + 1);
+									ads = address.substring(address.indexOf(alevel) + 1, address.length());
+								}
 							}
 						}
 					}
 				}
-				;
 				HashMap<String, String> hashmap = new HashMap<String, String>();
 				hashmap.put("city", city);
 				hashmap.put("area", area);
@@ -907,13 +863,23 @@ public class ShgmServlet extends HttpServlet {
 				request.setAttribute("cityarea", hashmap);
 
 				request.setAttribute("shgmvo", shgmvo);
-				String url = "/back-end/shgm/updateShgm.jsp";
+				//來自後台的修改請求
+				if (requestURL.equals("/back-end/shgm/listAllShgm.jsp")
+						|| requestURL.equals("/back-end/shgm/shgm_select_page.jsp")) {
+					url = "/back-end/shgm/updateShgm.jsp";
+					//來自前台買家的修改請求
+				} else if(requestURL.equals("/front-end/shgm/myShgm.jsp"))
+					url = "/front-end/shgm/buyerUpdate.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 
 			} catch (Exception e) {
 				errormsgs.add("無法取得要修改的資料:" + e.getMessage());
-				String url = "/back-end/shgm/shgm_select_page.jsp";
+				if (requestURL.equals("/back-end/shgm/listAllShgm.jsp")
+						|| requestURL.equals("/back-end/shgm/shgm_select_page.jsp")) {
+					url = "/back-end/shgm/shgm_select_page.jsp";
+				} else if(requestURL.equals("/front-end/shgm/myShgm.jsp"))
+					url = "/front-end/shgm/myShgm.jsp";
 				RequestDispatcher failureView = request.getRequestDispatcher(url);
 				failureView.forward(request, response);
 			}

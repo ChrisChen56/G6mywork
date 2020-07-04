@@ -222,7 +222,7 @@ div.top-info {
 						href="<%=request.getContextPath()%>/front-end/shgm/mainPage.jsp">市集</a></li>
 					<li class="breadcrumb-item"><a
 						href="<%=request.getContextPath()%>/front-end/shgm/myShgm.jsp">我的市集商品</a></li>
-					<li class="breadcrumb-item active" aria-current="page">修改出貨資訊</li>
+					<li class="breadcrumb-item active" aria-current="page">修改取貨資訊</li>
 					<li class="awrapper"><button type="button"
 							class="btn btn-primary" data-toggle="modal"
 							data-target="#exampleModal" data-whatever="@mdo">檢舉</button></li>

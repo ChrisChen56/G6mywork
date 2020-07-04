@@ -110,7 +110,7 @@
 				<td>
 					<select id="縣市1" name="city" class="address"></select>
 					<select id="鄉鎮市區1" name="area" class="address"></select>
-					<input id="ads" name="ads" type="text" class="address" placeholder="<%=(hashmap.get("ads") == null)? "":""%>" value="<%=(hashmap.get("ads") == null)? "":hashmap.get("ads") %>"/>
+					<input id="ads" name="ads" type="text" class="address" placeholder="<%=(hashmap.get("ads") == null)? "尚無資料":""%>" value="<%=(hashmap.get("ads") == null)? "":hashmap.get("ads") %>"/>
 					<input id="address" name="address" type="hidden" value="<%= (shgmvo.getAddress() == null)? "":shgmvo.getAddress() %>"/>
 				</td>
 			</tr>

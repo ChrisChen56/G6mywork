@@ -152,6 +152,7 @@
 				<form method="post" action="<%= request.getContextPath()%>/shgm/shgm.do">
 					<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
 					<input type="hidden" name="action" value="getone_update" >
+					<input type="hidden" name="requestURL" value="<%=request.getServletPath()%>"/>
 					<input type="submit" value="修改">
 				</form>
 			</td>

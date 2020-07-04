@@ -57,6 +57,7 @@
 					</c:forEach>
 				</select>
 				<input type="hidden" name="action" value="getone_update" >
+				<input type="hidden" name="requestURL" value="<%=request.getServletPath()%>"/>
 				<input type="submit" value="送出" >
 			</form>
 		</li>
