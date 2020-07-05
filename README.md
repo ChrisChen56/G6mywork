@@ -18,3 +18,4 @@ N.infoPage.jsp增加賣家圖示(and個人市集)？
 O.做footer
 P.後台做新版本，詳細資料額外顯示√
 Q.getone_update、oneForBuyerUpdate做好從哪裡來從哪裡回去√
+R.正則表達式判斷輸入的內容長度
