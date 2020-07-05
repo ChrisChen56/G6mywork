@@ -154,7 +154,9 @@
 			</tr>
 			<tr>
 				<td colspan="2">
-				<input type="hidden" name="action" value="update">	
+				<input type="hidden" name="action" value="update">
+				<input type="hidden" name="requestURL" value="<%=request.getParameter("requestURL")%>"> <!--接收原送出修改的來源網頁路徑後,再送給Controller準備轉交之用-->
+				<input type="hidden" name="whichPage"  value="<%=request.getParameter("whichPage")%>">  <!--只用於:istAllEmp.jsp-->
 				<input type="submit" value="送出" ></td>
 			</tr>
 	</table>

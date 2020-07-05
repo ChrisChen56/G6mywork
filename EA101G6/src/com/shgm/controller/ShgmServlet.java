@@ -827,6 +827,10 @@ public class ShgmServlet extends HttpServlet {
 			request.setAttribute("errormsgs", errormsgs);
 
 			String requestURL = request.getParameter("requestURL");
+			request.setAttribute("requestURL", requestURL);
+			String whichPage = request.getParameter("whichPage");
+			request.setAttribute("whichPage", whichPage);
+			System.out.println(whichPage);
 			String url = null;
 			try {
 				String shgmno = request.getParameter("shgmno");
@@ -889,6 +893,11 @@ public class ShgmServlet extends HttpServlet {
 
 			List<String> errormsgs = new LinkedList<String>();
 			request.setAttribute("errormsgs", errormsgs);
+			
+			String requestURL = request.getParameter("requestURL");
+			request.setAttribute("requestURL", requestURL);
+			String whichPage = request.getParameter("whichPage");
+			request.setAttribute("whichPage", whichPage);
 
 			try {
 				String shgmno = request.getParameter("shgmno");
@@ -1080,7 +1089,12 @@ public class ShgmServlet extends HttpServlet {
 					;// do nothing
 				}
 
-				String url = "/back-end/shgm/listAllShgm.jsp";
+				String url = null;
+				if(whichPage != null) {
+					url= requestURL+"?whichPage="+whichPage;
+				} else {
+					url = "/back-end/shgm/listAllShgm.jsp";
+				}
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 			} catch (Exception e) {
