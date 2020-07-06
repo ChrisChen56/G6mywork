@@ -121,20 +121,6 @@ public class ShgmServlet extends HttpServlet {
 				failureview.forward(request, response);
 			}
 		}
-		if ("getOneToInfo".equals(action)) {
-
-			String shgmno = request.getParameter("shgmno");
-
-			ShgmService shgmsvc = new ShgmService();
-			ShgmVO shgmvo = shgmsvc.getOneForInfo(shgmno);
-
-			// 把當前要瀏覽的市集商品存入session
-			session.setAttribute("shgmvo", shgmvo);
-			String url = "/front-end/shgm/infoPage.jsp";
-			RequestDispatcher nextjsp = request.getRequestDispatcher(url);
-			nextjsp.forward(request, response);
-
-		}
 
 		if ("insert".equals(action)) {
 
@@ -157,7 +143,7 @@ public class ShgmServlet extends HttpServlet {
 				String shgmname = request.getParameter("shgmname");
 				if (shgmname.trim().length() == 0)
 					errormsgs.add("市集商品名稱：請勿輸入空白");
-				if (shgmname.trim().length() > 10)
+				if (shgmname.trim().length() > 16)
 					errormsgs.add("市集商品名稱：名稱過長");
 
 				Integer price = null;
@@ -213,7 +199,7 @@ public class ShgmServlet extends HttpServlet {
 
 				// 只要買家、取貨方式、取貨人姓名、取貨人電話、取貨地址五個欄位任一個有填入資料，其他四個欄位也必須要填
 				// 而且出貨、付款、訂單狀態只要不是初始值，其餘欄位就要填寫
-				if (buyerno.trim().length() > 0 || take.trim().length() > 0 || takernm.trim().length() > 0
+				if (buyerno.trim().length() > 0 || take == null || takernm.trim().length() > 0
 						|| takerph.trim().length() > 0 || ads.trim().length() > 0 || boxstatus != 0 || paystatus != 0
 						|| status != 0) {
 
@@ -225,11 +211,9 @@ public class ShgmServlet extends HttpServlet {
 					}
 
 					// 取貨方式錯誤處理
-					if (take.trim().length() == 0) {
-						errormsgs.add("取貨方式：不得為空");
-					} else if (take.trim().length() > 3) {
-						errormsgs.add("取貨方式：長度不正確");
-					}
+					if (take == null)
+						errormsgs.add("取貨方式：請選擇取貨方式");
+					
 
 					// 取貨人姓名錯誤處理
 					if (takernm.trim().length() == 0) {
@@ -245,10 +229,13 @@ public class ShgmServlet extends HttpServlet {
 						errormsgs.add("取貨人電話：請輸入符合格式的電話號碼");
 
 					// 取貨地址
+					String adsReg = "^[(\u4e00-\u9fa5)(\\w)]{5,40}$";
 					if (ads.equals(address))
 						errormsgs.add("取貨地址：請選擇鄉鎮縣市");
 					if (ads.trim().length() == 0)
 						errormsgs.add("取貨地址：地址不得為空");
+					if (!ads.trim().matches(adsReg))
+						errormsgs.add("取貨地址：只能是中、英文字母、數字、底線，且長度必需5到40之間");
 				}
 
 				ShgmVO shgmvo = new ShgmVO();
@@ -319,7 +306,7 @@ public class ShgmServlet extends HttpServlet {
 				String shgmname = request.getParameter("shgmname");
 				if (shgmname.trim().length() == 0)
 					errormap.put((long) 1, "名稱不得為空");
-				if (shgmname.trim().length() > 10)
+				if (shgmname.trim().length() > 16)
 					errormap.put((long) 1, "名稱過長");
 
 				Integer price = null;
@@ -419,7 +406,7 @@ public class ShgmServlet extends HttpServlet {
 				String shgmname = request.getParameter("shgmname");
 				if (shgmname.trim().length() == 0)
 					errormap.put((long) 1, "名稱不得為空");
-				if (shgmname.trim().length() > 10)
+				if (shgmname.trim().length() > 16)
 					errormap.put((long) 1, "名稱過長");
 
 				Integer price = null;
@@ -481,14 +468,35 @@ public class ShgmServlet extends HttpServlet {
 				failedview.forward(request, response);
 			}
 		}
+		
+		if ("getOneForMoreInfo".equals(action)) {
+
+			String shgmno = request.getParameter("shgmno");
+			
+			String requestURL = request.getParameter("requestURL");
+
+			ShgmService shgmsvc = new ShgmService();
+			ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
+			
+			session.setAttribute("infoshgm", shgmvo);
+
+			String url = null;
+			if(requestURL == null) {
+				url = "/front-end/shgm/infoPage.jsp";
+			} else if(requestURL.equals("/front-end/shgm/infoPage.jsp")) {
+				url = "/front-end/shgm/buyPage.jsp";
+			}
+			RequestDispatcher nextjsp = request.getRequestDispatcher(url);
+			nextjsp.forward(request, response);
+		}
 
 		if ("dealingshgm".equals(action)) {
 
-			// getOneToInfo存入的市集商品在這邊取出
-			ShgmVO shgmvo = (ShgmVO) session.getAttribute("shgmvo");
-
 			HashMap<Long, String> errormap = new HashMap<Long, String>();
 			request.setAttribute("errormap", errormap);
+			
+			ShgmVO shgmvo = (ShgmVO) session.getAttribute("infoshgm");
+			session.setAttribute("infoshgm", shgmvo);
 
 			try {
 				String shgmno = request.getParameter("shgmno");
@@ -519,32 +527,21 @@ public class ShgmServlet extends HttpServlet {
 				String city = request.getParameter("city");
 				String area = request.getParameter("area");
 				String ads = request.getParameter("ads");
+				String adsReg = "^[(\u4e00-\u9fa5)(\\w)]{5,40}$";
 				String address = request.getParameter("address");
-				if (ads.trim().length() > 10) {// 還需要修改
-					errormap.put((long) 4, "長度不正確");
-				}
-				if (ads.trim().length() == 0) {
+				if (!ads.trim().matches(adsReg))
+					errormap.put((long) 4, "只能是中、英文字母、數字、底線，且長度必需5到40之間");
+				if (ads.trim().length() == 0)
 					errormap.put((long) 4, "地址不得為空");
-				}
-				if (ads.equals(address)) {
+				if (ads.equals(address))
 					errormap.put((long) 4, "請選擇縣市、鄉鎮");
-				}
-
-				Integer boxstatus = null;
-
-				Integer paystatus = null;
-
-				Integer status = null;
-
+				
 				shgmvo.setShgmno(shgmno);
 				shgmvo.setBuyerno(buyerno);
 				shgmvo.setTake(take);
 				shgmvo.setTakernm(takernm);
 				shgmvo.setTakerph(takerph);
 				shgmvo.setAddress(address);
-				shgmvo.setBoxstatus(boxstatus);
-				shgmvo.setPaystatus(paystatus);
-				shgmvo.setStatus(status);
 
 				if (!errormap.isEmpty()) {
 					HashMap<String, String> hashmap = new HashMap<String, String>();
@@ -566,9 +563,13 @@ public class ShgmServlet extends HttpServlet {
 				MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(buyerno);
 				// 把買家原本的points扣掉價格
 				mbrsvc.update(buyerno, mbrpfvo.getPoints() - shgmvo.getPrice());
-
-				String success = "success";
-				request.setAttribute("buysuccess", success);
+				
+				//回到infoPage的JSTL判斷用的
+				shgmvo.setBoxstatus(0);
+				shgmvo.setPaystatus(1);
+				shgmvo.setStatus(1);
+				
+				request.setAttribute("buysuccess", "success");
 
 				String url = "/front-end/shgm/infoPage.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
@@ -615,16 +616,14 @@ public class ShgmServlet extends HttpServlet {
 				String city = request.getParameter("city");
 				String area = request.getParameter("area");
 				String ads = request.getParameter("ads");
+				String adsReg = "^[(\u4e00-\u9fa5)(\\w)]{5,40}$";
 				String address = request.getParameter("address");
-				if (ads.trim().length() > 10) {// 還需要修改
-					errormap.put((long) 4, "長度不正確");
-				}
-				if (ads.trim().length() == 0) {
+				if (!ads.trim().matches(adsReg))
+					errormap.put((long) 4, "只能是中、英文字母、數字、底線，且長度必需5到40之間");
+				if (ads.trim().length() == 0)
 					errormap.put((long) 4, "地址不得為空");
-				}
-				if (ads.equals(address)) {
+				if (ads.equals(address))
 					errormap.put((long) 4, "請選擇縣市、鄉鎮");
-				}
 
 				ShgmVO shgmvo = new ShgmVO();
 				shgmvo.setShgmno(shgmno);
@@ -904,11 +903,10 @@ public class ShgmServlet extends HttpServlet {
 
 				String sellerno = request.getParameter("sellerno");
 				String memberreg = "^BM\\d{5}$";
-				if (sellerno.trim().length() == 0) {
+				if (sellerno.trim().length() == 0)
 					errormsgs.add("賣家編號：請勿輸入空白");
-				} else if (!sellerno.trim().matches(memberreg)) {
+				if (!sellerno.trim().matches(memberreg))
 					errormsgs.add("賣家編號：BM開頭、長度7的格式");
-				}
 
 				// 買家可為空字串
 				String buyerno = request.getParameter("buyerno");
@@ -916,7 +914,7 @@ public class ShgmServlet extends HttpServlet {
 				String shgmname = request.getParameter("shgmname");
 				if (shgmname.trim().length() == 0)
 					errormsgs.add("市集商品名稱：請勿輸入空白");
-				if (shgmname.trim().length() > 10)
+				if (shgmname.trim().length() > 16)
 					errormsgs.add("市集商品名稱：名稱過長");
 
 				Integer price = null;
@@ -1003,11 +1001,13 @@ public class ShgmServlet extends HttpServlet {
 						errormsgs.add("取貨人電話：不得為空");
 					} else if (!takerph.trim().matches(takerphreg))
 						errormsgs.add("取貨人電話：請輸入符合格式的電話號碼");
-					//
-					// 取貨地址
+					
+					String adsReg = "^[(\u4e00-\u9fa5)(\\w)]{5,40}$";
+					if (!ads.trim().matches(adsReg))
+						errormsgs.add("取貨地址：只能是中、英文字母、數字、底線，且長度必需5到40之間");
 					if (ads.equals(address))
 						errormsgs.add("取貨地址：請選擇鄉鎮縣市");
-					if (address.trim().length() == 0)
+					if (ads.trim().length() == 0)
 						errormsgs.add("取貨地址：地址不得為空");
 				}
 

@@ -6,7 +6,7 @@
 <%
 	java.util.HashMap<String, String> hashmap = (java.util.HashMap<String, String>) request.getAttribute("cityarea");
 	MbrpfVO member = (MbrpfVO) session.getAttribute("member");
-	ShgmVO shgmvo = (ShgmVO) session.getAttribute("shgmvo");
+	ShgmVO shgmvo = (ShgmVO) session.getAttribute("infoshgm");
 %>
 <!doctype html>
 <html lang="en">
@@ -224,7 +224,7 @@ div.top-info {
 					<li class="breadcrumb-item"><a
 						href="<%=request.getContextPath()%>/front-end/shgm/mainPage.jsp">市集</a></li>
 					<li class="breadcrumb-item"><a
-						href="<%=request.getContextPath()%>/front-end/shgm/infoPage.jsp?shgmno=${shgmvo.shgmno}">商品頁面</a></li>
+						href="<%=request.getContextPath()%>/front-end/shgm/infoPage.jsp?shgmno=${infoshgm.shgmno}">商品頁面</a></li>
 					<li class="breadcrumb-item active" aria-current="page">購買頁面</li>
 					<li class="awrapper"><button type="button"
 							class="btn btn-primary" data-toggle="modal"
@@ -256,7 +256,7 @@ div.top-info {
 							<button type="button" class="btn btn-primary"
 								data-dismiss="modal">取消</button>
 						</div>
-						<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
+						<input type="hidden" name="shgmno" value="${infoshgm.shgmno}">
 						<input type="hidden" name="suiterno" value="${member.mbrno}">
 						<input type="hidden" name="action" value="insertrp">
 					</form>
@@ -269,15 +269,15 @@ div.top-info {
 					<div
 						class="d-flex align-items-left flex-column bd-highlight mb-3">
 						<img
-							src="<%=request.getContextPath() %>/shgm/displayimg?shgmno=${shgmvo.shgmno}"
+							src="<%=request.getContextPath() %>/shgm/displayimg?shgmno=${infoshgm.shgmno}"
 							alt="..." class="img-thumbnail rounded float-left"> <br>
 						<div class="p-2 bd-highlight">
 							名稱
-							<h1>${shgmvo.shgmname}</h1>
+							<h1>${infoshgm.shgmname}</h1>
 						</div>
 						<div class="p-2 bd-highlight">
 							售價
-							<h1>${shgmvo.price}</h1>
+							<h1>${infoshgm.price}</h1>
 						</div>
 					</div>	
 				</div>
@@ -286,10 +286,10 @@ div.top-info {
 						class="shgm-info-right-inner  align-items-center flex-column bd-highlight mb-3">
 						<form method="post"
 							action="<%=request.getContextPath()%>/front-end/shgm/shgm.do">
-							<div class="form-group">
-								<label for="take">取貨方式</label><span class="alert">${errormap.get(1)}</span>
-								<input type="text" class="form-control" id="take" 
-									name="take" value="<%=(shgmvo.getTake() == null)? "":shgmvo.getTake()%>">
+							<div class="form-group" style="margin:0;">
+								<label for="take">取貨方式</label><span class="alert">${errormap.get(1)}</span><br>
+								<label for="1"><input id="1" type="radio" name="take" value="宅配到府" <%=(shgmvo.getTake() == null)? "":shgmvo.getTake().equals("宅配到府")? "checked":""%>>宅配到府</label>
+								<label for="2"><input id="2" type="radio" name="take" value="超商取貨" <%=(shgmvo.getTake() == null)? "":shgmvo.getTake().equals("超商取貨")? "checked":""%>>超商取貨</label>
 							</div>
 							<br>
 							<div class="form-group">
@@ -315,7 +315,7 @@ div.top-info {
 								<button type="submit" class="btn btn-primary">確定購買</button>
 								<a href="<%=request.getContextPath()%>/front-end/shgm/mainPage.jsp" class="btn btn-primary">取消購買</a>
 							</div>
-							<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
+							<input type="hidden" name="shgmno" value="${infoshgm.shgmno}">
 							<input type="hidden" name="buyerno" value="${member.mbrno}">
 							<input type="hidden" name="action" value="dealingshgm">
 						</form>

@@ -247,7 +247,7 @@ div.pageselect-area {
 				<div class="card-deck">
 					<c:forEach var="shgmvo" items="${shgmlist}"  begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
 						<div class="mb-4">
-							<a target="_self" href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneToInfo&shgmno=${shgmvo.shgmno}">
+							<a target="_self" href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneForMoreInfo&shgmno=${shgmvo.shgmno}">
 								<div class="card">
 									<img
 										src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}"

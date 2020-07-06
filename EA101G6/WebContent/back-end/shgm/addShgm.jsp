@@ -80,8 +80,10 @@
 			</tr>
 			<tr>
 				<td>取貨方式</td>
-				<td><input type="text" name="take" size="15"
-					value="<%= (shgmvo == null)? "宅配到府": shgmvo.getTake()%>"/></td>
+				<td>
+					<label for="1"><input id="1" type="radio" name="take" value="宅配到府" ${(shgmvo.take == '宅配到府')? 'checked':''}>宅配到府</label>
+					<label for="2"><input id="2" type="radio" name="take" value="超商取貨" ${(shgmvo.take == '超商取貨')? 'checked':''}>超商取貨</label>
+				</td>
 			</tr>
 			<tr>
 				<td>取貨人姓名</td>

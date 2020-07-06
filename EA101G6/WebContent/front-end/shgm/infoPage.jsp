@@ -5,7 +5,6 @@
 <%@ page import="com.mbrpf.model.*"%>
 <%@ page import="java.util.*"%>
 <%
-	MbrpfVO member = (MbrpfVO) session.getAttribute("member");
 	List<ShgmVO> list = (List<ShgmVO>) request.getAttribute("randlist");
 	pageContext.setAttribute("list", list);
 %>
@@ -15,7 +14,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <meta charset="utf-8">
-<title>${shgmvo.shgmname}</title>
+<title>${infoshgm.shgmname}</title>
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -151,7 +150,7 @@ div.top-info {
 							class="icon" src="images/add-icon.png">註冊</span></a>
 					<div class="float-right">
 						<c:choose>
-						<c:when test="<%=member != null%>">
+						<c:when test="${member.mbrname != null}">
 						<span id="mbrname" class="d-md-inline-block text-white">歡迎你！${member.mbrname}</span>
 						</c:when>
 						<c:otherwise>
@@ -257,7 +256,7 @@ div.top-info {
 							<button type="button" class="btn btn-primary"
 								data-dismiss="modal">取消</button>
 						</div>
-						<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
+						<input type="hidden" name="shgmno" value="${infoshgm.shgmno}">
 						<input type="hidden" name="suiterno" value="${member.mbrno}">
 						<input type="hidden" name="action" value="insertrp">
 					</form>
@@ -268,7 +267,7 @@ div.top-info {
 			<div class="shgm-info-toparea container">
 				<div id="imgzoom" class="shgm-info-left col-6 ">
 					<img
-						src="<%=request.getContextPath() %>/shgm/displayimg?shgmno=${shgmvo.shgmno}"
+						src="<%=request.getContextPath() %>/shgm/displayimg?shgmno=${infoshgm.shgmno}"
 						alt="..." class="img-thumbnail rounded float-left">
 				</div>
 				<div class="shgm-info-right col-6 d-flex justify-content-center">
@@ -276,28 +275,32 @@ div.top-info {
 						class="shgm-info-right-inner d-flex align-items-start flex-column bd-highlight mb-3">
 						<div class="p-2 bd-highlight">
 							名稱
-							<h1>${shgmvo.shgmname}</h1>
+							<h1>${infoshgm.shgmname}</h1>
 						</div>
 						<div class="p-2 bd-highlight">
 							售價
-							<h1 id="price">${shgmvo.price}</h1>
+							<h1 id="price">${infoshgm.price}</h1>
 						</div>
 						<c:choose>
-								<c:when test="${shgmvo.paystatus == 1}">
-								<a id="sold" class="btn btn-primary" role="button">本商品已售出</a>
-								</c:when>
-								<c:otherwise>
-									<a id="buythis" class="btn btn-primary"
-									 href="<%=request.getContextPath()%>/front-end/shgm/buyPage.jsp" role="button">購買</a>
-								</c:otherwise>
-							</c:choose>
+							<c:when test="${infoshgm.paystatus == 1}">
+							<a id="sold" class="btn btn-primary" role="button">本商品已售出</a>
+							</c:when>
+							<c:otherwise>
+							<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgm.do">
+								<button type="submit" class="btn btn-primary">購買</button>
+								<input type="hidden" name="shgmno" value="${infoshgm.shgmno}"/>
+								<input type="hidden" name="action" value="getOneForMoreInfo"/>
+								<input type="hidden" name="requestURL" value="<%=request.getServletPath()%>"/>
+							</form>
+							</c:otherwise>
+						</c:choose>
 					</div>
 				</div>
 				<br>
 				<div class="shgm-info-middle">
 					簡介
 					<div class="card">
-						<div class="card-body">${shgmvo.intro}</div>
+						<div class="card-body">${infoshgm.intro}</div>
 					</div>
 				</div>
 				<br>
@@ -322,7 +325,7 @@ div.top-info {
 											<c:forEach var="i" begin="0" end="3">
 												<div class="col-md-3">
 													<a
-														href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneToInfo&shgmno=${list.get(i).shgmno}">
+														href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneForMoreInfo&shgmno=${list.get(i).shgmno}">
 														<img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${list.get(i).shgmno}" alt="Image"
 														style="max-width: 100%;">
 													</a>
@@ -335,7 +338,7 @@ div.top-info {
 											<c:forEach var="i" begin="4" end="7">
 												<div class="col-md-3">
 													<a
-														href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneToInfo&shgmno=${list.get(i).shgmno}">
+														href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneForMoreInfo&shgmno=${list.get(i).shgmno}">
 														<img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${list.get(i).shgmno}" alt="Image"
 														style="max-width: 100%;">
 													</a>
