@@ -64,10 +64,9 @@ div.main-area {
 }
 
 .awrapper {
-	width: 150px;
 	display: inline;
 	text-align: right;
-	margin-left: 70%;
+	margin-left: 75.4%;
 }
 
 div.top-info {

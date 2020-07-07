@@ -216,10 +216,11 @@ public class ShgmServlet extends HttpServlet {
 					
 
 					// 取貨人姓名錯誤處理
-					if (takernm.trim().length() == 0) {
-						errormsgs.add("取貨人姓名：不得為空");
-					} else if (takernm.trim().length() > 3)
-						errormsgs.add("取貨人姓名：長度不正確");
+					String takernmreg = "^[(\u4e00-\u9fa5)]{1,10}$";
+					if (takernm.trim().length() == 0)
+						errormsgs.add("取貨人姓名：請勿輸入空白");
+					if (!takernm.trim().matches(takernmreg))
+						errormsgs.add("取貨人姓名：只能是中文，且長度必須在1到10之間");
 
 					// 取貨人電話錯誤處理
 					String takerphreg = "^09\\d{8}$";
@@ -235,7 +236,7 @@ public class ShgmServlet extends HttpServlet {
 					if (ads.trim().length() == 0)
 						errormsgs.add("取貨地址：地址不得為空");
 					if (!ads.trim().matches(adsReg))
-						errormsgs.add("取貨地址：只能是中、英文字母、數字、底線，且長度必需5到40之間");
+						errormsgs.add("取貨地址：只能是中、英文字母、數字、底線，且長度必須在5到40之間");
 				}
 
 				ShgmVO shgmvo = new ShgmVO();
@@ -476,7 +477,7 @@ public class ShgmServlet extends HttpServlet {
 			String requestURL = request.getParameter("requestURL");
 
 			ShgmService shgmsvc = new ShgmService();
-			ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
+			ShgmVO shgmvo = shgmsvc.getOneForInfo(shgmno);
 			
 			session.setAttribute("infoshgm", shgmvo);
 
@@ -498,23 +499,23 @@ public class ShgmServlet extends HttpServlet {
 			ShgmVO shgmvo = (ShgmVO) session.getAttribute("infoshgm");
 			session.setAttribute("infoshgm", shgmvo);
 
-			try {
+//			try {
 				String shgmno = request.getParameter("shgmno");
 
 				// 從會員資料取得，不需要錯誤處理
 				String buyerno = request.getParameter("buyerno");
 
 				String take = request.getParameter("take");
-				if (take.trim().length() > 3)// 還需要修改
-					errormap.put((long) 1, "長度不正確");
-				if (take.trim().length() == 0)
-					errormap.put((long) 1, "請勿輸入空白");
+				if (take == null)
+					errormap.put((long) 1, "請選擇取貨方式");
 
 				String takernm = request.getParameter("takernm");
-				if (takernm.trim().length() > 3)// 還需要修改
-					errormap.put((long) 2, "長度不正確");
-				if (takernm.trim().length() == 0)
+				String takernmreg = "^[(\u4e00-\u9fa5)]{1,10}$";
+				if (takernm.trim().length() == 0) {
 					errormap.put((long) 2, "請勿輸入空白");
+				} else if (!takernm.trim().matches(takernmreg)){
+					errormap.put((long) 2, "只能是中文，且長度必須在1到10之間");
+				}
 
 				String takerph = request.getParameter("takerph");
 				String takerphreg = "^09\\d{8}$";
@@ -530,7 +531,7 @@ public class ShgmServlet extends HttpServlet {
 				String adsReg = "^[(\u4e00-\u9fa5)(\\w)]{5,40}$";
 				String address = request.getParameter("address");
 				if (!ads.trim().matches(adsReg))
-					errormap.put((long) 4, "只能是中、英文字母、數字、底線，且長度必需5到40之間");
+					errormap.put((long) 4, "只能是中、英文字母、數字、底線，且長度必須在5到40之間");
 				if (ads.trim().length() == 0)
 					errormap.put((long) 4, "地址不得為空");
 				if (ads.equals(address))
@@ -574,12 +575,12 @@ public class ShgmServlet extends HttpServlet {
 				String url = "/front-end/shgm/infoPage.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
-			} catch (Exception e) {
-				errormap.put((long) 5, "無法購買此商品");
-				String url = "/front-end/shgm/buyPage.jsp";
-				RequestDispatcher failedview = request.getRequestDispatcher(url);
-				failedview.forward(request, response);
-			}
+//			} catch (Exception e) {
+//				errormap.put((long) 5, "無法購買此商品");
+//				String url = "/front-end/shgm/buyPage.jsp";
+//				RequestDispatcher failedview = request.getRequestDispatcher(url);
+//				failedview.forward(request, response);
+//			}
 		}
 
 		if ("buyerUpdate".equals(action)) {
@@ -594,16 +595,15 @@ public class ShgmServlet extends HttpServlet {
 				String buyerno = request.getParameter("buyerno");
 
 				String take = request.getParameter("take");
-				if (take.trim().length() > 3)// 還需要修改
-					errormap.put((long) 1, "長度不正確");
-				if (take.trim().length() == 0)
-					errormap.put((long) 1, "請勿輸入空白");
+				if (take == null)
+					errormap.put((long) 1, "請選擇取貨方式");
 
 				String takernm = request.getParameter("takernm");
-				if (takernm.trim().length() > 3)// 還需要修改
-					errormap.put((long) 2, "長度不正確");
+				String takernmreg = "^[(\u4e00-\u9fa5)]{1,10}$";
 				if (takernm.trim().length() == 0)
 					errormap.put((long) 2, "請勿輸入空白");
+				if (!takernm.trim().matches(takernmreg))
+					errormap.put((long) 2, "只能是中文，且長度必須在1到10之間");
 
 				String takerph = request.getParameter("takerph");
 				String takerphreg = "^09\\d{8}$";
@@ -619,7 +619,7 @@ public class ShgmServlet extends HttpServlet {
 				String adsReg = "^[(\u4e00-\u9fa5)(\\w)]{5,40}$";
 				String address = request.getParameter("address");
 				if (!ads.trim().matches(adsReg))
-					errormap.put((long) 4, "只能是中、英文字母、數字、底線，且長度必需5到40之間");
+					errormap.put((long) 4, "只能是中、英文字母、數字、底線，且長度必須在5到40之間");
 				if (ads.trim().length() == 0)
 					errormap.put((long) 4, "地址不得為空");
 				if (ads.equals(address))
@@ -745,7 +745,6 @@ public class ShgmServlet extends HttpServlet {
 					if (status == 3) {
 						shgmsvc.updateShgm(shgmno, shgmvo.getSellerno(), null, shgmvo.getShgmname(), shgmvo.getPrice(),
 								shgmvo.getIntro(), shgmvo.getImg(), 0, null, null, null, null, 0, 0, 0);
-						System.out.println("update shgm to upcheck0 status");
 
 						jsonobj.put("shgmno", shgmno);
 						jsonobj.put("shgmname", shgmvo.getShgmname());
@@ -971,7 +970,7 @@ public class ShgmServlet extends HttpServlet {
 
 				// 只要買家、取貨方式、取貨人姓名、取貨人電話、取貨地址五個欄位任一個有填入資料，其他四個欄位也必須要填。
 				// 而且出貨、付款、訂單狀態只要不是初始狀態，其餘欄位就要填寫
-				if (buyerno.trim().length() > 0 || take.trim().length() > 0 || takernm.trim().length() > 0
+				if (buyerno.trim().length() > 0 || take == null || takernm.trim().length() > 0
 						|| takerph.trim().length() > 0 || address.trim().length() > 0 || boxstatus != 0
 						|| paystatus != 0 || status != 0) {
 
@@ -983,17 +982,15 @@ public class ShgmServlet extends HttpServlet {
 					}
 
 					// 取貨方式錯誤處理
-					if (take.trim().length() == 0) {
-						errormsgs.add("取貨方式：不得為空");
-					} else if (take.trim().length() > 3) {
-						errormsgs.add("取貨方式：長度不正確");
-					}
+					if (take == null)
+						errormsgs.add("取貨方式：請選擇取貨方式");
 
 					// 取貨人姓名錯誤處理
+					String takernmreg = "^[(\u4e00-\u9fa5)]{1,10}$";
 					if (takernm.trim().length() == 0) {
 						errormsgs.add("取貨人姓名：不得為空");
-					} else if (takernm.trim().length() > 3)
-						errormsgs.add("取貨人姓名：長度不正確");
+					} else if (!takernm.trim().matches(takernmreg))
+						errormsgs.add("取貨人姓名：只能是中文，且長度必須在1到10之間");
 
 					// 取貨人電話錯誤處理
 					String takerphreg = "^09\\d{8}$";
@@ -1004,7 +1001,7 @@ public class ShgmServlet extends HttpServlet {
 					
 					String adsReg = "^[(\u4e00-\u9fa5)(\\w)]{5,40}$";
 					if (!ads.trim().matches(adsReg))
-						errormsgs.add("取貨地址：只能是中、英文字母、數字、底線，且長度必需5到40之間");
+						errormsgs.add("取貨地址：只能是中、英文字母、數字、底線，且長度必須在5到40之間");
 					if (ads.equals(address))
 						errormsgs.add("取貨地址：請選擇鄉鎮縣市");
 					if (ads.trim().length() == 0)

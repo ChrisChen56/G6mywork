@@ -73,10 +73,9 @@ div.main-area {
 }
 
 .awrapper {
-	width: 200px;
 	display: inline;
 	text-align: right;
-	margin-left: 72.5%;
+	margin-left: 81%;
 }
 
 div.top-info {
@@ -100,7 +99,6 @@ div.top-info {
 	vertical-align: middle;
 	margin: 3% 0;
 	padding-top: 2%;
-	text-align: left;
 }
 
 .btn {
@@ -272,14 +270,14 @@ div.top-info {
 				</div>
 				<div class="shgm-info-right col-6 d-flex justify-content-center">
 					<div
-						class="shgm-info-right-inner d-flex align-items-start flex-column bd-highlight mb-3">
+						class="shgm-info-right-inner d-flex align-items-center flex-column bd-highlight mb-3" style="text-align:center;">
 						<div class="p-2 bd-highlight">
 							名稱
-							<h1>${infoshgm.shgmname}</h1>
+							<h1 style="text-align:left;">${infoshgm.shgmname}</h1>
 						</div>
 						<div class="p-2 bd-highlight">
 							售價
-							<h1 id="price">${infoshgm.price}</h1>
+							<h1 id="price" style="text-align:left;">${infoshgm.price}</h1>
 						</div>
 						<c:choose>
 							<c:when test="${infoshgm.paystatus == 1}">

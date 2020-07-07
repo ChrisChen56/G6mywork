@@ -67,10 +67,9 @@ div.card-body{
 }
 
 .awrapper {
-	width: 350px;
 	display: inline;
 	text-align: right;
-	margin-left: 70%;
+	margin-left: 52%;
 }
 
 div.top-info {
@@ -234,9 +233,9 @@ div.pageselect-area {
 				<ol class="breadcrumb d-flex">
 					<li class="breadcrumb-item"><a href="#">首頁</a></li>
 					<li class="breadcrumb-item active" aria-current="page">市集</li>
-					<li class="awrapper">
-					<a id="upshgm" class="btn btn-primary ml-auto" href="<%=request.getContextPath()%>/front-end/shgm/sellPage.jsp" role="button">我要上架</a>
-					<a id="myshgm" class="btn btn-primary " href="<%=request.getContextPath()%>/front-end/shgm/myShgm.jsp" role="button">我的市集商品</a>
+					<li class="awrapper" style="width:40%;">
+					<a id="upshgm" class="btn btn-primary" href="<%=request.getContextPath()%>/front-end/shgm/sellPage.jsp" role="button">我要上架</a>
+					<a id="myshgm" class="btn btn-primary" href="<%=request.getContextPath()%>/front-end/shgm/myShgm.jsp" role="button">我的市集商品</a>
 					<a id="seller" class="btn btn-primary" href="<%=request.getContextPath()%>/front-end/shgm/sellerPage.jsp" role="button">賣家專區</a></li>
 				</ol>
 			</nav>
