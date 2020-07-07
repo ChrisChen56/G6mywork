@@ -12,6 +12,9 @@ import java.util.List;
 import javax.naming.*;
 import javax.sql.DataSource;
 
+import com.mbrpf.model.MbrpfService;
+import com.mbrpf.model.MbrpfVO;
+
 public class ShgmDAO implements ShgmDAO_interface {
 
 	private static DataSource ds = null;
@@ -58,6 +61,8 @@ public class ShgmDAO implements ShgmDAO_interface {
 			+ " FROM SHGM WHERE buyerno=?";// ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)
 	private static final String MAINPAGE_GETALL_STMT = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
 			+ " FROM SHGM WHERE (upcheck=1 AND boxstatus=0 AND paystatus=0 AND status=0)";// ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)
+	private static final String MAINPAGE_GETALL_STMT2 = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
+			+ " FROM SHGM WHERE (upcheck=1 AND boxstatus=0 AND paystatus=0 AND status=0 AND shgmname LIKE '%?%')";// ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)
 
 	@Override
 	public void insertSold(ShgmVO shgmvo) {
@@ -284,6 +289,7 @@ public class ShgmDAO implements ShgmDAO_interface {
 		}
 	}
 	
+	
 	@Override
 	public void upcheckUpdate(Integer upcheck, String shgmno) {
 		Connection con = null;
@@ -383,6 +389,7 @@ public class ShgmDAO implements ShgmDAO_interface {
 		}
 	}
 
+	
 	@Override
 	public void sellerUpdate(ShgmVO shgmvo) {
 		Connection con = null;
@@ -420,9 +427,56 @@ public class ShgmDAO implements ShgmDAO_interface {
 			}
 		}
 	}
+	
+	@Override
+	public void sellerUpdate(ShgmVO shgmvo, MbrpfVO mbrpfVO) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		try {
+			con = ds.getConnection();
+			con.setAutoCommit(false);
+			
+			pstmt = con.prepareStatement(SELLER_UPDATE_STMT);
+
+			pstmt.setString(1, shgmvo.getShgmname());
+			pstmt.setInt(2, shgmvo.getPrice());
+			Clob clob = con.createClob();
+			clob.setString(1, shgmvo.getIntro());
+			pstmt.setClob(3, clob);
+			pstmt.setBytes(4, shgmvo.getImg());
+			pstmt.setString(5, shgmvo.getShgmno());
+			pstmt.executeUpdate();
+			
+			MbrpfService mbrpfsvc = new MbrpfService();
+			mbrpfsvc.updateMbrpf(mbrpfVO, con);
+			
+			con.commit();
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 
 	@Override
-	public void dealingshgm(ShgmVO shgmvo) {
+	public void buyerupdate(ShgmVO shgmvo) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		try {
@@ -460,10 +514,59 @@ public class ShgmDAO implements ShgmDAO_interface {
 			}
 		}
 	}
+	
+	@Override
+	public void buyerupdate(ShgmVO shgmvo, MbrpfVO mbrpfVO) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		try {
+			con = ds.getConnection();
+			
+			con.setAutoCommit(false);
+			
+			pstmt = con.prepareStatement(DEALING_STMT);
+
+			pstmt.setString(1, shgmvo.getBuyerno());
+			pstmt.setString(2, shgmvo.getTake());
+			pstmt.setString(3, shgmvo.getTakernm());
+			pstmt.setString(4, shgmvo.getTakerph());
+			pstmt.setString(5, shgmvo.getAddress());
+			pstmt.setInt(6, shgmvo.getBoxstatus());
+			pstmt.setInt(7, shgmvo.getPaystatus());
+			pstmt.setInt(8, shgmvo.getStatus());
+			pstmt.setString(9, shgmvo.getShgmno());
+			pstmt.executeUpdate();
+			
+			MbrpfService mbrpfsvc = new MbrpfService();
+			mbrpfsvc.updateMbrpf(mbrpfVO, con);
+			
+			con.commit();
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 
 	@Override
-	public Timestamp soldtimeCT(String shgmno) {
-		Connection con = null;
+	public Timestamp soldtimeCT(String shgmno, Connection con) {
 		PreparedStatement pstmt = null;
 		Timestamp soldtime = new Timestamp(System.currentTimeMillis());
 		try {
@@ -495,8 +598,7 @@ public class ShgmDAO implements ShgmDAO_interface {
 	}
 	
 	@Override
-	public void soldtimeNU(String shgmno) {
-		Connection con = null;
+	public void soldtimeNU(String shgmno, Connection con) {
 		PreparedStatement pstmt = null;
 		try {
 			con = ds.getConnection();
@@ -526,8 +628,7 @@ public class ShgmDAO implements ShgmDAO_interface {
 	}
 
 	@Override
-	public Timestamp uptimeCT(String shgmno) {
-		Connection con = null;
+	public Timestamp uptimeCT(String shgmno, Connection con) {
 		PreparedStatement pstmt = null;
 		Timestamp uptime = new Timestamp(System.currentTimeMillis());
 		try {
@@ -559,8 +660,7 @@ public class ShgmDAO implements ShgmDAO_interface {
 	}
 	
 	@Override
-	public void uptimeNU(String shgmno) {
-		Connection con = null;
+	public void uptimeNU(String shgmno, Connection con) {
 		PreparedStatement pstmt = null;
 		try {
 			con = ds.getConnection();

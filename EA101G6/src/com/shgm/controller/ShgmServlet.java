@@ -40,37 +40,7 @@ public class ShgmServlet extends HttpServlet {
 
 		String action = request.getParameter("action");
 
-		if ("login".equals(action)) {
-
-			// 請求參數取得帳號密碼
-			String mbract = request.getParameter("mbract");
-			String mbrpw = request.getParameter("mbrpw");
-
-			MbrpfService mbrsvc = new MbrpfService();
-			// MbrpfService的check方法在資料庫查詢是否有相對應的資料
-			if (mbrsvc.check(mbract, mbrpw)) {
-				// true，session存入當前使用者的資料
-				MbrpfVO mbrpfvo = mbrsvc.getByActPw(mbract, mbrpw);
-				session.setAttribute("member", mbrpfvo);
-				// 測試印出姓名
-				System.out.println(mbrpfvo.getMbrname());
-
-				// 轉送到市集頁面
-				String url = "/front-end/shgm/mainPage.jsp";
-				RequestDispatcher successview = request.getRequestDispatcher(url);
-				successview.forward(request, response);
-
-			} else {
-				// false，request存入錯誤訊息
-				String error = "帳號密碼錯誤";
-				request.setAttribute("error", error);
-
-				// 轉送到登入頁面
-				String url = "/front-end/shgm/simpleLogin.jsp";
-				RequestDispatcher failedview = request.getRequestDispatcher(url);
-				failedview.forward(request, response);
-			}
-		}
+//				session.setAttribute("member", mbrpfvo);
 
 		if ("get_one".equals(action)) {
 
@@ -270,19 +240,21 @@ public class ShgmServlet extends HttpServlet {
 				}
 
 				ShgmService shgmsvc = new ShgmService();
-				// 上架且通過審核，更新上架時間
-				if (upcheck == 1) {
-					shgmsvc.addShgmCheck1(sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm,
-							takerph, address, boxstatus, paystatus, status);
-					// 上架且通過審核並賣出，更新上架、售出時間，即是訂單完成，可以扣掉買家點數、增加賣家的點數了
-				} else if (upcheck == 1 && boxstatus == 2 && paystatus == 1 && status == 2) {
-					shgmsvc.addShgmSold(sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm, takerph,
-							address, boxstatus, paystatus, status);
-				} else {
-					// 正常上架未通過審查，上架、售出時間為空值
-					shgmsvc.addShgmNocheck(sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm,
-							takerph, address, boxstatus, paystatus, status);
-				}
+				shgmsvc.addShgm(sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm, takerph, 
+						address, boxstatus, paystatus, status);
+//				// 上架且通過審核，更新上架時間
+//				if (upcheck == 1) {
+//					shgmsvc.addShgmCheck1(sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm,
+//							takerph, address, boxstatus, paystatus, status);
+//					// 上架且通過審核並賣出，更新上架、售出時間，即是訂單完成，可以扣掉買家點數、增加賣家的點數了
+//				} else if (upcheck == 1 && boxstatus == 2 && paystatus == 1 && status == 2) {
+//					shgmsvc.addShgmSold(sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm, takerph,
+//							address, boxstatus, paystatus, status);
+//				} else {
+//					// 正常上架未通過審查，上架、售出時間為空值
+//					shgmsvc.addShgmNocheck(sellerno, buyerno, shgmname, price, intro, img, upcheck, take, takernm,
+//							takerph, address, boxstatus, paystatus, status);
+//				}
 
 				String url = "/back-end/shgm/listAllShgm.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
@@ -499,7 +471,7 @@ public class ShgmServlet extends HttpServlet {
 			ShgmVO shgmvo = (ShgmVO) session.getAttribute("infoshgm");
 			session.setAttribute("infoshgm", shgmvo);
 
-//			try {
+			try {
 				String shgmno = request.getParameter("shgmno");
 
 				// 從會員資料取得，不需要錯誤處理
@@ -556,14 +528,14 @@ public class ShgmServlet extends HttpServlet {
 					return;
 				}
 
-				ShgmService shgmsvc = new ShgmService();
-				shgmsvc.dealingshgm(shgmno, buyerno, take, takernm, takerph, address, 0, 1, 1);
-
 				MbrpfService mbrsvc = new MbrpfService();
 				// 取出買家的mbrpfvo以便對points做更動
-				MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(buyerno);
+				MbrpfVO mbrpfVO = mbrsvc.getOneMbrpf(buyerno);
 				// 把買家原本的points扣掉價格
-				mbrsvc.update(buyerno, mbrpfvo.getPoints() - shgmvo.getPrice());
+				mbrpfVO.setPoints(mbrpfVO.getPoints() - shgmvo.getPrice());
+				
+				ShgmService shgmsvc = new ShgmService();
+				shgmsvc.buyerupdate(shgmno, buyerno, takerph, takernm, takerph, address, 0, 1, 1, mbrpfVO);
 				
 				//回到infoPage的JSTL判斷用的
 				shgmvo.setBoxstatus(0);
@@ -575,12 +547,12 @@ public class ShgmServlet extends HttpServlet {
 				String url = "/front-end/shgm/infoPage.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
-//			} catch (Exception e) {
-//				errormap.put((long) 5, "無法購買此商品");
-//				String url = "/front-end/shgm/buyPage.jsp";
-//				RequestDispatcher failedview = request.getRequestDispatcher(url);
-//				failedview.forward(request, response);
-//			}
+			} catch (Exception e) {
+				errormap.put((long) 5, "無法購買此商品");
+				String url = "/front-end/shgm/buyPage.jsp";
+				RequestDispatcher failedview = request.getRequestDispatcher(url);
+				failedview.forward(request, response);
+			}
 		}
 
 		if ("buyerUpdate".equals(action)) {
@@ -647,10 +619,8 @@ public class ShgmServlet extends HttpServlet {
 				}
 
 				ShgmService shgmsvc = new ShgmService();
-				shgmvo = shgmsvc.getOneShgm(shgmno);
-				shgmsvc.dealingshgm(shgmno, buyerno, take, takernm, takerph, address, shgmvo.getBoxstatus(),
-						shgmvo.getPaystatus(), shgmvo.getStatus());
-
+				shgmsvc.buyerupdate(shgmno, buyerno, takerph, takernm, takerph, address, 0, 1, 1);
+				
 				String success = "success";
 				request.setAttribute("updateSuccess", success);
 
@@ -741,10 +711,12 @@ public class ShgmServlet extends HttpServlet {
 				if (request.getParameter("status") != null) {
 
 					Integer status = new Integer(request.getParameter("status"));
-					// 將買家資料清空，回到待上架狀態
+					//status狀態改為0，回到待上架狀態
 					if (status == 3) {
-						shgmsvc.updateShgm(shgmno, shgmvo.getSellerno(), null, shgmvo.getShgmname(), shgmvo.getPrice(),
-								shgmvo.getIntro(), shgmvo.getImg(), 0, null, null, null, null, 0, 0, 0);
+						
+						shgmsvc.buyerupdate(shgmno, null, null, null, null, null, 0, 0, 0);
+//						shgmsvc.updateShgm(shgmno, shgmvo.getSellerno(), null, shgmvo.getShgmname(), shgmvo.getPrice(),
+//								shgmvo.getIntro(), shgmvo.getImg(), 0, null, null, null, null, 0, 0, 0);
 
 						jsonobj.put("shgmno", shgmno);
 						jsonobj.put("shgmname", shgmvo.getShgmname());
@@ -753,11 +725,12 @@ public class ShgmServlet extends HttpServlet {
 					// 已送達，買家確認收貨，下訂改成完成
 					if (status == 2) {
 
-						// 增加賣家點數
-						MbrpfService mbrsvc = new MbrpfService();
+							// 增加賣家點數
 						String sellerno = shgmvo.getSellerno();
-						MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(sellerno);
-						mbrsvc.update(sellerno, mbrpfvo.getPoints() + shgmvo.getPrice());
+						MbrpfService mbrpfsvc = new MbrpfService();					
+						MbrpfVO mbrpfVO = mbrpfsvc.getOneMbrpf(sellerno);
+						mbrpfVO.setPoints(mbrpfVO.getPoints() + shgmvo.getPrice());
+						shgmsvc.sellerUpdate(shgmno, shgmvo.getShgmname(), shgmvo.getPrice(), shgmvo.getIntro(), shgmvo.getImg(), mbrpfVO);
 
 						java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 						Timestamp uptimeCT = shgmsvc.getOneShgm(shgmno).getUptime();
@@ -775,14 +748,14 @@ public class ShgmServlet extends HttpServlet {
 					}
 					// 不論訂單狀態，買家取消訂單
 					if (status == 8) {
-						shgmsvc.statusUpdate(3, shgmno);
-
+						
 						// 退款給買家
-						MbrpfService mbrsvc = new MbrpfService();
-						String buyerno = shgmvo.getBuyerno();
-						MbrpfVO mbrpfvo = mbrsvc.getOneMbrpf(buyerno);
-						mbrsvc.update(buyerno, mbrpfvo.getPoints() + shgmvo.getPrice());
-
+						String buyerno = shgmvo.getBuyerno();					
+						MbrpfService mbrpfsvc = new MbrpfService();
+						MbrpfVO mbrpfVO  = mbrpfsvc.getOneMbrpf(buyerno);
+						mbrpfVO.setPoints(mbrpfVO.getPoints() + shgmvo.getPrice());
+						shgmsvc.buyerupdate(shgmno, null, null, null, null, null, 0, 0, 3, mbrpfVO);
+						
 						jsonobj.put("shgmno", shgmno);
 						jsonobj.put("shgmname", shgmvo.getShgmname());
 						jsonobj.put("price", shgmvo.getPrice());
@@ -865,12 +838,12 @@ public class ShgmServlet extends HttpServlet {
 				request.setAttribute("cityarea", hashmap);
 
 				request.setAttribute("shgmvo", shgmvo);
-				//來自後台的修改請求
+				// 來自台的修改請求
 				if (requestURL.equals("/back-end/shgm/listAllShgm.jsp")
 						|| requestURL.equals("/back-end/shgm/shgm_select_page.jsp")) {
 					url = "/back-end/shgm/updateShgm.jsp";
-					//來自前台買家的修改請求
-				} else if(requestURL.equals("/front-end/shgm/myShgm.jsp"))
+					// 來自台買家的修改請求
+				} else if (requestURL.equals("/front-end/shgm/myShgm.jsp"))
 					url = "/front-end/shgm/buyerUpdate.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
@@ -880,7 +853,7 @@ public class ShgmServlet extends HttpServlet {
 				if (requestURL.equals("/back-end/shgm/listAllShgm.jsp")
 						|| requestURL.equals("/back-end/shgm/shgm_select_page.jsp")) {
 					url = "/back-end/shgm/shgm_select_page.jsp";
-				} else if(requestURL.equals("/front-end/shgm/myShgm.jsp"))
+				} else if (requestURL.equals("/front-end/shgm/myShgm.jsp"))
 					url = "/front-end/shgm/myShgm.jsp";
 				RequestDispatcher failureView = request.getRequestDispatcher(url);
 				failureView.forward(request, response);
@@ -891,6 +864,7 @@ public class ShgmServlet extends HttpServlet {
 
 			List<String> errormsgs = new LinkedList<String>();
 			request.setAttribute("errormsgs", errormsgs);
+
 			
 			String requestURL = request.getParameter("requestURL");
 			request.setAttribute("requestURL", requestURL);
@@ -998,6 +972,7 @@ public class ShgmServlet extends HttpServlet {
 						errormsgs.add("取貨人電話：不得為空");
 					} else if (!takerph.trim().matches(takerphreg))
 						errormsgs.add("取貨人電話：請輸入符合格式的電話號碼");
+
 					
 					String adsReg = "^[(\u4e00-\u9fa5)(\\w)]{5,40}$";
 					if (!ads.trim().matches(adsReg))
@@ -1087,8 +1062,8 @@ public class ShgmServlet extends HttpServlet {
 				}
 
 				String url = null;
-				if(whichPage != null) {
-					url= requestURL+"?whichPage="+whichPage;
+				if (whichPage != null) {
+					url = requestURL + "?whichPage=" + whichPage;
 				} else {
 					url = "/back-end/shgm/listAllShgm.jsp";
 				}

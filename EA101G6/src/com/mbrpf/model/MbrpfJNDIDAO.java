@@ -8,7 +8,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-public class MbrpfDAO implements MbrpfDAO_interface {
+public class MbrpfJNDIDAO implements MbrpfDAO_interface {
 
 	// 一個應用程式中,針對一個資料庫 ,共用一個DataSource即可
 	private static DataSource ds = null;
@@ -269,6 +269,7 @@ public class MbrpfDAO implements MbrpfDAO_interface {
 			con = ds.getConnection();
 			pstmt = con.prepareStatement(GET_ALL_STMT);
 			rs = pstmt.executeQuery();
+
 			while (rs.next()) {
 				// mbrpfVO 也稱為 Domain objects
 				mbrpfVO = new MbrpfVO();
@@ -286,7 +287,7 @@ public class MbrpfDAO implements MbrpfDAO_interface {
 				mbrpfVO.setPoints(rs.getInt("points"));
 				mbrpfVO.setStatus(rs.getInt("status"));
 				mbrpfVO.setRatedtotal(rs.getInt("ratedtotal"));
-				mbrpfVO.setStartotal(rs.getInt("startotal"));
+				mbrpfVO.setStartotal(rs.getInt("satrtotal"));
 				mbrpfVO.setUnattend(rs.getInt("unattend"));
 				mbrpfVO.setTtattend(rs.getInt("ttattend"));
 				list.add(mbrpfVO); // Store the row in the list
