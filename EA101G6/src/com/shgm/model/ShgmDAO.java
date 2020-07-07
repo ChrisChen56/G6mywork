@@ -247,6 +247,9 @@ public class ShgmDAO implements ShgmDAO_interface {
 		PreparedStatement pstmt = null;
 		try {
 			con = ds.getConnection();
+			
+			con.setAutoCommit(false);
+			
 			pstmt = con.prepareStatement(UPDATE_STMT);
 
 			pstmt.setString(1, shgmvo.getSellerno());
@@ -266,11 +269,79 @@ public class ShgmDAO implements ShgmDAO_interface {
 			pstmt.setInt(13, shgmvo.getPaystatus());
 			pstmt.setInt(14, shgmvo.getStatus());
 			pstmt.setString(15, shgmvo.getShgmno());
-
 			pstmt.executeUpdate();
+			
+			ShgmService shgmsvc = new ShgmService();
+			shgmsvc.timeUpdate(shgmvo, con);
 
+			con.commit();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void update(ShgmVO shgmvo, MbrpfVO mbrpfVO) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		try {
+			con = ds.getConnection();
+			
+			con.setAutoCommit(false);
+			
+			pstmt = con.prepareStatement(UPDATE_STMT);
+
+			pstmt.setString(1, shgmvo.getSellerno());
+			pstmt.setString(2, shgmvo.getBuyerno());
+			pstmt.setString(3, shgmvo.getShgmname());
+			pstmt.setInt(4, shgmvo.getPrice());
+			Clob clob = con.createClob();
+			clob.setString(1, shgmvo.getIntro());
+			pstmt.setClob(5, clob);
+			pstmt.setBytes(6, shgmvo.getImg());
+			pstmt.setInt(7, shgmvo.getUpcheck());
+			pstmt.setString(8, shgmvo.getTake());
+			pstmt.setString(9, shgmvo.getTakernm());
+			pstmt.setString(10, shgmvo.getTakerph());
+			pstmt.setString(11, shgmvo.getAddress());
+			pstmt.setInt(12, shgmvo.getBoxstatus());
+			pstmt.setInt(13, shgmvo.getPaystatus());
+			pstmt.setInt(14, shgmvo.getStatus());
+			pstmt.setString(15, shgmvo.getShgmno());
+			pstmt.executeUpdate();
+			
+			MbrpfService mbrpfsvc = new MbrpfService();
+			mbrpfsvc.updateMbrpf(mbrpfVO, con);
+			
+			ShgmService shgmsvc = new ShgmService();
+			shgmsvc.timeUpdate(shgmvo, con);
+
+			con.commit();
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 		} finally {
 			if (pstmt != null) {
 				try {
@@ -570,7 +641,6 @@ public class ShgmDAO implements ShgmDAO_interface {
 		PreparedStatement pstmt = null;
 		Timestamp soldtime = new Timestamp(System.currentTimeMillis());
 		try {
-			con = ds.getConnection();
 			pstmt = con.prepareStatement(SOLDTIME_CT_STMT);
 
 			pstmt.setString(1, shgmno);
@@ -578,7 +648,11 @@ public class ShgmDAO implements ShgmDAO_interface {
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 		} finally {
 			if (pstmt != null)
 				try {
@@ -586,13 +660,6 @@ public class ShgmDAO implements ShgmDAO_interface {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 		return soldtime;
 	}
@@ -601,7 +668,6 @@ public class ShgmDAO implements ShgmDAO_interface {
 	public void soldtimeNU(String shgmno, Connection con) {
 		PreparedStatement pstmt = null;
 		try {
-			con = ds.getConnection();
 			pstmt = con.prepareStatement(SOLDTIME_NU_STMT);
 
 			pstmt.setString(1, shgmno);
@@ -609,7 +675,11 @@ public class ShgmDAO implements ShgmDAO_interface {
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 		} finally {
 			if (pstmt != null)
 				try {
@@ -617,13 +687,6 @@ public class ShgmDAO implements ShgmDAO_interface {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 
@@ -632,7 +695,6 @@ public class ShgmDAO implements ShgmDAO_interface {
 		PreparedStatement pstmt = null;
 		Timestamp uptime = new Timestamp(System.currentTimeMillis());
 		try {
-			con = ds.getConnection();
 			pstmt = con.prepareStatement(UPTIME_CT_STMT);
 
 			pstmt.setString(1, shgmno);
@@ -640,7 +702,11 @@ public class ShgmDAO implements ShgmDAO_interface {
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 		} finally {
 			if (pstmt != null)
 				try {
@@ -648,13 +714,6 @@ public class ShgmDAO implements ShgmDAO_interface {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 		return uptime;
 	}
@@ -663,7 +722,6 @@ public class ShgmDAO implements ShgmDAO_interface {
 	public void uptimeNU(String shgmno, Connection con) {
 		PreparedStatement pstmt = null;
 		try {
-			con = ds.getConnection();
 			pstmt = con.prepareStatement(UPTIME_NU_STMT);
 
 			pstmt.setString(1, shgmno);
@@ -671,7 +729,11 @@ public class ShgmDAO implements ShgmDAO_interface {
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 		} finally {
 			if (pstmt != null)
 				try {
@@ -679,13 +741,6 @@ public class ShgmDAO implements ShgmDAO_interface {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 

@@ -218,7 +218,7 @@ public class MbrpfDAO implements MbrpfDAO_interface {
 				mbrpfVO.setPoints(rs.getInt("points"));
 				mbrpfVO.setStatus(rs.getInt("status"));
 				mbrpfVO.setRatedtotal(rs.getInt("ratedtotal"));
-				mbrpfVO.setStartotal(rs.getInt("satrtotal"));
+				mbrpfVO.setStartotal(rs.getInt("startotal"));
 				mbrpfVO.setUnattend(rs.getInt("unattend"));
 				mbrpfVO.setTtattend(rs.getInt("ttattend"));
 				

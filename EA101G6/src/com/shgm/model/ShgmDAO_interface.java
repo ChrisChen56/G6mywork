@@ -10,6 +10,7 @@ public interface ShgmDAO_interface {
 	public void insertNocheck(ShgmVO shgmvo);
 	public void sellshgm(ShgmVO shgmvo);
 	public void update(ShgmVO shgmvo);
+	public void update(ShgmVO shgmvo, MbrpfVO mbrpfVO);
 	public void upcheckUpdate(Integer upcheck, String shgmno);
 	public void boxstatusUpdate(Integer boxstatus, String shgmno);
 	public void statusUpdate(Integer status, String shgmno);

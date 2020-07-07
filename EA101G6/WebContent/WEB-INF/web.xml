@@ -16,6 +16,14 @@
   	<res-auth>Container</res-auth>
   </resource-ref>
   <servlet>
+  	<servlet-name>MbrpfServlet</servlet-name>
+  	<servlet-class>com.mbrpf.controller.MbrpfServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>MbrpfServlet</servlet-name>
+  	<url-pattern>/front-end/mbrpf/mbrpf.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>ShgmServlet</servlet-name>
     <servlet-class>com.shgm.controller.ShgmServlet</servlet-class>
   </servlet>

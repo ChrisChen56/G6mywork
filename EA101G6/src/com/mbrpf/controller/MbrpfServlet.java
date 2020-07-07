@@ -519,7 +519,7 @@ if("tryLogin".equals(action)) {// 來自login.jsp的請求
 			if(password.equals(mbrpwd)) {//帳號正確，取出的密碼也和輸入的一樣
 				HttpSession session =req.getSession();
 				session.setAttribute("account", account);//將帳號存進session，之後可以藉由這個取得他所擁有的權限
-				session.setAttribute("mbrpfVO", mbrpfVO);
+				session.setAttribute("member", mbrpfVO);
 		/***************************3.刪除完成,準備轉交(Send the Success view)***********/
 				try {//查看是否有來源網頁
 					String location = (String)session.getAttribute("location");
@@ -533,7 +533,7 @@ if("tryLogin".equals(action)) {// 來自login.jsp的請求
 					return;
 				}
 				//沒有來源網頁的話就去首頁
-				res.sendRedirect(req.getContextPath()+"/front-end/mbrpf/select_page.jsp");
+				res.sendRedirect(req.getContextPath()+"/front-end/shgm/mainPage.jsp");
 				return;
 			}else {
 				errorMsgs.add("帳號、密碼錯誤");
