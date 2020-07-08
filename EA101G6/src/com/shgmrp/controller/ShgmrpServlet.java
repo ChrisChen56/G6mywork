@@ -176,12 +176,6 @@ public class ShgmrpServlet extends HttpServlet {
 				ShgmrpService shgmrpsvc = new ShgmrpService();
 				shgmrpvo = shgmrpsvc.addShgmrp(shgmno, suiterno, detail, status);
 				
-				//新增同時檢舉審核通過，下架市集商品
-				if(status == 1) {
-					shgmsvc = new ShgmService();
-					shgmsvc.upcheckUpdate(2, shgmno);
-				}
-
 				String url = "/back-end/shgmrp/listAllShgmrp.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
@@ -272,17 +266,6 @@ public class ShgmrpServlet extends HttpServlet {
 				ShgmrpService shgmrpsvc = new ShgmrpService();
 				shgmrpvo = shgmrpsvc.updateShgmrp(shgmrpno, shgmno, suiterno, detail, status);
 				
-				//確定檢舉，下架市集商品
-				if(status == 1) {
-					shgmsvc = new ShgmService();
-					shgmsvc.upcheckUpdate(2, shgmno);
-					//取消檢舉，上架市集商品，更新上架時間
-				} else if(status == 2) {
-					shgmsvc = new ShgmService();
-					shgmsvc.upcheckUpdate(1, shgmno);
-					shgmsvc.uptimeCT(shgmno);
-				}
-
 				String url = "/back-end/shgmrp/listAllShgmrp.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);

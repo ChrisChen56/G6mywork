@@ -2,6 +2,8 @@ package com.shgmrp.model;
 
 import javax.sql.*;
 
+import com.shgm.model.ShgmService;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,8 +26,6 @@ public class ShgmrpDAO implements ShgmrpDAO_interface{
 			"INSERT INTO SHGMRP(shgmrpno,shgmno,suiterno,detail,status) VALUES ('CB'||LPAD(shgmrp_seq.NEXTVAL,5,'0'),?,?,?,?)";
 		private static final String UPDATE_STMT = 
 			"UPDATE SHGMRP SET shgmno=?, suiterno=?, detail=?, status=? WHERE shgmrpno=?";
-		private static final String UPDATE_STATUS_STMT = 
-			"UPDATE SHGMRP SET status=? WHERE shgmrpno=?";
 		private static final String DELETE_STMT = 
 			"DELETE FROM SHGMRP WHERE shgmrpno = ?";
 		private static final String GET_ONE_STMT = 
@@ -48,17 +48,27 @@ public class ShgmrpDAO implements ShgmrpDAO_interface{
 			PreparedStatement pstmt = null;
 			try {
 				con = ds.getConnection();
+				con.setAutoCommit(false);
+				
 				pstmt = con.prepareStatement(INSERT_STMT);
 				
 				pstmt.setString(1, shgmrpvo.getShgmno());
 				pstmt.setString(2, shgmrpvo.getSuiterno());
 				pstmt.setString(3, shgmrpvo.getDetail());
 				pstmt.setInt(4, shgmrpvo.getStatus());
-				
 				pstmt.executeUpdate();
 				
+				ShgmService shgmsvc = new ShgmService();
+				ShgmrpService shgmrpsvc = new ShgmrpService();
+				shgmrpsvc.updateUpcheck(shgmsvc.getOneShgm(shgmrpvo.getShgmno()), shgmrpvo.getStatus(), con);
+				
+				con.commit();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				try {
+					con.rollback();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
 			} finally {
 				if(pstmt != null)
 					try {
@@ -81,6 +91,8 @@ public class ShgmrpDAO implements ShgmrpDAO_interface{
 			PreparedStatement pstmt = null;
 			try {
 				con = ds.getConnection();
+				con.setAutoCommit(false);
+				
 				pstmt = con.prepareStatement(UPDATE_STMT);
 				
 				pstmt.setString(1, shgmrpvo.getShgmno());
@@ -88,11 +100,19 @@ public class ShgmrpDAO implements ShgmrpDAO_interface{
 				pstmt.setString(3, shgmrpvo.getDetail());
 				pstmt.setInt(4, shgmrpvo.getStatus());
 				pstmt.setString(5, shgmrpvo.getShgmrpno());
-				
 				pstmt.executeUpdate();
 				
+				ShgmService shgmsvc = new ShgmService();
+				ShgmrpService shgmrpsvc = new ShgmrpService();
+				shgmrpsvc.updateUpcheck(shgmsvc.getOneShgm(shgmrpvo.getShgmno()), shgmrpvo.getStatus(), con);
+				
+				con.commit();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				try {
+					con.rollback();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
 			} finally {
 				if(pstmt != null)
 					try {
@@ -109,36 +129,6 @@ public class ShgmrpDAO implements ShgmrpDAO_interface{
 			}
 		}
 
-		public void updateStatus(Integer status, String shgmrpno) {
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			try {
-				con = ds.getConnection();
-				pstmt = con.prepareStatement(UPDATE_STATUS_STMT);
-				
-				pstmt.setInt(1, status);
-				pstmt.setString(2, shgmrpno);
-				
-				pstmt.executeUpdate();
-				
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				if(pstmt != null)
-					try {
-						pstmt.close();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-				if(con != null)
-					try {
-						con.close();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-			}
-		}
-		
 		public void delete(String shgmrpno) {
 			Connection con = null;
 			PreparedStatement pstmt = null;

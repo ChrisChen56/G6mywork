@@ -10,16 +10,22 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mbrpf.model.MbrpfVO;
+
 public class ShgmJDBCDAO implements ShgmDAO_interface {
 	String driver = "oracle.jdbc.driver.OracleDriver";
 	String url = "jdbc:oracle:thin:@localhost:1521:XE";
 	String user = "EA101";
 	String password = "123456";
+
 //	public static void main(String[] args) {
 //		ShgmJDBCDAO shgm = new ShgmJDBCDAO();
-//		ShgmVO vo = shgm.getOneForInfo("CA00005");
-//		System.out.println(vo.getIntro());
+//		List<ShgmVO> list = shgm.searchForMain("桌");
+//		for (ShgmVO shgmvo : list) {
+//			System.out.println(shgmvo.getShgmname());
+//		}
 //	}
+
 	private static final String INSERT_NOCHECK_STMT = "INSERT INTO SHGM "
 			+ "(shgmno,sellerno,buyerno,shgmname,price,intro,img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime) "
 			+ "VALUES" + "('CA'||LPAD(shgame_seq.NEXTVAL,5,'0'),?,?,?,?,?,?,?,null,?,?,?,?,?,?,?,null)";
@@ -35,41 +41,29 @@ public class ShgmJDBCDAO implements ShgmDAO_interface {
 			+ "VALUES" + "('CA'||LPAD(shgame_seq.NEXTVAL,5,'0'),?,null,?,?,?,?,0,null,null,null,null,null,0,0,0,null)";
 	private static final String UPDATE_STMT = "UPDATE SHGM SET sellerno=?,buyerno=?,shgmname=?,price=?,intro=?,img=?,upcheck=?,"
 			+ "take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=? WHERE shgmno=?";
-	private static final String UPCHECK_UPDATE_STMT = 
-			"UPDATE SHGM SET upcheck=? where shgmno=?";
-	private static final String BOXSTATUS_UPDATE_STMT =
-			"UPDATE SHGM SET boxstatus=? where shgmno=?";
-	private static final String STATUS_UPDATE_STMT = 
-			"UPDATE SHGM SET status=? where shgmno=?";
-	private static final String SELLER_UPDATE_STMT = 
-			"UPDATE SHGM SET shgmname=?,price=?,intro=?,img=? WHERE shgmno=?";
-	private static final String DEALING_STMT = 
-			"UPDATE SHGM SET buyerno=?,take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=? WHERE shgmno=?";
-	private static final String UPTIME_CT_STMT = 
-			"UPDATE SHGM SET uptime=CURRENT_TIMESTAMP WHERE shgmno=?";
-	private static final String SOLDTIME_CT_STMT = 
-			"UPDATE SHGM SET soldtime=CURRENT_TIMESTAMP WHERE shgmno=?";
-	private static final String UPTIME_NU_STMT = 
-			"UPDATE SHGM SET uptime=null WHERE shgmno=?";
-	private static final String SOLDTIME_NU_STMT = 
-			"UPDATE SHGM SET soldtime=null WHERE shgmno=?";
-	private static final String DELETE_STMT = 
-			"DELETE FROM SHGM WHERE shgmno=?";
-	private static final String GET_ONE_STMT = 
-			"SELECT * FROM SHGM WHERE shgmno=?";
-	private static final String GET_ONE_INFO = 
-			"SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
+	private static final String UPCHECK_UPDATE_STMT = "UPDATE SHGM SET upcheck=? where shgmno=?";
+	private static final String BOXSTATUS_UPDATE_STMT = "UPDATE SHGM SET boxstatus=? where shgmno=?";
+	private static final String STATUS_UPDATE_STMT = "UPDATE SHGM SET status=? where shgmno=?";
+	private static final String SELLER_UPDATE_STMT = "UPDATE SHGM SET shgmname=?,price=?,intro=?,img=? WHERE shgmno=?";
+	private static final String DEALING_STMT = "UPDATE SHGM SET buyerno=?,take=?,takernm=?,takerph=?,address=?,boxstatus=?,paystatus=?,status=? WHERE shgmno=?";
+	private static final String UPTIME_CT_STMT = "UPDATE SHGM SET uptime=CURRENT_TIMESTAMP WHERE shgmno=?";
+	private static final String SOLDTIME_CT_STMT = "UPDATE SHGM SET soldtime=CURRENT_TIMESTAMP WHERE shgmno=?";
+	private static final String UPTIME_NU_STMT = "UPDATE SHGM SET uptime=null WHERE shgmno=?";
+	private static final String SOLDTIME_NU_STMT = "UPDATE SHGM SET soldtime=null WHERE shgmno=?";
+	private static final String DELETE_STMT = "DELETE FROM SHGM WHERE shgmno=?";
+	private static final String GET_ONE_STMT = "SELECT * FROM SHGM WHERE shgmno=?";
+	private static final String GET_ONE_INFO = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
 			+ " FROM SHGM WHERE shgmno=?";
-	private static final String GET_ALL_STMT = 
-			"SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
+	private static final String GET_ALL_STMT = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
 			+ " FROM SHGM ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
 	private static final String GET_ALL_FOR_SELLER_STMT = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
 			+ " FROM SHGM WHERE sellerno=? ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
 	private static final String GET_ALL_FOR_BUYER_STMT = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
 			+ " FROM SHGM WHERE buyerno=? ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
-	private static final String MAINPAGE_GETALL_STMT = 
-			"SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
+	private static final String MAINPAGE_GETALL_STMT = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
 			+ " FROM SHGM WHERE (upcheck=1 AND boxstatus=0 AND paystatus=0 AND status=0) ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
+	private static final String SEARCH_STMT = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
+			+ " FROM SHGM WHERE (upcheck=1 AND boxstatus=0 AND paystatus=0 AND status=0 AND shgmname LIKE ?)";
 
 	@Override
 	public void insertSold(ShgmVO shgmvo) {
@@ -222,47 +216,6 @@ public class ShgmJDBCDAO implements ShgmDAO_interface {
 	}
 
 	@Override
-	public void sellshgm(ShgmVO shgmvo) {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		try {
-			Class.forName(driver);
-			con = DriverManager.getConnection(url, user, password);
-			pstmt = con.prepareStatement(SELLER_STMT);
-
-			pstmt.setString(1, shgmvo.getSellerno());
-			pstmt.setString(2, shgmvo.getShgmname());
-			pstmt.setInt(3, shgmvo.getPrice());
-			Clob clob = con.createClob();
-			clob.setString(1, shgmvo.getIntro());
-			pstmt.setClob(4, clob);
-			pstmt.setBytes(5, shgmvo.getImg());
-
-			pstmt.executeUpdate();
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
-	@Override
 	public void update(ShgmVO shgmvo) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -314,215 +267,34 @@ public class ShgmJDBCDAO implements ShgmDAO_interface {
 	}
 	
 	@Override
-	public void upcheckUpdate(Integer upcheck, String shgmno) {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		try {
-			Class.forName(driver);
-			con = DriverManager.getConnection(url, user, password);
-			pstmt = con.prepareStatement(UPCHECK_UPDATE_STMT);
-
-			pstmt.setInt(1, upcheck);
-			pstmt.setString(2, shgmno);
-			
-			pstmt.executeUpdate();
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	
-	@Override
-	public void boxstatusUpdate(Integer boxstatus, String shgmno) {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		try {
-			Class.forName(driver);
-			con = DriverManager.getConnection(url, user, password);
-			pstmt = con.prepareStatement(BOXSTATUS_UPDATE_STMT);
-
-			pstmt.setInt(1, boxstatus);
-			pstmt.setString(2, shgmno);
-			
-			pstmt.executeUpdate();
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	
-	@Override
-	public void statusUpdate(Integer status, String shgmno) {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		try {
-			Class.forName(driver);
-			con = DriverManager.getConnection(url, user, password);
-			pstmt = con.prepareStatement(STATUS_UPDATE_STMT);
-
-			pstmt.setInt(1, status);
-			pstmt.setString(2, shgmno);
-			
-			pstmt.executeUpdate();
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+	public void update(ShgmVO shgmvo, MbrpfVO mbrpfVO) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public void sellerUpdate(ShgmVO shgmvo) {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		try {
-			Class.forName(driver);
-			con = DriverManager.getConnection(url, user, password);
-			pstmt = con.prepareStatement(SELLER_UPDATE_STMT);
-
-			pstmt.setString(1, shgmvo.getShgmname());
-			pstmt.setInt(2, shgmvo.getPrice());
-			Clob clob = con.createClob();
-			clob.setString(1, shgmvo.getIntro());
-			pstmt.setClob(3, clob);
-			pstmt.setBytes(4, shgmvo.getImg());
-			pstmt.setString(5, shgmvo.getShgmno());
-
-			pstmt.executeUpdate();
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+	public void update(ShgmVO shgmvo, Connection con) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public void dealingshgm(ShgmVO shgmvo) {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		try {
-			Class.forName(driver);
-			con = DriverManager.getConnection(url, user, password);
-			pstmt = con.prepareStatement(DEALING_STMT);
-
-			pstmt.setString(1, shgmvo.getBuyerno());
-			pstmt.setString(2, shgmvo.getTake());
-			pstmt.setString(3, shgmvo.getTakernm());
-			pstmt.setString(4, shgmvo.getTakerph());
-			pstmt.setString(5, shgmvo.getAddress());
-			pstmt.setInt(6, shgmvo.getBoxstatus());
-			pstmt.setInt(7, shgmvo.getPaystatus());
-			pstmt.setInt(8, shgmvo.getStatus());
-			pstmt.setString(9, shgmvo.getShgmno());
-
-			pstmt.executeUpdate();
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
-	@Override
-	public Timestamp soldtimeCT(String shgmno) {
-		Connection con = null;
+	public Timestamp soldtimeCT(String shgmno, Connection con) {
 		PreparedStatement pstmt = null;
 		Timestamp soldtime = new Timestamp(System.currentTimeMillis());
 		try {
-			Class.forName(driver);
-			con = DriverManager.getConnection(url, user, password);
 			pstmt = con.prepareStatement(SOLDTIME_CT_STMT);
 
 			pstmt.setString(1, shgmno);
 
 			pstmt.executeUpdate();
 
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 		} finally {
 			if (pstmt != null)
 				try {
@@ -530,35 +302,27 @@ public class ShgmJDBCDAO implements ShgmDAO_interface {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 		return soldtime;
 	}
 
 	@Override
-	public Timestamp uptimeCT(String shgmno) {
-		Connection con = null;
+	public Timestamp uptimeCT(String shgmno, Connection con) {
 		PreparedStatement pstmt = null;
 		Timestamp uptime = new Timestamp(System.currentTimeMillis());
 		try {
-			Class.forName(driver);
-			con = DriverManager.getConnection(url, user, password);
 			pstmt = con.prepareStatement(UPTIME_CT_STMT);
 
 			pstmt.setString(1, shgmno);
 
 			pstmt.executeUpdate();
 
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 		} finally {
 			if (pstmt != null)
 				try {
@@ -566,34 +330,26 @@ public class ShgmJDBCDAO implements ShgmDAO_interface {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 		return uptime;
 	}
 
 	@Override
-	public void soldtimeNU(String shgmno) {
-		Connection con = null;
+	public void soldtimeNU(String shgmno, Connection con) {
 		PreparedStatement pstmt = null;
 		try {
-			Class.forName(driver);
-			con = DriverManager.getConnection(url, user, password);
 			pstmt = con.prepareStatement(SOLDTIME_NU_STMT);
 
 			pstmt.setString(1, shgmno);
 
 			pstmt.executeUpdate();
 
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 		} finally {
 			if (pstmt != null)
 				try {
@@ -601,33 +357,25 @@ public class ShgmJDBCDAO implements ShgmDAO_interface {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 
 	@Override
-	public void uptimeNU(String shgmno) {
-		Connection con = null;
+	public void uptimeNU(String shgmno, Connection con) {
 		PreparedStatement pstmt = null;
 		try {
-			Class.forName(driver);
-			con = DriverManager.getConnection(url, user, password);
 			pstmt = con.prepareStatement(UPTIME_NU_STMT);
 
 			pstmt.setString(1, shgmno);
 
 			pstmt.executeUpdate();
 
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 		} finally {
 			if (pstmt != null)
 				try {
@@ -635,16 +383,9 @@ public class ShgmJDBCDAO implements ShgmDAO_interface {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
-	
+
 	@Override
 	public void delete(String shgmno) {
 		Connection con = null;
@@ -866,7 +607,7 @@ public class ShgmJDBCDAO implements ShgmDAO_interface {
 		}
 		return list;
 	}
-	
+
 	@Override
 	public List<ShgmVO> allForSeller(String sellerno) {
 		Connection con = null;
@@ -878,7 +619,7 @@ public class ShgmJDBCDAO implements ShgmDAO_interface {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url, user, password);
 			pstmt = con.prepareStatement(GET_ALL_FOR_SELLER_STMT);
-			
+
 			pstmt.setString(1, sellerno);
 
 			rs = pstmt.executeQuery();
@@ -931,7 +672,7 @@ public class ShgmJDBCDAO implements ShgmDAO_interface {
 		}
 		return list;
 	}
-	
+
 	@Override
 	public List<ShgmVO> allForBuyer(String Buyerno) {
 		Connection con = null;
@@ -945,7 +686,7 @@ public class ShgmJDBCDAO implements ShgmDAO_interface {
 			pstmt = con.prepareStatement(GET_ALL_FOR_BUYER_STMT);
 
 			pstmt.setString(1, Buyerno);
-			
+
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
@@ -1060,4 +801,69 @@ public class ShgmJDBCDAO implements ShgmDAO_interface {
 		}
 		return list;
 	}
+
+	@Override
+	public List<ShgmVO> searchForMain(String word) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<ShgmVO> list = new ArrayList<ShgmVO>();
+
+		try {
+			Class.forName(driver);
+			con = DriverManager.getConnection(url, user, password);
+			pstmt = con.prepareStatement(SEARCH_STMT);
+			
+			pstmt.setString(1, "%"+word+"%");
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				ShgmVO shgmvo = new ShgmVO();
+				shgmvo.setShgmno(rs.getString(1));
+				shgmvo.setSellerno(rs.getString(2));
+				shgmvo.setBuyerno(rs.getString(3));
+				shgmvo.setShgmname(rs.getString(4));
+				shgmvo.setPrice(rs.getInt(5));
+				Clob clob = rs.getClob(6);
+				String intro = clob.getSubString(1, (int) clob.length());
+				shgmvo.setIntro(intro);
+				shgmvo.setImg(rs.getBytes(7));
+				shgmvo.setUpcheck(rs.getInt(8));
+				shgmvo.setUptime(rs.getTimestamp(9));
+				shgmvo.setTake(rs.getString(10));
+				shgmvo.setTakernm(rs.getString(11));
+				shgmvo.setTakerph(rs.getString(12));
+				shgmvo.setAddress(rs.getString(13));
+				shgmvo.setBoxstatus(rs.getInt(14));
+				shgmvo.setPaystatus(rs.getInt(15));
+				shgmvo.setStatus(rs.getInt(16));
+				shgmvo.setSoldtime(rs.getTimestamp(17));
+
+				list.add(shgmvo);
+			}
+
+			rs.close();
+
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null)
+				try {
+					pstmt.close();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return list;
+	}
+
 }

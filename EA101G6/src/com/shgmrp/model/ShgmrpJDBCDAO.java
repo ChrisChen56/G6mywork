@@ -15,8 +15,6 @@ public class ShgmrpJDBCDAO implements ShgmrpDAO_interface{
 	
 	private static final String INSERT_STMT = 
 		"INSERT INTO (shgmrpno,shgmno,suiterno,detail,status) VALUES ('CB'||LPAD(shgmrp_seq.NEXTVAL,5,'0'), ?, ?, ?, ?)";
-	private static final String UPDATE_STATUS_STMT = 
-		"UPDATE SHGMRP SET status=? WHERE shgmrpno=?";
 	private static final String UPDATE_STMT = 
 		"UPDATE SHGMRP SET shgmno=?, suiterno=?, detail=?, status=? WHERE shgmrpno=?";
 	private static final String DELETE_STMT = 
@@ -108,39 +106,6 @@ public class ShgmrpJDBCDAO implements ShgmrpDAO_interface{
 		}
 	}
 	
-	public void updateStatus(Integer status, String shgmrpno) {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		try {
-			Class.forName(driver);
-			con = DriverManager.getConnection(url, user, password);
-			pstmt = con.prepareStatement(UPDATE_STATUS_STMT);
-			
-			pstmt.setInt(1, status);
-			pstmt.setString(2, shgmrpno);
-			
-			pstmt.executeUpdate();
-			
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if(pstmt != null)
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			if(con != null)
-				try {
-					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-		}
-	}
-
 	public void delete(String shgmrpno) {
 		Connection con = null;
 		PreparedStatement pstmt = null;

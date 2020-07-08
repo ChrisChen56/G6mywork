@@ -6,8 +6,7 @@
 <%@ page import="java.util.*"%>
 <%
 	MbrpfVO member = (MbrpfVO) session.getAttribute("member");
-	ShgmService shgmsvc = new ShgmService();
-	List<ShgmVO> list = shgmsvc.getAllForMain();
+	List<ShgmVO> list = (List<ShgmVO>) request.getAttribute("searchResult");
 	pageContext.setAttribute("shgmlist", list);
 %>
 <!doctype html>
@@ -69,7 +68,7 @@ div.card-body{
 .awrapper {
 	display: inline;
 	text-align: right;
-	margin-left: 52%;
+	margin-left: 45%;
 }
 
 div.top-info {
@@ -232,7 +231,8 @@ div.pageselect-area {
 			<nav aria-label="breadcrumb" class="breadcrumb-nav">
 				<ol class="breadcrumb d-flex">
 					<li class="breadcrumb-item"><a href="#">首頁</a></li>
-					<li class="breadcrumb-item active" aria-current="page">市集</li>
+					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/front-end/shgm/mainPage.jsp">市集</a></li>
+					<li class="breadcrumb-item active" aria-current="page">搜尋結果</li>
 					<li class="awrapper" style="width:40%;">
 					<a id="upshgm" class="btn btn-primary" href="<%=request.getContextPath()%>/front-end/shgm/sellPage.jsp" role="button">我要上架</a>
 					<a id="myshgm" class="btn btn-primary" href="<%=request.getContextPath()%>/front-end/shgm/myShgm.jsp" role="button">我的市集商品</a>
@@ -244,12 +244,12 @@ div.pageselect-area {
 		<div class="shgm-area-wrapper">
 			<div class="shgm-area ">
 				<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgm.do">
-					<input type="text" name="word" value="${(searchResult == null)? '':param.word}"/>
+					<input type="text" name="word" value="${param.word}"/>
 					<input type="submit"/>
 					<input type="hidden" name="action" value="search"/>
 				</form>
 				<div class="card-deck">
-					<c:forEach var="shgmvo" items="${(searchResult == null)? shgmlist:searchResult}"  begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
+					<c:forEach var="shgmvo" items="${shgmlist}"  begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
 						<div class="mb-4">
 							<a target="_self" href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneForMoreInfo&shgmno=${shgmvo.shgmno}">
 								<div class="card">

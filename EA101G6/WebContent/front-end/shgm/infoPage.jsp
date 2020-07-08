@@ -285,7 +285,7 @@ div.top-info {
 							</c:when>
 							<c:otherwise>
 							<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgm.do">
-								<button type="submit" class="btn btn-primary">購買</button>
+								<button id="buythis" type="submit" class="btn btn-primary">購買</button>
 								<input type="hidden" name="shgmno" value="${infoshgm.shgmno}"/>
 								<input type="hidden" name="action" value="getOneForMoreInfo"/>
 								<input type="hidden" name="requestURL" value="<%=request.getServletPath()%>"/>

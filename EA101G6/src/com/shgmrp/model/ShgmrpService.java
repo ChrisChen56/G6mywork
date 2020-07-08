@@ -1,5 +1,10 @@
 package com.shgmrp.model;
 
+import java.sql.Connection;
+
+import com.shgm.model.ShgmService;
+import com.shgm.model.ShgmVO;
+
 public class ShgmrpService {
 	
 	private ShgmrpDAO_interface dao;
@@ -33,9 +38,16 @@ public class ShgmrpService {
 		return shgmrpvo;
 	}
 	
-	public void updateStatus(Integer status, String shgmrpno) {
-		
-		dao.updateStatus(status, shgmrpno);
+	public void updateUpcheck(ShgmVO shgmvo, Integer status, Connection con) {
+		ShgmService shgmsvc = new ShgmService();
+		//確定檢舉，下架市集商品
+		if(status == 1) {
+			shgmvo.setUpcheck(2);
+			//取消檢舉或未審核檢舉，上架市集商品
+		} else if(status == 2 || status == 0) {
+			shgmvo.setUpcheck(1);
+		}
+		shgmsvc.updateShgm(shgmvo, con);
 	}
 	
 	public void deleteShgmrp(String shgmrpno) {
