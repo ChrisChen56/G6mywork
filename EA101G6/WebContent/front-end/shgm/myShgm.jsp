@@ -439,6 +439,7 @@ div.pageselect-area {
 		</div>
 	</div>
 	<input type="hidden" id="member" value="${member.mbrname}">
+	<input type="hidden" id="success" value="${updateSuccess}">
 
 	<script src="js/jquery-3.3.1.min.js"></script>
 	<!-- 看起來沒屁用 -->
@@ -463,6 +464,15 @@ div.pageselect-area {
 	<script>
 	$(document).ready(function(){
 		
+		if($("#success").val() == "success"){
+			Swal.fire({
+				  icon: 'success',
+				  title: '您已修改成功！',
+				  showConfirmButton: false,
+				  timer: 1500
+				})
+			$("#success").val('');
+		}
 		$(".container").on("click",".boxstatus2",function(){
 			var $shgmno = $(this).closest("button")[0].id;
 			console.log($shgmno);

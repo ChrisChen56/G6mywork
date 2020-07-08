@@ -10,6 +10,6 @@
         <A href="<%=request.getRequestURI()%>?whichPage=<%=whichPage+1%>" class="btn btn-primary">下一頁 </A>&nbsp;
         <A href="<%=request.getRequestURI()%>?whichPage=<%=pageNumber%>" class="btn btn-primary">最後一頁</A>&nbsp;
     <%}%>
-  <%}%>  
+  <%}%>
 </div>
 <br><br>

@@ -54,7 +54,7 @@ public class ShgmDAO implements ShgmDAO_interface {
 	private static final String MAINPAGE_GETALL_STMT = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
 			+ " FROM SHGM WHERE (upcheck=1 AND boxstatus=0 AND paystatus=0 AND status=0)";// ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)
 	private static final String SEARCH_STMT = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
-			+ " FROM SHGM WHERE (upcheck=1 AND boxstatus=0 AND paystatus=0 AND status=0 AND shgmname LIKE ?)";// ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)
+			+ " FROM SHGM WHERE (upcheck=1 AND boxstatus=0 AND paystatus=0 AND status=0 AND UPPER(shgmname) LIKE UPPER(?))";// ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)
 
 	@Override
 	public void insertSold(ShgmVO shgmvo) {

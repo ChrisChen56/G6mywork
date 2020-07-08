@@ -133,6 +133,38 @@ div.pageselect-area {
 	display: flex;
 	justify-content: center;
 }
+footer{
+	padding: 0.5% 0;
+	margin:0 auto;
+	background-color: gray;
+	text-align: center;
+	color: white;
+	font-size: 100%;
+	width: 100%;
+	height: 150px;
+}
+.wrap{
+	margin:auto;
+	width:80%;
+}
+.footerdiv{
+	display:inline-block;
+}
+.footer-left{
+	border:1px red solid;
+	width:33%;
+	float:left;
+}
+.footer-mid{
+	border:1px blue solid;
+	width:33%;
+	float:left;
+}
+.footer-right{
+	border:1px green solid;
+	width:33%;
+	float:left;
+}
 </style>
 <body data-spy="scroll" data-target=".site-navbar-target"
 	data-offset="300" background="images/bgimage3.jpg">
@@ -232,7 +264,14 @@ div.pageselect-area {
 			<nav aria-label="breadcrumb" class="breadcrumb-nav">
 				<ol class="breadcrumb d-flex">
 					<li class="breadcrumb-item"><a href="#">首頁</a></li>
-					<li class="breadcrumb-item active" aria-current="page">市集</li>
+					<c:choose>
+						<c:when test="${searchResult == null}">
+							<li class="breadcrumb-item active" aria-current="page">市集</li>
+						</c:when>
+						<c:otherwise>
+							<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/front-end/shgm/mainPage.jsp">市集</a></li>
+						</c:otherwise>
+					</c:choose>
 					<li class="awrapper" style="width:40%;">
 					<a id="upshgm" class="btn btn-primary" href="<%=request.getContextPath()%>/front-end/shgm/sellPage.jsp" role="button">我要上架</a>
 					<a id="myshgm" class="btn btn-primary" href="<%=request.getContextPath()%>/front-end/shgm/myShgm.jsp" role="button">我的市集商品</a>
@@ -244,8 +283,8 @@ div.pageselect-area {
 		<div class="shgm-area-wrapper">
 			<div class="shgm-area ">
 				<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgm.do">
-					<input type="text" name="word" value="${(searchResult == null)? '':param.word}"/>
-					<input type="submit"/>
+					<input id="word" type="text" name="word" value="${(searchResult == null)? '':param.word}"/>
+					<input id="findshgm"  class="btn btn-primary" type="submit" value="找桌遊"/>
 					<input type="hidden" name="action" value="search"/>
 				</form>
 				<div class="card-deck">
@@ -267,12 +306,35 @@ div.pageselect-area {
 				</div>
 			</div>
 		</div>
-	<%@ include file="page2.file" %>
+		<c:if test="${(searchResult == null)? true:(listsize > 12)? true:false}">
+			<%@ include file="page2.file" %>
+		</c:if>
+		<c:if test="${listsize == 0}">
+		<div style="margin:20% 0; width:100%; text-align:center;">很抱歉！並沒有符合的搜尋結果</div>
+		</c:if>
 	</div>
 	<input type="hidden" id="member" value="${member.mbrname}">
-
+	<footer>
+		<div class="wrap">
+			<div class="footer-left footerdiv">
+			asdfadsf
+			</div>
+			<div class="footer-mid footerdiv">
+			asdfasdfa
+			</div>
+			<div class="footer-right footerdiv">
+			asdfasdfdsf	
+			</div>
+		</div>
+	</footer>
 	<script>
 	$(document).ready(function(){
+		$("#findshgm").click(function(){
+			if($("#word").val().trim() === ''){
+				event.preventDefault();
+			}
+		})
+		
 		$("#upshgm,#myshgm,#seller").click(function(){
 			if($('#member').val() === ''){
 				alert('您未登入');

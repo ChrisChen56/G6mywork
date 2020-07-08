@@ -283,10 +283,10 @@ div.top-info {
 						class="shgm-info-right-inner  align-items-center flex-column bd-highlight mb-3">
 						<form method="post"
 							action="<%=request.getContextPath()%>/front-end/shgm/shgm.do">
-							<div class="form-group">
-								<label for="take">取貨方式</label><span class="alert">${errormap.get(1)}</span>
-								<input type="text" class="form-control" id="take" 
-									name="take" value="<%=(shgmvo.getTake() == null)? "":shgmvo.getTake()%>">
+							<div class="form-group" style="margin:0;">
+								<label for="take">取貨方式</label><span class="alert">${errormap.get(1)}</span><br>
+								<label for="1"><input id="1" type="radio" name="take" value="宅配到府" <%=(shgmvo.getTake() == null)? "":shgmvo.getTake().equals("宅配到府")? "checked":""%>>宅配到府</label>
+								<label for="2"><input id="2" type="radio" name="take" value="超商取貨" <%=(shgmvo.getTake() == null)? "":shgmvo.getTake().equals("超商取貨")? "checked":""%>>超商取貨</label>
 							</div>
 							<br>
 							<div class="form-group">

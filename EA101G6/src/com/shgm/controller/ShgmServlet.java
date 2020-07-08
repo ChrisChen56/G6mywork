@@ -343,8 +343,8 @@ public class ShgmServlet extends HttpServlet {
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 			} catch (Exception e) {
-				errormap.put((long) 5, "無法新增您的商品");
-				String url = "/front-end/shgm/sellerUpdate.jsp";// 可能要回到sellerPage.jsp
+				errormap.put((long) 5, "無法取得您的商品");
+				String url = "/front-end/shgm/sellerPage.jsp";// sellerPage.jsp的錯誤處理？
 				RequestDispatcher failedview = request.getRequestDispatcher(url);
 				failedview.forward(request, response);
 			}
@@ -359,71 +359,73 @@ public class ShgmServlet extends HttpServlet {
 			String shgmno = request.getParameter("shgmno");
 
 			ShgmService shgmsvc = new ShgmService();
-			ShgmVO shgm = shgmsvc.getOneShgm(shgmno);
+			ShgmVO shgmorg = shgmsvc.getOneShgm(shgmno);
 			try {
 
-				String sellerno = request.getParameter("sellerno");
+			String sellerno = request.getParameter("sellerno");
 
-				String shgmname = request.getParameter("shgmname");
-				if (shgmname.trim().length() == 0)
-					errormap.put((long) 1, "名稱不得為空");
-				if (shgmname.trim().length() > 21)
-					errormap.put((long) 1, "名稱過長");
+			String shgmname = request.getParameter("shgmname");
+			if (shgmname.trim().length() == 0)
+				errormap.put((long) 1, "名稱不得為空");
+			if (shgmname.trim().length() > 21)
+				errormap.put((long) 1, "名稱過長");
 
-				Integer price = null;
-				String pricestr = request.getParameter("price");
-				if (pricestr.trim().length() == 0) {
-					errormap.put((long) 2, "價錢不得為空");
-				} else {
-					try {
-						price = new Integer(pricestr);
-						if (price > 999999)
-							errormap.put((long) 2, "金額超過本平台規範");
-					} catch (Exception e) {
-						errormap.put((long) 2, "格式不正確");
-					}
+			Integer price = null;
+			String pricestr = request.getParameter("price");
+			if (pricestr.trim().length() == 0) {
+				errormap.put((long) 2, "價錢不得為空");
+			} else {
+				try {
+					price = new Integer(pricestr);
+					if (price > 999999)
+						errormap.put((long) 2, "金額超過本平台規範");
+				} catch (Exception e) {
+					errormap.put((long) 2, "格式不正確");
 				}
+			}
 
-				String intro = request.getParameter("intro");
-				if (intro.trim().length() == 0)
-					errormap.put((long) 3, "簡介文字不得為空");
+			String intro = request.getParameter("intro");
+			if (intro.trim().length() == 0)
+				errormap.put((long) 3, "簡介文字不得為空");
 
-				byte[] img = null;
-				Part imgreq = request.getPart("img");
-				if (imgreq.getSize() > 0) {
-					InputStream is = imgreq.getInputStream();
-					img = new byte[is.available()];
-					is.read(img);
-				} else {
-					img = shgm.getImg();
-				}
+			byte[] img = null;
+			Part imgreq = request.getPart("img");
+			if (imgreq.getSize() > 0) {
+				InputStream is = imgreq.getInputStream();
+				img = new byte[is.available()];
+				is.read(img);
+			} else {
+				img = shgmorg.getImg();
+			}
 
-				ShgmVO shgmvo = new ShgmVO();
-				shgmvo.setShgmno(shgmno);
-				shgmvo.setSellerno(sellerno);
-				shgmvo.setShgmname(shgmname);
-				shgmvo.setPrice(price);
-				shgmvo.setIntro(intro);
-				shgmvo.setImg(img);
+			ShgmVO shgmvo = new ShgmVO();
+			shgmvo.setShgmno(shgmno);
+			shgmvo.setSellerno(sellerno);
+			shgmvo.setShgmname(shgmname);
+			shgmvo.setPrice(price);
+			shgmvo.setIntro(intro);
+			shgmvo.setImg(img);
 
-				if (!errormap.isEmpty()) {
-					request.setAttribute("shgmvo", shgmvo);
-					String url = "/front-end/shgm/sellerUpdate.jsp";
-					RequestDispatcher failedview = request.getRequestDispatcher(url);
-					failedview.forward(request, response);
-					return;
-				}
+			if (!errormap.isEmpty()) {
+				request.setAttribute("shgmvo", shgmvo);
+				String url = "/front-end/shgm/sellerUpdate.jsp";
+				RequestDispatcher failedview = request.getRequestDispatcher(url);
+				failedview.forward(request, response);
+				return;
+			}
 
-				System.out.println("enter here");
-				shgmsvc.updateShgm(shgmno, sellerno, shgm.getBuyerno(), shgmname, price, intro, img, shgm.getUpcheck(),
-						shgmvo.getTake(), shgmvo.getTakernm(), shgmvo.getTakerph(), shgmvo.getAddress(),
-						shgmvo.getBoxstatus(), shgmvo.getPaystatus(), shgmvo.getStatus());
+			System.out.println("enter here11111");
+			System.out.println(shgmvo.getBoxstatus());
+			shgmsvc.updateShgm(shgmno, sellerno, shgmorg.getBuyerno(), shgmname, price, intro, img,
+					shgmorg.getUpcheck(), shgmorg.getTake(), shgmorg.getTakernm(), shgmorg.getTakerph(),
+					shgmorg.getAddress(), shgmorg.getBoxstatus(), shgmorg.getPaystatus(), shgmorg.getStatus());
+			System.out.println("enter here22222");
 
-				String url = "/front-end/shgm/sellerPage.jsp";// 回到原本的頁面
-				RequestDispatcher successview = request.getRequestDispatcher(url);
-				successview.forward(request, response);
+			String url = "/front-end/shgm/sellerPage.jsp";// 回到原本的頁面
+			RequestDispatcher successview = request.getRequestDispatcher(url);
+			successview.forward(request, response);
 			} catch (Exception e) {
-				errormap.put((long) 5, "無法新增您的商品");
+				errormap.put((long) 5, "無法修改您的商品");
 				String url = "/front-end/shgm/sellerUpdate.jsp";
 				RequestDispatcher failedview = request.getRequestDispatcher(url);
 				failedview.forward(request, response);
@@ -440,6 +442,10 @@ public class ShgmServlet extends HttpServlet {
 			ShgmVO shgmvo = shgmsvc.getOneForInfo(shgmno);
 
 			session.setAttribute("infoshgm", shgmvo);
+			
+			MbrpfService mbrpfsvc = new MbrpfService();
+			MbrpfVO mbrpfvo = mbrpfsvc.getOneMbrpf(shgmvo.getSellerno());
+			request.setAttribute("sellerinfo", mbrpfvo);
 
 			String url = null;
 			if (requestURL == null) {
@@ -457,7 +463,6 @@ public class ShgmServlet extends HttpServlet {
 			request.setAttribute("errormap", errormap);
 
 			ShgmVO shgmvo = (ShgmVO) session.getAttribute("infoshgm");
-			session.setAttribute("infoshgm", shgmvo);
 
 			try {
 				String shgmno = request.getParameter("shgmno");
@@ -523,12 +528,13 @@ public class ShgmServlet extends HttpServlet {
 				mbrpfVO.setPoints(mbrpfVO.getPoints() - shgmvo.getPrice());
 
 				ShgmService shgmsvc = new ShgmService();
-				shgmvo = shgmsvc.updateShgm(shgmno, buyerno, shgmvo.getBuyerno(), shgmvo.getShgmname(),
+				shgmvo = shgmsvc.updateShgm(shgmno, shgmvo.getSellerno(), buyerno, shgmvo.getShgmname(),
 						shgmvo.getPrice(), shgmvo.getIntro(), shgmvo.getImg(), shgmvo.getUpcheck(), take, takernm,
 						takerph, address, 0, 1, 1, mbrpfVO);
 
 				// 回到infoPage的JSTL判斷用的
 				shgmvo.setPaystatus(1);
+				session.setAttribute("infoshgm", shgmvo);
 
 				request.setAttribute("buysuccess", "success");
 
@@ -550,7 +556,7 @@ public class ShgmServlet extends HttpServlet {
 
 			try {
 				String shgmno = request.getParameter("shgmno");
-
+				
 				// 從會員資料取得，不需要錯誤處理
 				String buyerno = request.getParameter("buyerno");
 
@@ -585,35 +591,37 @@ public class ShgmServlet extends HttpServlet {
 				if (ads.equals(address))
 					errormap.put((long) 4, "請選擇縣市、鄉鎮");
 
+				ShgmService shgmsvc = new ShgmService();
+				ShgmVO shgmorg = shgmsvc.getOneShgm(shgmno);
+				
 				ShgmVO shgmvo = new ShgmVO();
 				shgmvo.setShgmno(shgmno);
 				shgmvo.setBuyerno(buyerno);
+				shgmvo.setShgmname(shgmorg.getShgmname());
+				shgmvo.setPrice(shgmorg.getPrice());
 				shgmvo.setTake(take);
 				shgmvo.setTakernm(takernm);
 				shgmvo.setTakerph(takerph);
 				shgmvo.setAddress(address);
-
+				
 				if (!errormap.isEmpty()) {
 					HashMap<String, String> hashmap = new HashMap<String, String>();
 					hashmap.put("city", city);
 					hashmap.put("area", area);
 					hashmap.put("ads", ads);
 					request.setAttribute("cityarea", hashmap);
-					request.setAttribute("buyerUpdate", shgmvo);
+					request.setAttribute("shgmvo", shgmvo);
 					String url = "/front-end/shgm/buyerUpdate.jsp";
 					RequestDispatcher failedview = request.getRequestDispatcher(url);
 					failedview.forward(request, response);
 					return;
 				}
 
-				ShgmService shgmsvc = new ShgmService();
+				shgmsvc.updateShgm(shgmno, shgmorg.getSellerno(), buyerno, shgmorg.getShgmname(), shgmorg.getPrice(),
+						shgmorg.getIntro(), shgmorg.getImg(), shgmorg.getUpcheck(), take, takernm, takerph, address,
+						shgmorg.getBoxstatus(), shgmorg.getPaystatus(), shgmorg.getStatus());
 
-				shgmsvc.updateShgm(shgmno, buyerno, shgmvo.getBuyerno(), shgmvo.getShgmname(), shgmvo.getPrice(),
-						shgmvo.getIntro(), shgmvo.getImg(), shgmvo.getUpcheck(), take, takernm, takerph, address, 0, 1,
-						1);
-
-				String success = "success";
-				request.setAttribute("updateSuccess", success);
+				request.setAttribute("updateSuccess", "success");
 
 				String url = "/front-end/shgm/myShgm.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
@@ -736,12 +744,12 @@ public class ShgmServlet extends HttpServlet {
 								shgmvo.getTake(), shgmvo.getTakernm(), shgmvo.getTakerph(), shgmvo.getAddress(),
 								shgmvo.getBoxstatus(), shgmvo.getPaystatus(), 2, mbrpfVO);
 
-						ShgmVO shgm = shgmsvc.getOneShgm(shgmno);
+						ShgmVO shgmorg = shgmsvc.getOneShgm(shgmno);
 
 						java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-						Timestamp uptimeCT = shgm.getUptime();
+						Timestamp uptimeCT = shgmorg.getUptime();
 						String uptime = df.format(uptimeCT);
-						Timestamp soldtimeCT = shgm.getSoldtime();
+						Timestamp soldtimeCT = shgmorg.getSoldtime();
 						String soldtime = df.format(soldtimeCT);
 
 						jsonobj.put("shgmno", shgmno);
@@ -845,11 +853,11 @@ public class ShgmServlet extends HttpServlet {
 				request.setAttribute("cityarea", hashmap);
 
 				request.setAttribute("shgmvo", shgmvo);
-				// 來自台的修改請求
+				// 來自後台的修改請求
 				if (requestURL.equals("/back-end/shgm/listAllShgm.jsp")
 						|| requestURL.equals("/back-end/shgm/shgm_select_page.jsp")) {
 					url = "/back-end/shgm/updateShgm.jsp";
-					// 來自台買家的修改請求
+					// 來自前台買家的修改請求
 				} else if (requestURL.equals("/front-end/shgm/myShgm.jsp"))
 					url = "/front-end/shgm/buyerUpdate.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
@@ -993,7 +1001,7 @@ public class ShgmServlet extends HttpServlet {
 				}
 
 				ShgmService shgmsvc = new ShgmService();
-				ShgmVO shgm = shgmsvc.getOneShgm(shgmno);
+				ShgmVO shgmorg = shgmsvc.getOneShgm(shgmno);
 				ShgmVO shgmvo = new ShgmVO();
 				shgmvo.setShgmno(shgmno);
 				shgmvo.setSellerno(sellerno);
@@ -1003,7 +1011,7 @@ public class ShgmServlet extends HttpServlet {
 				shgmvo.setIntro(intro);
 				shgmvo.setImg(img);
 				shgmvo.setUpcheck(upcheck);
-				shgmvo.setUptime(shgm.getUptime());
+				shgmvo.setUptime(shgmorg.getUptime());
 				shgmvo.setTake(take);
 				shgmvo.setTakernm(takernm);
 				shgmvo.setTakerph(takerph);
@@ -1011,7 +1019,7 @@ public class ShgmServlet extends HttpServlet {
 				shgmvo.setBoxstatus(boxstatus);
 				shgmvo.setPaystatus(paystatus);
 				shgmvo.setStatus(status);
-				shgmvo.setSoldtime(shgm.getSoldtime());
+				shgmvo.setSoldtime(shgmorg.getSoldtime());
 
 				if (!errormsgs.isEmpty()) {
 					HashMap<String, String> hashmap = new HashMap<String, String>();
@@ -1053,17 +1061,39 @@ public class ShgmServlet extends HttpServlet {
 		if ("search".equals(action)) {
 
 			try {
-				// 前台用js擋沒有輸入
+				
 				String word = request.getParameter("word");
 
 				ShgmService shgmsvc = new ShgmService();
 				List<ShgmVO> list = shgmsvc.searchForMain(word);
 				request.setAttribute("searchResult", list);
+				request.setAttribute("listsize", (long) list.size());
 				String url = "/front-end/shgm/mainPage.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 			} catch (Exception e) {
 				String url = "/front-end/shgm/mainPage.jsp";
+				RequestDispatcher failedview = request.getRequestDispatcher(url);
+				failedview.forward(request, response);
+			}
+		}
+		
+		if ("toPrsnlMkt".equals(action)) {
+
+			try {
+				String sellerno = request.getParameter("sellerno");
+
+				ShgmService shgmsvc = new ShgmService();
+				List<ShgmVO> list = shgmsvc.allForSeller(sellerno);
+				request.setAttribute("psllist", list);
+				MbrpfService mbrpfsvc = new MbrpfService();
+				MbrpfVO mbrpfvo = mbrpfsvc.getOneMbrpf(sellerno);
+				request.setAttribute("sellerinfo", mbrpfvo);
+				String url = "/front-end/shgm/personalMkt.jsp";
+				RequestDispatcher successview = request.getRequestDispatcher(url);
+				successview.forward(request, response);
+			} catch (Exception e) {
+				String url = "/front-end/shgm/personalMkt.jsp";
 				RequestDispatcher failedview = request.getRequestDispatcher(url);
 				failedview.forward(request, response);
 			}

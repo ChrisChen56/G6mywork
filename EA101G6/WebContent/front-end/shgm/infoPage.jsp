@@ -295,6 +295,8 @@ div.top-info {
 					</div>
 				</div>
 				<br>
+				<div><a href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=toPrsnlMkt&sellerno=${sellerinfo.mbrno}">${sellerinfo.nickname}的個人市集</a></div>
+				<br>
 				<div class="shgm-info-middle">
 					簡介
 					<div class="card">

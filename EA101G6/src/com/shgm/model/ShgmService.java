@@ -70,7 +70,7 @@ public class ShgmService {
 
 		return shgmvo;
 	}
-	
+
 	public ShgmVO updateShgm(String shgmno, String sellerno, String buyerno, String shgmname, Integer price,
 			String intro, byte[] img, Integer upcheck, String take, String takernm, String takerph, String address,
 			Integer boxstatus, Integer paystatus, Integer status, MbrpfVO mbrpfVO) {
@@ -96,28 +96,35 @@ public class ShgmService {
 
 		return shgmvo;
 	}
-	
+
 	public ShgmVO updateShgm(ShgmVO shgmvo, Connection con) {
 
 		dao.update(shgmvo, con);
-		
+
 		return shgmvo;
 	}
 
 	public void timeUpdate(ShgmVO shgmvo, Connection con) {
+		// 拿出原本的時間
+		ShgmService shgmsvc = new ShgmService();
+		ShgmVO shgmorg = shgmsvc.getOneShgm(shgmvo.getShgmno());
+		shgmvo.setUptime(shgmorg.getUptime());
+		shgmvo.setSoldtime(shgmorg.getSoldtime());
+
 		if (shgmvo.getUpcheck() == 0) {
 			dao.uptimeNU(shgmvo.getShgmno(), con);
 			dao.soldtimeNU(shgmvo.getShgmno(), con);
 		}
 		if (shgmvo.getUpcheck() == 1) {
 			// 上架的市集商品，同時修改成已送達、已付款、已完成，即是訂單完成
-			if(shgmvo.getBoxstatus() == 2 && shgmvo.getPaystatus() == 1 && shgmvo.getStatus() == 2) {
-				// 資料庫更新上架時間、售出時間，如果之前就是上架中，沿用上架時間
-				if(shgmvo.getUptime() == null)
+			if (shgmvo.getBoxstatus() == 2 && shgmvo.getPaystatus() == 1 && shgmvo.getStatus() == 2) {
+				// 資料庫更新上架時間、售出時間，如果之前沒上架，更新上架時間；如果本來就是上架中，那就沿用上架時間
+				if (shgmvo.getUptime() == null)
 					dao.uptimeCT(shgmvo.getShgmno(), con);
+				// 更新售出時間
 				dao.soldtimeCT(shgmvo.getShgmno(), con);
-			} else {
 				// 上架的市集商品，更新上架時間
+			} else if (shgmvo.getBoxstatus() == 0 && shgmvo.getPaystatus() == 0 && shgmvo.getStatus() == 0) {
 				dao.uptimeCT(shgmvo.getShgmno(), con);
 				dao.soldtimeNU(shgmvo.getShgmno(), con);
 			}
@@ -181,7 +188,7 @@ public class ShgmService {
 
 		return dao.getAllForMain();
 	}
-	
+
 	public java.util.List<ShgmVO> searchForMain(String word) {
 
 		return dao.searchForMain(word);

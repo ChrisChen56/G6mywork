@@ -86,9 +86,8 @@ public class ShgmrpServlet extends HttpServlet {
 			try {
 				String shgmno = request.getParameter("shgmno");
 
-				//之後從session拿到當前檢舉人，先寫死
+				//EL從session拿到的會員編號
 				String suiterno = request.getParameter("suiterno");
-				suiterno = "BM00001";
 
 				String detail = request.getParameter("detail");
 				if (detail.trim().length() == 0) {
