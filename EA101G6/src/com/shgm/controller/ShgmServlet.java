@@ -37,7 +37,7 @@ public class ShgmServlet extends HttpServlet {
 
 		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
-
+		
 		String action = request.getParameter("action");
 
 		if ("get_one".equals(action)) {
@@ -331,11 +331,9 @@ public class ShgmServlet extends HttpServlet {
 			try {
 
 				String shgmno = request.getParameter("shgmno");
-				System.out.println(shgmno);
 
 				ShgmService shgmsvc = new ShgmService();
 				ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
-				System.out.println(shgmvo.getShgmno());
 
 				request.setAttribute("shgmvo", shgmvo);
 
@@ -351,7 +349,6 @@ public class ShgmServlet extends HttpServlet {
 		}
 
 		if ("sellerUpdate".equals(action)) {
-			System.out.println("enter hwew");
 
 			HashMap<Long, String> errormap = new HashMap<Long, String>();
 			request.setAttribute("errormap", errormap);
@@ -414,12 +411,9 @@ public class ShgmServlet extends HttpServlet {
 				return;
 			}
 
-			System.out.println("enter here11111");
-			System.out.println(shgmvo.getBoxstatus());
 			shgmsvc.updateShgm(shgmno, sellerno, shgmorg.getBuyerno(), shgmname, price, intro, img,
 					shgmorg.getUpcheck(), shgmorg.getTake(), shgmorg.getTakernm(), shgmorg.getTakerph(),
 					shgmorg.getAddress(), shgmorg.getBoxstatus(), shgmorg.getPaystatus(), shgmorg.getStatus());
-			System.out.println("enter here22222");
 
 			String url = "/front-end/shgm/sellerPage.jsp";// 回到原本的頁面
 			RequestDispatcher successview = request.getRequestDispatcher(url);
@@ -647,11 +641,9 @@ public class ShgmServlet extends HttpServlet {
 				if (request.getParameter("upcheck") != null) {
 
 					Integer upcheck = new Integer(request.getParameter("upcheck"));
-					System.out.println("更新前：" + upcheck);
 					// 待上架、上架中選擇自行下架，改成下架中狀態
 					if (upcheck == 0 || upcheck == 1) {
 						// 先更新
-//						shgmsvc.upcheckUpdate(2, shgmno);
 						shgmsvc.updateShgm(shgmno, shgmvo.getSellerno(), shgmvo.getBuyerno(), shgmvo.getShgmname(),
 								shgmvo.getPrice(), shgmvo.getIntro(), shgmvo.getImg(), 2, shgmvo.getTake(),
 								shgmvo.getTakernm(), shgmvo.getTakerph(), shgmvo.getAddress(), shgmvo.getBoxstatus(),
@@ -691,7 +683,6 @@ public class ShgmServlet extends HttpServlet {
 				if (request.getParameter("boxstatus") != null) {
 
 					Integer boxstatus = new Integer(request.getParameter("boxstatus"));
-					System.out.println("更新前：" + boxstatus);
 
 					jsonobj.put("shgmno", shgmvo.getShgmno());
 					jsonobj.put("shgmname", shgmvo.getShgmname());
@@ -777,11 +768,10 @@ public class ShgmServlet extends HttpServlet {
 					}
 				}
 
-				System.out.println(jsonobj.toString());
 				out.write(jsonobj.toString());
 
 			} catch (org.json.JSONException e) {
-				System.out.println(e.getMessage());
+				e.printStackTrace();
 			}
 		}
 
@@ -816,40 +806,14 @@ public class ShgmServlet extends HttpServlet {
 			request.setAttribute("requestURL", requestURL);
 			String whichPage = request.getParameter("whichPage");
 			request.setAttribute("whichPage", whichPage);
-			System.out.println(whichPage);
 			String url = null;
 			try {
 				String shgmno = request.getParameter("shgmno");
 
-				String city = null;
-				String area = null;
-				String ads = null;
-				String address = null;
-
 				ShgmService shgmsvc = new ShgmService();
 				ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
-				// 將address分割為city、area、ads
-				if (shgmvo.getAddress() != null) {
-					address = shgmvo.getAddress();
-					String[] citylevel = { "縣", "市", "島" };
-					String[] arealevel = { "鄉", "鎮", "島", "區", "市" };
-					for (String clevel : citylevel) {
-						if (address.contains(clevel)) {
-							city = address.substring(0, address.indexOf(clevel) + 1);
-							address = address.substring(address.indexOf(clevel) + 1, address.length());
-							for (String alevel : arealevel) {
-								if (address.contains(alevel)) {
-									area = address.substring(0, address.indexOf(alevel) + 1);
-									ads = address.substring(address.indexOf(alevel) + 1, address.length());
-								}
-							}
-						}
-					}
-				}
-				HashMap<String, String> hashmap = new HashMap<String, String>();
-				hashmap.put("city", city);
-				hashmap.put("area", area);
-				hashmap.put("ads", ads);
+				
+				HashMap<String, String> hashmap = shgmsvc.splitAddress(shgmvo.getAddress());
 				request.setAttribute("cityarea", hashmap);
 
 				request.setAttribute("shgmvo", shgmvo);

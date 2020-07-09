@@ -159,7 +159,7 @@
 				<input type="hidden" name="action" value="update">
 				<input type="hidden" name="requestURL" value="<%=request.getParameter("requestURL")%>"> <!--接收原送出修改的來源網頁路徑後,再送給Controller準備轉交之用-->
 				<input type="hidden" name="whichPage"  value="<%=request.getParameter("whichPage")%>">  <!--只用於:istAllEmp.jsp-->
-				<input type="submit" value="送出" ></td>
+				<input type="submit" value="送出" onclick="upcheckConfirm()"></td>
 			</tr>
 	</table>
 </form>
@@ -183,6 +183,46 @@
 	       address.value = city + area + location;
 	       console.log(address.value);
        };
+       
+	var sellerno = document.getElementsByName("sellerno")[0].value;
+	var MyPoint = "/updateShgm/shgm-back-end";
+	var host = window.location.host;
+	var path = window.location.pathname;
+	var webCtx = path.substring(0, path.indexOf('/', 1));
+	var endPointURL = "ws://" + host + webCtx + MyPoint;
+	
+	var webSocket;
+
+	//function connect() {
+		// create a websocket
+		webSocket = new WebSocket(endPointURL);//建立連線到伺服器端→
+
+		webSocket.onopen = function(event) {//成功連線，伺服器端回應←
+			alert('success');
+		};
+
+		webSocket.onmessage = function(event) {//接收伺服器端回應的json字串←
+			var messagesArea = document.getElementById("messagesArea");
+			var jsonObj = JSON.parse(event.data);//json字串轉為物件
+			var message = jsonObj.userName + ": " + jsonObj.message + "\r\n";
+			messagesArea.value = messagesArea.value + message;
+			messagesArea.scrollTop = messagesArea.scrollHeight;
+		};
+
+		webSocket.onclose = function(event) {//成功關閉，伺服器端回應←
+			alert('closed');
+		};
+		
+		function upcheckConfirm() {
+			var upcheck = document.getElementById("upcheck").value;
+			if(upcheck === 1){
+				websocket.send("upcheck1");
+			}
+		}
+	//}
+       
+       
+       
   }
 </script>
 </html>

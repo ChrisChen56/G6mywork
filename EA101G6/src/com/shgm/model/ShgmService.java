@@ -2,6 +2,7 @@ package com.shgm.model;
 
 import java.sql.Connection;
 import java.sql.Timestamp;
+import java.util.HashMap;
 
 import com.mbrpf.model.MbrpfVO;
 
@@ -162,6 +163,34 @@ public class ShgmService {
 	public ShgmVO getOneShgm(String shgmno) {
 
 		return dao.findByPrimaryKey(shgmno);
+	}
+	
+	public HashMap<String, String> splitAddress(String address) {
+		HashMap<String, String> hashmap = new HashMap<String, String>();
+		// 將address分割為city、area、ads
+		String adres = address;
+		String city = null;
+		String area = null;
+		String ads = null;
+		String[] citylevel = { "縣", "市", "島" };
+		String[] arealevel = { "鄉", "鎮", "島", "區", "市" };
+		for (String clevel : citylevel) {
+			if (adres.contains(clevel)) {
+				city = adres.substring(0, adres.indexOf(clevel) + 1);
+				adres = adres.substring(adres.indexOf(clevel) + 1, adres.length());
+				for (String alevel : arealevel) {
+					if (adres.contains(alevel)) {
+						area = adres.substring(0, adres.indexOf(alevel) + 1);
+						ads = adres.substring(adres.indexOf(alevel) + 1, adres.length());
+					}
+				}
+			}
+		}
+		hashmap.put("city", city);
+		hashmap.put("area", area);
+		hashmap.put("ads", ads);
+
+		return hashmap;
 	}
 
 	public ShgmVO getOneForInfo(String shgmno) {
