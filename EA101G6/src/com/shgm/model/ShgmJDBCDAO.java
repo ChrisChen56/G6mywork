@@ -18,13 +18,13 @@ public class ShgmJDBCDAO implements ShgmDAO_interface {
 	String user = "EA101";
 	String password = "123456";
 
-//	public static void main(String[] args) {
-//		ShgmJDBCDAO shgm = new ShgmJDBCDAO();
-//		List<ShgmVO> list = shgm.searchForMain("桌");
-//		for (ShgmVO shgmvo : list) {
-//			System.out.println(shgmvo.getShgmname());
-//		}
-//	}
+	public static void main(String[] args) {
+		ShgmJDBCDAO shgm = new ShgmJDBCDAO();
+		List<ShgmVO> list = shgm.searchForMain("桌");
+		for (ShgmVO shgmvo : list) {
+			System.out.println(shgmvo.getShgmname());
+		}
+	}
 
 	private static final String INSERT_NOCHECK_STMT = "INSERT INTO SHGM "
 			+ "(shgmno,sellerno,buyerno,shgmname,price,intro,img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime) "

@@ -185,16 +185,17 @@
        };
        
 	var sellerno = document.getElementsByName("sellerno")[0].value;
-	var MyPoint = "/updateShgm/shgm-back-end";
+	var MyPoint = "/updateShgm/sellerno";
 	var host = window.location.host;
 	var path = window.location.pathname;
 	var webCtx = path.substring(0, path.indexOf('/', 1));
-	var endPointURL = "ws://" + host + webCtx + MyPoint;
+	var endPointURL = "ws://" + host + webCtx + MyPoint;//使用者位址
 	
 	var webSocket;
 
 	//function connect() {
 		// create a websocket
+		console.log(endPointURL);
 		webSocket = new WebSocket(endPointURL);//建立連線到伺服器端→
 
 		webSocket.onopen = function(event) {//成功連線，伺服器端回應←

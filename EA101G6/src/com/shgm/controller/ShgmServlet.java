@@ -2,8 +2,6 @@ package com.shgm.controller;
 
 import java.io.*;
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -60,7 +58,7 @@ public class ShgmServlet extends HttpServlet {
 					failureview.forward(request, response);
 					return;
 				}
-
+				
 				ShgmService shgmsvc = new ShgmService();
 				ShgmVO shgmvo = shgmsvc.getOneForInfo(shgmno);
 				// 錯誤處理
