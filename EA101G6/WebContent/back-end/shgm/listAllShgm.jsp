@@ -9,7 +9,6 @@
 	List<ShgmVO> list = shgmsvc.getAllShgm();
 	pageContext.setAttribute("shgmlist", list);
 %>
-
 <html>
 <head>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
@@ -26,12 +25,43 @@
     	border: 1px solid black;
     	width: 135px;
   	}
+  	.table td, .table th {
+    	vertical-align: middle;
+    }
+  	#shgmall-mainarea{
+  		margin:1% auto;
+  		height:776px;
+  	}
   	#intro{
 	  	text-align:left;
   	}
   	#introbtn{
   		margin-top: 10%;
   	}
+  	div.pageselect-area {
+		display: flex;
+		justify-content: center;
+	}
+  	.lefta{
+		float: right;
+		margin-left:1%;
+	}
+	#whichpage{
+		width: 40px;
+		margin:0 1%;
+	}
+	.right-area{
+		width:48%;
+		float:left;
+	}
+	.right-area a, .left-area  a, #soldtlbtn, #introbtn{
+		background-color: #9999;
+		border-color: #9999;
+		color:black;
+	}   
+	.left-area{
+		width:48%;
+	}
   	.imgtd img{
   		width:200px;
   		height:150px;
@@ -47,7 +77,9 @@
 		</c:forEach>
 	</c:if>
 </ul>
-	<table>
+<div id="shgmall-mainarea">
+		<%@ include file="page1.file" %> 
+	<table id="table" class="table table-striped bg-white">
 		<tr>
 			<td>市集商品編號</td>
 			<td>賣家會員編號</td>
@@ -61,8 +93,6 @@
 			<td>修改市集商品</td>
 			<td>刪除市集商品</td>
 		</tr>
-		
-		<%@ include file="page1.file" %> 
 		
 		<c:forEach var="shgmvo" items="${shgmlist}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
 		<tr>
@@ -94,7 +124,7 @@
         		</c:otherwise>
         	</c:choose>
         	<td>
-        	<button id="seldtlbtn" type="button" class="btn btn-primary" data-toggle="modal" onclick="showmodal()" data-target="#modal1${shgmvo.shgmno}">
+        	<button id="soldtlbtn" type="button" class="btn btn-primary" data-toggle="modal" onclick="showmodal()" data-target="#modal1${shgmvo.shgmno}">
 			  交易詳情
 			</button>
         	<div class="modal fade" id="modal1${shgmvo.shgmno}" tabindex="-1" role="dialog" aria-labelledby="${shgmvo.shgmno}ModalLabel1">
@@ -211,10 +241,11 @@
 			</td>
 		</tr>
 		</c:forEach>
-		
+	</table>
+</div>
 		<%@ include file="page2.file" %>
 		
-	</table>
+	<br>
 	<a href="<%= request.getContextPath()%>/back-end/shgm/shgm_select_page.jsp">回首頁</a>
 	
 	<script>

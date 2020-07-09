@@ -62,7 +62,7 @@ public class ShgmServlet extends HttpServlet {
 				}
 
 				ShgmService shgmsvc = new ShgmService();
-				ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
+				ShgmVO shgmvo = shgmsvc.getOneForInfo(shgmno);
 				// 錯誤處理
 				if (shgmvo == null) {
 					errormsgs.add("查無資料");
@@ -807,13 +807,17 @@ public class ShgmServlet extends HttpServlet {
 			String whichPage = request.getParameter("whichPage");
 			request.setAttribute("whichPage", whichPage);
 			String url = null;
-			try {
+//			try {
 				String shgmno = request.getParameter("shgmno");
 
 				ShgmService shgmsvc = new ShgmService();
 				ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
+				String address = shgmvo.getAddress();
 				
-				HashMap<String, String> hashmap = shgmsvc.splitAddress(shgmvo.getAddress());
+				HashMap<String, String> hashmap = null;
+				if(address != null)
+					hashmap = shgmsvc.splitAddress(address);
+				
 				request.setAttribute("cityarea", hashmap);
 
 				request.setAttribute("shgmvo", shgmvo);
@@ -827,16 +831,16 @@ public class ShgmServlet extends HttpServlet {
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 
-			} catch (Exception e) {
-				errormsgs.add("無法取得要修改的資料:" + e.getMessage());
-				if (requestURL.equals("/back-end/shgm/listAllShgm.jsp")
-						|| requestURL.equals("/back-end/shgm/shgm_select_page.jsp")) {
-					url = "/back-end/shgm/shgm_select_page.jsp";
-				} else if (requestURL.equals("/front-end/shgm/myShgm.jsp"))
-					url = "/front-end/shgm/myShgm.jsp";
-				RequestDispatcher failureView = request.getRequestDispatcher(url);
-				failureView.forward(request, response);
-			}
+//			} catch (Exception e) {
+//				errormsgs.add("無法取得要修改的資料:" + e.getMessage());
+//				if (requestURL.equals("/back-end/shgm/listAllShgm.jsp")
+//						|| requestURL.equals("/back-end/shgm/shgm_select_page.jsp")) {
+//					url = "/back-end/shgm/shgm_select_page.jsp";
+//				} else if (requestURL.equals("/front-end/shgm/myShgm.jsp"))
+//					url = "/front-end/shgm/myShgm.jsp";
+//				RequestDispatcher failureView = request.getRequestDispatcher(url);
+//				failureView.forward(request, response);
+//			}
 		}
 
 		if ("update".equals(action)) {
