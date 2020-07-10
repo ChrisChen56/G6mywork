@@ -185,6 +185,7 @@ div.pageselect-area {
 						<c:choose>
 							<c:when test="<%=member != null%>">
 								<span class="d-md-inline-block text-white">歡迎你！${member.mbrname}</span>
+								<input type="hidden" id="mbrno" value="${member.mbrno}"/>
 							</c:when>
 							<c:otherwise>
 								<a href="#" class="text-white"><span
@@ -461,6 +462,7 @@ div.pageselect-area {
 	<script src="js/aos.js"></script>
 
 	<script src="js/main.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/wsForShgm.js"></script>
 	<script>
 	$(document).ready(function(){
 		
@@ -473,6 +475,8 @@ div.pageselect-area {
 				})
 			$("#success").val('');
 		}
+		
+		/*確定收貨購買完成*/
 		$(".container").on("click",".boxstatus2",function(){
 			var $shgmno = $(this).closest("button")[0].id;
 			console.log($shgmno);
@@ -494,6 +498,11 @@ div.pageselect-area {
 					$("#list-status2 ul:eq(1)").append('<li class="list-group-item">'+response.price+'</li>');
 					$("#list-status2 ul:eq(1)").append('<li class="list-group-item">'+response.uptime+'</li>');
 					$("#list-status2 ul:eq(1)").append('<li class="list-group-item">'+response.soldtime+'</li>');
+					//Gson 無法把將含有日期型態的json資料轉為物件，後面用不到日期所以直接賦予空值
+			    	response.uptime = null;
+			    	response.soldtime = null;
+			    	jsondata = JSON.stringify(response);
+					webSocket.send(jsondata);
 			    },
 			    error: function(result) {
                     console.log(result);
@@ -501,6 +510,7 @@ div.pageselect-area {
 			});
 		});
 		
+		/*取消訂單*/
 		$(".container").on("click",".status3",function(){
 			var $shgmno = $(this).closest("button")[0].id;
 			console.log($shgmno);
@@ -515,6 +525,8 @@ div.pageselect-area {
 			    dataType: "json",
 			    cache: false,
 			    success: function(response){
+			    	jsondata = JSON.stringify(response);
+					webSocket.send(jsondata);
 			    	$("#list-status3 ul:eq(0)").after('<ul class="list-group list-group-horizontal five-li"></ul>');
 					$("#list-status3 ul:eq(1)").append('<li class="list-group-item">'+response.shgmname+'</li>');			    	
 					$("#list-status3 ul:eq(1)").append('<li class="list-group-item"><div class="imgwrapper">'+

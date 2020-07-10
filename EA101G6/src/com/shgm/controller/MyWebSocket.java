@@ -7,6 +7,7 @@ import javax.websocket.server.ServerEndpoint;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.mbrpf.model.MbrpfService;
 import com.mbrpf.model.MbrpfVO;
 import com.shgm.model.ShgmService;
 import com.shgm.model.ShgmVO;
@@ -45,38 +46,58 @@ public class MyWebSocket {
 		
 		httpsession = (HttpSession) conf.getUserProperties().get("httpsession");
 		String sendthis = null;
-		String mbrno = null;
 		JSONObject jsonobj = new JSONObject(jsondata);
-		System.out.println(jsonobj);
 		ShgmService shgmsvc = new ShgmService();
 		ShgmVO shgmorg = shgmsvc.getOneShgm(jsonobj.getString("shgmno"));
+		
+		MbrpfService mbrpfsvc = new MbrpfService();
+		String sellerno = shgmorg.getSellerno();
+		String buyerno = shgmorg.getBuyerno();
+		MbrpfVO sellerVO = mbrpfsvc.getOneMbrpf(sellerno);
+		MbrpfVO buyerVO = mbrpfsvc.getOneMbrpf(buyerno);
 		
 		Gson gson = new Gson();
 		ShgmVO shgmvo = gson.fromJson(jsondata, ShgmVO.class);
 		if(shgmvo.getUpcheck() != null) {
-			mbrno = shgmorg.getSellerno();
-			sendthis = "您已改變狀態";
+			sendthis = "您已改變上架狀態";//其實可以刪掉
+			sendmsg(sellerno, sendthis);
 		}
-		if(shgmvo.getBoxstatus() == null) {
+		if(shgmvo.getBoxstatus() != null) {
 			
+			if(shgmvo.getBoxstatus() == 1) {
+				sendthis = "賣家 "+sellerVO.getNickname()+"，已將您購買的商品「"+shgmorg.getShgmname()+"」出貨";
+				sendmsg(buyerno, sendthis);
+			} else if(shgmvo.getBoxstatus() == 2) {
+				sendthis = buyerVO.getNickname()+"，您購買的商品「"+shgmorg.getShgmname()+"」已送達，請確認取貨！";
+				sendmsg(buyerno, sendthis);
+			}
 		}
-		if(shgmvo.getStatus() == null) {
-			
+		if(shgmvo.getStatus() != null) {
+			if(shgmvo.getStatus() == 2) {
+				sendthis = "買家  "+buyerVO.getNickname()+"，已確認收貨，您的商品「"+shgmorg.getShgmname()+"」已賣出！";
+				sendmsg(sellerno, sendthis);
+			} else if(shgmvo.getStatus() == 3) {
+				sendthis = "買家  "+buyerVO.getNickname()+"，已取消購買「"+shgmorg.getShgmname()+"」，請至賣家專區回收商品";
+				sendmsg(sellerno, sendthis);
+				sendthis = "親愛的 "+buyerVO.getNickname()+"，您已成功取消購買「"+shgmorg.getShgmname()+"」，點數共 "+shgmorg.getPrice()+"點已退還至您的帳戶";
+				sendmsg(buyerno, sendthis);
+			}
 		}
-//		MbrpfVO mbrpfvo = (MbrpfVO) httpsession.getAttribute("member");
+		
+	}
+	
+	public void sendmsg(String mbrno, String sendthis) {
 		for(String hashmapkey: connectedSessions.keySet()) {
-//			connectedSessions.get(hashmapkey).getAsyncRemote().sendText(sendthis);//sendToAll
-			System.out.println("enter");
 			if(mbrno.equals(hashmapkey)) {
-				System.out.println("here");
-				connectedSessions.get(hashmapkey).getAsyncRemote().sendText(sendthis);//sendToMbr
-				System.out.println(hashmapkey);
+				if(connectedSessions.get(hashmapkey).isOpen())
+					connectedSessions.get(hashmapkey).getAsyncRemote().sendText(sendthis);//sendToMbr
 			}
 		}
 	}
 	
 	@OnError
 	public void error(Session session, Throwable error) {
+		error.printStackTrace();
 		System.out.println("error:"+error.getMessage());
 	}
 	

@@ -596,39 +596,11 @@ div.pageselect-area {
 	</div>
 	<input type="hidden" id="member" value="${member.mbrname}">
 
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/wsForShgm.js"></script>
 	<script>
 	$(document).ready(function(){
 		
-		var mbrno = document.getElementById("mbrno").value;
-		var MyPoint = "/mainPage/"+mbrno;
-		var host = window.location.host;
-		var path = window.location.pathname;
-		var webCtx = path.substring(0, path.indexOf('/', 1));
-		var endPointURL = "ws://" + host + webCtx + MyPoint;//使用者位址
-		
-		var webSocket;
-		
-		var jsondata;
-		
-		if(mbrno !== ''){
-		console.log(endPointURL);
-			
-			webSocket = new WebSocket(endPointURL);//建立連線到伺服器端→
-			
-			webSocket.onopen = function(event) {//成功連線，伺服器端回應←
-				alert('success');
-			};
-
-			webSocket.onmessage = function(event) {//接收伺服器端回應的json字串←
-				alert(event.data);
-			};
-
-			webSocket.onclose = function(event) {//成功關閉，伺服器端回應←
-				alert('closed');
-			};
-			
-		}
-		
+		/*下架中、待上架狀態切換*/
 		$(".container").on("click",".upcheck",function(){
 			var $shgmno = $(this).closest("button")[0].id;
 			var $value = $(this).closest("button")[0].value;
@@ -675,6 +647,7 @@ div.pageselect-area {
 			});
 		});
 		
+		/*出貨、送達狀態改變*/
 		$(".container").on("click",".boxstatus",function(){
 			var $shgmno = $(this).closest("button")[0].id;
 			var $value = $(this).closest("button")[0].value;
@@ -691,7 +664,8 @@ div.pageselect-area {
 				dataType: "json",
 				cache: false,
 				success: function(response){
-					jsondata = response;
+					jsondata = JSON.stringify(response);
+					webSocket.send(jsondata);
 					if(response.boxstatus == 1){
 						$("#boxstatus1 ul:eq(0)").after('<ul class="list-group list-group-horizontal six-li"></ul>');
 						$("#boxstatus1 ul:eq(1)").append('<li class="list-group-item">'+response.shgmname+'</li>');
@@ -720,6 +694,7 @@ div.pageselect-area {
 			});
 		});
 		
+		/*回收被取消的商品，變成待上架狀態*/
 		$(".container").on("click",".status",function(){
 			var $shgmno = $(this).closest("button")[0].id;
 			$(this).closest("ul").fadeOut(function(){
@@ -733,7 +708,6 @@ div.pageselect-area {
 				dataType: "json",
 				cache: false,
 				success: function(response){
-					jsondata = response;
 					$('#upcheck0 ul').eq(0).after('<ul class="list-group list-group-horizontal four-li"></ul>');
 					$('#upcheck0 ul').eq(1).append('<li class="list-group-item">'+response.shgmname+'</li>');
 					$('#upcheck0 ul').eq(1).append('<li class="list-group-item"><div class="imgwrapper">'+

@@ -217,6 +217,11 @@ public class ShgmService {
 
 		return dao.getAllForMain();
 	}
+	
+	public java.util.List<ShgmVO> allForPersonalMkt(String sellerno) {
+
+		return dao.allForPpersonalMkt(sellerno);
+	}
 
 	public java.util.List<ShgmVO> searchForMain(String word) {
 

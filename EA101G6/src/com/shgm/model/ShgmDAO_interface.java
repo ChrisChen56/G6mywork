@@ -21,6 +21,7 @@ public interface ShgmDAO_interface {
 	public java.util.List<ShgmVO> allForSeller(String sellerno);
 	public java.util.List<ShgmVO> allForBuyer(String buyerno);
 	public java.util.List<ShgmVO> getall();
+	public java.util.List<ShgmVO> allForPpersonalMkt(String sellerno);
 	public java.util.List<ShgmVO> getAllForMain();
 	public java.util.List<ShgmVO> searchForMain(String word);
 }
