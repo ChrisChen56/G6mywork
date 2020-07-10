@@ -187,6 +187,7 @@ div.pageselect-area {
 						<c:choose>
 							<c:when test="<%=member != null%>">
 								<span class="d-md-inline-block text-white">歡迎你！${member.mbrname}</span>
+								<input type="hidden" id="mbrno" value="${member.mbrno}"/>
 							</c:when>
 							<c:otherwise>
 								<a href="#" class="text-white"><span
@@ -598,6 +599,36 @@ div.pageselect-area {
 	<script>
 	$(document).ready(function(){
 		
+		var mbrno = document.getElementById("mbrno").value;
+		var MyPoint = "/mainPage/"+mbrno;
+		var host = window.location.host;
+		var path = window.location.pathname;
+		var webCtx = path.substring(0, path.indexOf('/', 1));
+		var endPointURL = "ws://" + host + webCtx + MyPoint;//使用者位址
+		
+		var webSocket;
+		
+		var jsondata;
+		
+		if(mbrno !== ''){
+		console.log(endPointURL);
+			
+			webSocket = new WebSocket(endPointURL);//建立連線到伺服器端→
+			
+			webSocket.onopen = function(event) {//成功連線，伺服器端回應←
+				alert('success');
+			};
+
+			webSocket.onmessage = function(event) {//接收伺服器端回應的json字串←
+				alert(event.data);
+			};
+
+			webSocket.onclose = function(event) {//成功關閉，伺服器端回應←
+				alert('closed');
+			};
+			
+		}
+		
 		$(".container").on("click",".upcheck",function(){
 			var $shgmno = $(this).closest("button")[0].id;
 			var $value = $(this).closest("button")[0].value;
@@ -614,6 +645,8 @@ div.pageselect-area {
 				dataType: "json",
 				cache: false,
 				success: function(response){
+					jsondata = JSON.stringify(response);
+					webSocket.send(jsondata);
 					if(response.upcheck == 2){
 						$("#upcheck2 ul:eq(0)").after('<form method="post" action="/EA101G6/front-end/shgm/shgm.do"></form>');
 						$("form:first").append('<ul class="list-group list-group-horizontal four-li"></ul>');
@@ -658,6 +691,7 @@ div.pageselect-area {
 				dataType: "json",
 				cache: false,
 				success: function(response){
+					jsondata = response;
 					if(response.boxstatus == 1){
 						$("#boxstatus1 ul:eq(0)").after('<ul class="list-group list-group-horizontal six-li"></ul>');
 						$("#boxstatus1 ul:eq(1)").append('<li class="list-group-item">'+response.shgmname+'</li>');
@@ -699,6 +733,7 @@ div.pageselect-area {
 				dataType: "json",
 				cache: false,
 				success: function(response){
+					jsondata = response;
 					$('#upcheck0 ul').eq(0).after('<ul class="list-group list-group-horizontal four-li"></ul>');
 					$('#upcheck0 ul').eq(1).append('<li class="list-group-item">'+response.shgmname+'</li>');
 					$('#upcheck0 ul').eq(1).append('<li class="list-group-item"><div class="imgwrapper">'+

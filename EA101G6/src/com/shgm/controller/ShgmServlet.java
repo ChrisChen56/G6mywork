@@ -630,7 +630,7 @@ public class ShgmServlet extends HttpServlet {
 			response.setContentType("text/html; charset=utf-8");
 			Writer out = response.getWriter();
 			JSONObject jsonobj = new JSONObject();
-
+			
 			String shgmno = request.getParameter("shgmno");
 			ShgmService shgmsvc = new ShgmService();
 			ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
@@ -673,8 +673,7 @@ public class ShgmServlet extends HttpServlet {
 						jsonobj.put("shgmno", shgmvo.getShgmno());
 						jsonobj.put("shgmname", shgmvo.getShgmname());
 						jsonobj.put("price", shgmvo.getPrice());
-						// upcheck的值在ajax作流程控制用的
-						jsonobj.put("upcheck", 0);
+						jsonobj.put("upcheck", 0);// upcheck的值在ajax作流程控制用的
 					}
 				}
 				// 改變出貨狀態
@@ -683,6 +682,7 @@ public class ShgmServlet extends HttpServlet {
 					Integer boxstatus = new Integer(request.getParameter("boxstatus"));
 
 					jsonobj.put("shgmno", shgmvo.getShgmno());
+					jsonobj.put("buyerno", shgmvo.getBuyerno());//通知買家
 					jsonobj.put("shgmname", shgmvo.getShgmname());
 					jsonobj.put("takernm", shgmvo.getTakernm());
 					jsonobj.put("takerph", shgmvo.getTakerph());
@@ -716,8 +716,10 @@ public class ShgmServlet extends HttpServlet {
 								shgmvo.getIntro(), shgmvo.getImg(), 0, null, null, null, null, 0, 0, 0);
 
 						jsonobj.put("shgmno", shgmno);
+						jsonobj.put("buyerno", shgmvo.getBuyerno());//通知買家
 						jsonobj.put("shgmname", shgmvo.getShgmname());
 						jsonobj.put("price", shgmvo.getPrice());
+						jsonobj.put("status", 0);
 					}
 					// 已送達，買家確認收貨，下訂改成完成
 					if (status == 2) {
@@ -742,10 +744,12 @@ public class ShgmServlet extends HttpServlet {
 						String soldtime = df.format(soldtimeCT);
 
 						jsonobj.put("shgmno", shgmno);
+						jsonobj.put("buyerno", shgmvo.getBuyerno());//通知買家
 						jsonobj.put("shgmname", shgmvo.getShgmname());
 						jsonobj.put("price", shgmvo.getPrice());
 						jsonobj.put("uptime", uptime);
 						jsonobj.put("soldtime", soldtime);
+						jsonobj.put("status", 2);
 					}
 					// 不論訂單狀態，買家取消訂單
 					if (status == 8) {
@@ -761,8 +765,10 @@ public class ShgmServlet extends HttpServlet {
 								3, mbrpfVO);
 
 						jsonobj.put("shgmno", shgmno);
+						jsonobj.put("sellerno", shgmvo.getSellerno());//通知賣家
 						jsonobj.put("shgmname", shgmvo.getShgmname());
 						jsonobj.put("price", shgmvo.getPrice());
+						jsonobj.put("status", 3);
 					}
 				}
 

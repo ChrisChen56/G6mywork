@@ -4,7 +4,12 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
+import org.json.JSONObject;
+
+import com.google.gson.Gson;
 import com.mbrpf.model.MbrpfVO;
+import com.shgm.model.ShgmService;
+import com.shgm.model.ShgmVO;
 
 import javax.websocket.EndpointConfig;
 import javax.websocket.OnOpen;
@@ -36,17 +41,35 @@ public class MyWebSocket {
 	}
 	
 	@OnMessage
-	public void message(Session session, String msg) {
-		System.out.println("1");
+	public void message(Session session, String jsondata) {
+		
 		httpsession = (HttpSession) conf.getUserProperties().get("httpsession");
-		System.out.println("2");
-		MbrpfVO mbrpfvo = (MbrpfVO) httpsession.getAttribute("member");
-		System.out.println("3");
-		String mbrno = mbrpfvo.getMbrno();
-		System.out.println("4");
+		String sendthis = null;
+		String mbrno = null;
+		JSONObject jsonobj = new JSONObject(jsondata);
+		System.out.println(jsonobj);
+		ShgmService shgmsvc = new ShgmService();
+		ShgmVO shgmorg = shgmsvc.getOneShgm(jsonobj.getString("shgmno"));
+		
+		Gson gson = new Gson();
+		ShgmVO shgmvo = gson.fromJson(jsondata, ShgmVO.class);
+		if(shgmvo.getUpcheck() != null) {
+			mbrno = shgmorg.getSellerno();
+			sendthis = "您已改變狀態";
+		}
+		if(shgmvo.getBoxstatus() == null) {
+			
+		}
+		if(shgmvo.getStatus() == null) {
+			
+		}
+//		MbrpfVO mbrpfvo = (MbrpfVO) httpsession.getAttribute("member");
 		for(String hashmapkey: connectedSessions.keySet()) {
+//			connectedSessions.get(hashmapkey).getAsyncRemote().sendText(sendthis);//sendToAll
+			System.out.println("enter");
 			if(mbrno.equals(hashmapkey)) {
-				connectedSessions.get(hashmapkey).getAsyncRemote().sendText("我抓到你了");
+				System.out.println("here");
+				connectedSessions.get(hashmapkey).getAsyncRemote().sendText(sendthis);//sendToMbr
 				System.out.println(hashmapkey);
 			}
 		}
@@ -54,12 +77,12 @@ public class MyWebSocket {
 	
 	@OnError
 	public void error(Session session, Throwable error) {
-		System.out.println(error.getMessage());
+		System.out.println("error:"+error.getMessage());
 	}
 	
 	@OnClose
-	public void close(Session session, CloseReason ression) {
-		System.out.println("close");
+	public void close(Session session, CloseReason reason) {
+		System.out.println("close:"+reason.getReasonPhrase());
 	}
 
 }

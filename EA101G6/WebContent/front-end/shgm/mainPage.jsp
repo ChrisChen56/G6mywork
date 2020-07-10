@@ -361,29 +361,17 @@ footer{
 			webSocket = new WebSocket(endPointURL);//建立連線到伺服器端→
 			
 			webSocket.onopen = function(event) {//成功連線，伺服器端回應←
-				alert('success');
-				webSocket.send("msg");
+				console.log('success');
 			};
 
 			webSocket.onmessage = function(event) {//接收伺服器端回應的json字串←
-				console.log(event);
-				var messagesArea = document.getElementById("messagesArea");
-				var jsonObj = JSON.parse(event.data);//json字串轉為物件
-				var message = jsonObj.userName + ": " + jsonObj.message + "\r\n";
-				messagesArea.value = messagesArea.value + message;
-				messagesArea.scrollTop = messagesArea.scrollHeight;
+				alert(event.data);
 			};
 
 			webSocket.onclose = function(event) {//成功關閉，伺服器端回應←
-				alert('closed');
+				console.log('closed');
 			};
 			
-			function upcheckConfirm() {
-				var upcheck = document.getElementById("upcheck").value;
-				if(upcheck === 1){
-					websocket.send("upcheck1");
-				}
-			}
 		}
 		
 		
