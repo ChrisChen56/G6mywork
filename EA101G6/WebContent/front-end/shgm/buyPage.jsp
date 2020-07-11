@@ -38,6 +38,7 @@
 body {
 	background-color: #EEEEEE;
 	background-size: repeat;
+	height:980px;
 }
 
 .icon {
@@ -64,11 +65,20 @@ div.main-area {
 }
 
 .awrapper {
-	display: inline;
+	display: block;
 	text-align: right;
-	margin-left: 75.4%;
+	width: 79%;
 }
-
+@media (max-width: 1672px) {
+	.awrapper {
+		width:70%;
+	}
+}
+@media (max-width: 1150px) {
+	.awrapper {
+		width:50%;
+	}
+}
 div.top-info {
 	margin: 0 auto;
 	border: green 1px solid;

@@ -95,7 +95,7 @@
 		</tr>
 		
 		<c:forEach var="shgmvo" items="${shgmlist}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
-		<tr>
+		<tr ${(shgmvo.shgmno == param.shgmno)? 'bgcolor=#b5b5b5':''}>
 			<td>${shgmvo.shgmno}</td>
 			<td>${shgmvo.sellerno}</td>
 			<td>${shgmvo.shgmname}</td>
@@ -242,16 +242,20 @@
 		</tr>
 		</c:forEach>
 	</table>
+	<input type="hidden" id="mbrno" value="shgmBackEnd">
+	<input type="hidden" id="wsShgmno" value="${param.shgmno}">
 </div>
 		<%@ include file="page2.file" %>
 		
 	<br>
 	<a href="<%= request.getContextPath()%>/back-end/shgm/shgm_select_page.jsp">回首頁</a>
 	
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/wsForShgm.js"></script>
 	<script>
 	function showmodal(){
 		$(this).modal("show");
 	}
+
 	</script>
 </body>
 </html>

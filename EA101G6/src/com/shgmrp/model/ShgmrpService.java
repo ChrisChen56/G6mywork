@@ -47,7 +47,13 @@ public class ShgmrpService {
 		} else if(status == 2 || status == 0) {
 			shgmvo.setUpcheck(1);
 		}
-		shgmsvc.updateShgm(shgmvo, con);
+		
+		System.out.println("enter 2nd service");
+		shgmsvc.updateShgm(shgmvo.getShgmno(), shgmvo.getSellerno(), shgmvo.getBuyerno(),
+				shgmvo.getShgmname(), shgmvo.getPrice(), shgmvo.getIntro(), shgmvo.getImg(),
+				shgmvo.getUpcheck(), shgmvo.getUptime(), shgmvo.getTake(), shgmvo.getTakernm(),
+				shgmvo.getTakerph(), shgmvo.getAddress(), shgmvo.getBoxstatus(), shgmvo.getPaystatus(),
+				shgmvo.getStatus(), shgmvo.getSoldtime(), con);
 	}
 	
 	public void deleteShgmrp(String shgmrpno) {

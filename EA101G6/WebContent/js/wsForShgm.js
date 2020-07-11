@@ -7,6 +7,9 @@ var endPointURL = "ws://" + host + webCtx + MyPoint;// 使用者位址
 
 var webSocket;
 
+//在listAllShgm.jsp
+var shgmno = $("#wsShgmno").val();
+
 var jsondata;
 
 if (mbrno !== '') {
@@ -16,6 +19,9 @@ if (mbrno !== '') {
 
 	webSocket.onopen = function(event) {// 成功連線，伺服器端回應←
 		console.log('success');
+		if(shgmno !== '' && shgmno !== undefined){
+			webSocket.send(shgmno);
+		}
 	};
 
 	webSocket.onmessage = function(event) {// 接收伺服器端回應的json字串←

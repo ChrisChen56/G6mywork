@@ -184,46 +184,6 @@
 	       console.log(address.value);
        };
        
-	var sellerno = document.getElementsByName("sellerno")[0].value;
-	var MyPoint = "/updateShgm/sellerno";
-	var host = window.location.host;
-	var path = window.location.pathname;
-	var webCtx = path.substring(0, path.indexOf('/', 1));
-	var endPointURL = "ws://" + host + webCtx + MyPoint;//使用者位址
-	
-	var webSocket;
-
-	//function connect() {
-		// create a websocket
-		console.log(endPointURL);
-		webSocket = new WebSocket(endPointURL);//建立連線到伺服器端→
-
-		webSocket.onopen = function(event) {//成功連線，伺服器端回應←
-			alert('success');
-		};
-
-		webSocket.onmessage = function(event) {//接收伺服器端回應的json字串←
-			var messagesArea = document.getElementById("messagesArea");
-			var jsonObj = JSON.parse(event.data);//json字串轉為物件
-			var message = jsonObj.userName + ": " + jsonObj.message + "\r\n";
-			messagesArea.value = messagesArea.value + message;
-			messagesArea.scrollTop = messagesArea.scrollHeight;
-		};
-
-		webSocket.onclose = function(event) {//成功關閉，伺服器端回應←
-			alert('closed');
-		};
-		
-		function upcheckConfirm() {
-			var upcheck = document.getElementById("upcheck").value;
-			if(upcheck === 1){
-				websocket.send("upcheck1");
-			}
-		}
-	//}
-       
-       
-       
   }
 </script>
 </html>

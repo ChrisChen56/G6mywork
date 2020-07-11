@@ -72,10 +72,19 @@ div.main-area {
 }
 
 .awrapper {
-	width: 300px;
-	display: inline;
+	display: block;
 	text-align: right;
-	margin-left: 60%;
+	width: 85%;
+}
+@media (max-width: 1496px) {
+	.awrapper {
+		width:75%;
+	}
+}
+@media (max-width: 936px) {
+	.awrapper {
+		width:60%;
+	}
 }
 
 .breadcrumb button {
@@ -265,8 +274,7 @@ div.pageselect-area {
 					<li class="awrapper"><a id="upshgm"
 						class="btn btn-primary ml-auto"
 						href="<%=request.getContextPath()%>/front-end/shgm/sellPage.jsp"
-						role="button">我要上架</a> <a id="myshgm" class="btn btn-primary "
-						href="#" role="button">我的市集商品</a></li>
+						role="button">我要上架</a></li>
 				</ol>
 			</nav>
 		</div>
@@ -378,18 +386,22 @@ div.pageselect-area {
 													<ul class="list-group list-group-horizontal four-li">
 														<li class="list-group-item">${shgmvo.shgmname}</li>
 														<li class="list-group-item"><div class="imgwrapper">
-																<img
-																	src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}">
-															</div></li>
-														<li class="list-group-item"><c:choose>
-																<c:when
-																	test="${shgmrpsvc.getOnerpByShgmno(shgmvo.shgmno).status == 1}">
-													(檢舉下架)${shgmrpsvc.getOnerpByShgmno(shgmvo.shgmno).detail}
-													</c:when>
-																<c:otherwise>
-													(自行下架)自行下架
-													</c:otherwise>
-															</c:choose></li>
+																<img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${shgmvo.shgmno}">
+															</div>
+														</li>
+														<li class="list-group-item">
+														<c:choose>
+															<c:when test="${shgmrpsvc.getOnerpByShgmno(shgmvo.shgmno).status != 1}">
+																後台下架
+															</c:when>
+															<c:when test="${shgmrpsvc.getOnerpByShgmno(shgmvo.shgmno).status == 1}">
+																檢舉下架${shgmrpsvc.getOnerpByShgmno(shgmvo.shgmno).detail}
+															</c:when>
+															<c:otherwise>
+																自行下架
+															</c:otherwise>
+														</c:choose>
+														</li>
 														<li class="list-group-item"><input type="submit"
 															class="btn btn-primary" value="修改"><br>
 															<button id="${shgmvo.shgmno}" value="2" type="button"

@@ -73,9 +73,19 @@ div.main-area {
 }
 
 .awrapper {
-	display: inline;
+	display: block;
 	text-align: right;
-	margin-left: 81%;
+	width: 85%;
+}
+@media (max-width: 1496px) {
+	.awrapper {
+		width:70%;
+	}
+}
+@media (max-width: 936px) {
+	.awrapper {
+		width:45%;
+	}
 }
 
 div.top-info {
@@ -360,10 +370,7 @@ div.top-info {
 		<input type="hidden" id="points" value="${member.points}">
 		<input type="hidden" id="success" value="${buysuccess}">
 	</div>
-
-
-
-
+	
 	<script>
 	$(document).ready(function(){
 		if($("#success").val() == "success"){

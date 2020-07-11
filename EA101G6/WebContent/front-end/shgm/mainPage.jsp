@@ -64,12 +64,21 @@ div.card-body{
 
 .breadcrumb-nav {
 	background-color: #EEEEEE;
+	width:100%;
+	float:right;
 }
-
+.breadcrumb{
+	margin-bottom:0;
+}
 .awrapper {
-	display: inline;
+	display: block;
 	text-align: right;
-	margin-left: 52%;
+	width:90%;
+}
+@media (max-width: 1200px) {
+	.awrapper {
+		width:80%;
+	}
 }
 
 div.top-info {
@@ -97,6 +106,9 @@ div.shgm-area {
 	text-align:center;
 }
 
+#word{
+	margin-top:1%;
+}
 .card-deck {
 	margin: 0 auto;
 }
@@ -123,11 +135,28 @@ div.shgm-area {
 }
 
 div.pageselect-area {
-	display: block;
-	position: relative;
-	width: 100%;
-	margin: 0 auto;
+	display: flex;
+	justify-content: center;
 }
+
+.lefta{
+		float: right;
+		margin-left:2%;
+	}
+	#whichpage{
+		text-align:center;
+		width: 40px;
+		margin:0 1%;
+	}
+	.right-area{
+		margin-bottom:1%;
+		width:48%;
+		float:left;
+	}
+	.left-area{
+		margin-bottom:1%;
+		width:48%;
+	}
 
 .pagination {
 	margin-top: -5%;
@@ -274,8 +303,7 @@ footer{
 							<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/front-end/shgm/mainPage.jsp">市集</a></li>
 						</c:otherwise>
 					</c:choose>
-					<li class="awrapper" style="width:40%;">
-					<a id="upshgm" class="btn btn-primary" href="<%=request.getContextPath()%>/front-end/shgm/sellPage.jsp" role="button">我要上架</a>
+					<li class="awrapper">
 					<a id="myshgm" class="btn btn-primary" href="<%=request.getContextPath()%>/front-end/shgm/myShgm.jsp" role="button">我的市集商品</a>
 					<a id="seller" class="btn btn-primary" href="<%=request.getContextPath()%>/front-end/shgm/sellerPage.jsp" role="button">賣家專區</a></li>
 				</ol>
@@ -338,7 +366,7 @@ footer{
 			}
 		})
 		
-		$("#upshgm,#myshgm,#seller").click(function(){
+		$("#myshgm,#seller").click(function(){
 			if($('#member').val() === ''){
 				alert('您未登入');
 				window.location.href = "<%= request.getContextPath()%>/front-end/shgm/simpleLogin.jsp";

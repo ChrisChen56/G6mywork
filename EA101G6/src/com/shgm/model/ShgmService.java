@@ -14,9 +14,9 @@ public class ShgmService {
 		dao = new ShgmDAO();
 	}
 
-	public ShgmVO addShgm(String sellerno, String buyerno, String shgmname, Integer price, String intro, byte[] img,
-			Integer upcheck, String take, String takernm, String takerph, String address, Integer boxstatus,
-			Integer paystatus, Integer status) {
+	public ShgmVO addShgm(String sellerno, String buyerno, String shgmname, Integer price,
+			String intro, byte[] img, Integer upcheck, Timestamp uptime, String take, String takernm, String takerph, String address,
+			Integer boxstatus, Integer paystatus, Integer status,Timestamp soldtime) {
 
 		ShgmVO shgmvo = new ShgmVO();
 
@@ -27,6 +27,7 @@ public class ShgmService {
 		shgmvo.setIntro(intro);
 		shgmvo.setImg(img);
 		shgmvo.setUpcheck(upcheck);
+		shgmvo.setUptime(uptime);
 		shgmvo.setTake(take);
 		shgmvo.setTakernm(takernm);
 		shgmvo.setTakerph(takerph);
@@ -34,21 +35,19 @@ public class ShgmService {
 		shgmvo.setBoxstatus(boxstatus);
 		shgmvo.setPaystatus(paystatus);
 		shgmvo.setStatus(status);
-
-		if (upcheck == 1) {
-			dao.insertCheck1(shgmvo);
-		} else if (upcheck == 1 && boxstatus == 2 && paystatus == 1 && status == 2) {
-			dao.insertSold(shgmvo);
-		} else {
-			dao.insertNocheck(shgmvo);
-		}
+		shgmvo.setSoldtime(soldtime);
+		
+		ShgmService shgmsvc = new ShgmService();
+		shgmvo = shgmsvc.timeUpdate(shgmvo);
+		
+		dao.insertShgm(shgmvo);
 
 		return shgmvo;
 	}
 
 	public ShgmVO updateShgm(String shgmno, String sellerno, String buyerno, String shgmname, Integer price,
-			String intro, byte[] img, Integer upcheck, String take, String takernm, String takerph, String address,
-			Integer boxstatus, Integer paystatus, Integer status) {
+			String intro, byte[] img, Integer upcheck, Timestamp uptime, String take, String takernm, String takerph, String address,
+			Integer boxstatus, Integer paystatus, Integer status,Timestamp soldtime) {
 
 		ShgmVO shgmvo = new ShgmVO();
 		shgmvo.setShgmno(shgmno);
@@ -59,6 +58,7 @@ public class ShgmService {
 		shgmvo.setIntro(intro);
 		shgmvo.setImg(img);
 		shgmvo.setUpcheck(upcheck);
+		shgmvo.setUptime(uptime);
 		shgmvo.setTake(take);
 		shgmvo.setTakernm(takernm);
 		shgmvo.setTakerph(takerph);
@@ -66,15 +66,19 @@ public class ShgmService {
 		shgmvo.setBoxstatus(boxstatus);
 		shgmvo.setPaystatus(paystatus);
 		shgmvo.setStatus(status);
-
+		shgmvo.setSoldtime(soldtime);
+		
+		ShgmService shgmsvc = new ShgmService();
+		shgmvo = shgmsvc.timeUpdate(shgmvo);
+		
 		dao.update(shgmvo);
 
 		return shgmvo;
 	}
 
 	public ShgmVO updateShgm(String shgmno, String sellerno, String buyerno, String shgmname, Integer price,
-			String intro, byte[] img, Integer upcheck, String take, String takernm, String takerph, String address,
-			Integer boxstatus, Integer paystatus, Integer status, MbrpfVO mbrpfVO) {
+			String intro, byte[] img, Integer upcheck, Timestamp uptime, String take, String takernm, String takerph, String address,
+			Integer boxstatus, Integer paystatus, Integer status,Timestamp soldtime, MbrpfVO mbrpfVO) {
 
 		ShgmVO shgmvo = new ShgmVO();
 		shgmvo.setShgmno(shgmno);
@@ -85,6 +89,7 @@ public class ShgmService {
 		shgmvo.setIntro(intro);
 		shgmvo.setImg(img);
 		shgmvo.setUpcheck(upcheck);
+		shgmvo.setUptime(uptime);
 		shgmvo.setTake(take);
 		shgmvo.setTakernm(takernm);
 		shgmvo.setTakerph(takerph);
@@ -92,67 +97,74 @@ public class ShgmService {
 		shgmvo.setBoxstatus(boxstatus);
 		shgmvo.setPaystatus(paystatus);
 		shgmvo.setStatus(status);
+		shgmvo.setSoldtime(soldtime);
+		
+		ShgmService shgmsvc = new ShgmService();
+		shgmvo = shgmsvc.timeUpdate(shgmvo);
 
 		dao.update(shgmvo, mbrpfVO);
 
 		return shgmvo;
 	}
+	
+	public ShgmVO updateShgm(String shgmno, String sellerno, String buyerno, String shgmname, Integer price,
+			String intro, byte[] img, Integer upcheck, Timestamp uptime, String take, String takernm, String takerph, String address,
+			Integer boxstatus, Integer paystatus, Integer status,Timestamp soldtime, Connection con) {
 
-	public ShgmVO updateShgm(ShgmVO shgmvo, Connection con) {
+		ShgmVO shgmvo = new ShgmVO();
+		shgmvo.setShgmno(shgmno);
+		shgmvo.setSellerno(sellerno);
+		shgmvo.setBuyerno(buyerno);
+		shgmvo.setShgmname(shgmname);
+		shgmvo.setPrice(price);
+		shgmvo.setIntro(intro);
+		shgmvo.setImg(img);
+		shgmvo.setUpcheck(upcheck);
+		shgmvo.setUptime(uptime);
+		shgmvo.setTake(take);
+		shgmvo.setTakernm(takernm);
+		shgmvo.setTakerph(takerph);
+		shgmvo.setAddress(address);
+		shgmvo.setBoxstatus(boxstatus);
+		shgmvo.setPaystatus(paystatus);
+		shgmvo.setStatus(status);
+		shgmvo.setSoldtime(soldtime);
+		
+		ShgmService shgmsvc = new ShgmService();
+		ShgmVO shgmvo2 = shgmsvc.timeUpdate(shgmvo);
 
-		dao.update(shgmvo, con);
+		System.out.println(con.equals(null));
+		dao.update(shgmvo2, con);
 
-		return shgmvo;
+		return shgmvo2;
 	}
 
-	public void timeUpdate(ShgmVO shgmvo, Connection con) {
-		// 拿出原本的時間
-		ShgmService shgmsvc = new ShgmService();
-		ShgmVO shgmorg = shgmsvc.getOneShgm(shgmvo.getShgmno());
-		shgmvo.setUptime(shgmorg.getUptime());
-		shgmvo.setSoldtime(shgmorg.getSoldtime());
+	public ShgmVO timeUpdate(ShgmVO shgmvo) {
+		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 
 		if (shgmvo.getUpcheck() == 0) {
-			dao.uptimeNU(shgmvo.getShgmno(), con);
-			dao.soldtimeNU(shgmvo.getShgmno(), con);
+			shgmvo.setUptime(null);
+			shgmvo.setSoldtime(null);
 		}
 		if (shgmvo.getUpcheck() == 1) {
 			// 上架的市集商品，同時修改成已送達、已付款、已完成，即是訂單完成
 			if (shgmvo.getBoxstatus() == 2 && shgmvo.getPaystatus() == 1 && shgmvo.getStatus() == 2) {
 				// 資料庫更新上架時間、售出時間，如果之前沒上架，更新上架時間；如果本來就是上架中，那就沿用上架時間
-				if (shgmvo.getUptime() == null)
-					dao.uptimeCT(shgmvo.getShgmno(), con);
+				if (shgmvo.getUptime() == null) {
+					shgmvo.setUptime(currentTime);
+				}
 				// 更新售出時間
-				dao.soldtimeCT(shgmvo.getShgmno(), con);
+				shgmvo.setSoldtime(currentTime);
 				// 上架的市集商品，更新上架時間
 			} else if (shgmvo.getBoxstatus() == 0 && shgmvo.getPaystatus() == 0 && shgmvo.getStatus() == 0) {
-				dao.uptimeCT(shgmvo.getShgmno(), con);
-				dao.soldtimeNU(shgmvo.getShgmno(), con);
+				shgmvo.setUptime(currentTime);
+				shgmvo.setSoldtime(null);
 			}
 		}
 		if (shgmvo.getUpcheck() == 2) {
 			;// do nothing
 		}
-	}
-
-	public Timestamp soldtimeCT(String shgmno, Connection con) {
-
-		return dao.soldtimeCT(shgmno, con);
-	}
-
-	public void soldtimeNU(String shgmno, Connection con) {
-
-		dao.soldtimeNU(shgmno, con);
-	}
-
-	public Timestamp uptimeCT(String shgmno, Connection con) {
-
-		return dao.uptimeCT(shgmno, con);
-	}
-
-	public void uptimeNU(String shgmno, Connection con) {
-
-		dao.uptimeNU(shgmno, con);
+		return shgmvo;
 	}
 
 	public void deleteShgm(String shgmno) {

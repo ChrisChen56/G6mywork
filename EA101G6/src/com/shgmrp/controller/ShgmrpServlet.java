@@ -109,6 +109,7 @@ public class ShgmrpServlet extends HttpServlet {
 					return;
 				}
 
+				System.out.println("controller ok");
 				ShgmrpService shgmrpsvc = new ShgmrpService();
 				shgmrpsvc.addShgmrp(shgmno, suiterno, detail, status);
 
