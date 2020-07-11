@@ -60,11 +60,8 @@ public class ShgmrpDAO implements ShgmrpDAO_interface{
 				
 				ShgmService shgmsvc = new ShgmService();
 				ShgmrpService shgmrpsvc = new ShgmrpService();
-				System.out.println("11111111111");
 				shgmrpsvc.updateUpcheck(shgmsvc.getOneShgm(shgmrpvo.getShgmno()), shgmrpvo.getStatus(), con);
-				System.out.println(con.getCatalog());
-				System.out.println("22222222222");
-				System.out.println(con.equals(null));
+				
 				con.commit();
 			} catch (SQLException e) {
 				try {

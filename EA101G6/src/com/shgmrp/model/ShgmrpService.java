@@ -39,7 +39,6 @@ public class ShgmrpService {
 	}
 	
 	public void updateUpcheck(ShgmVO shgmvo, Integer status, Connection con) {
-		ShgmService shgmsvc = new ShgmService();
 		//確定檢舉，下架市集商品
 		if(status == 1) {
 			shgmvo.setUpcheck(2);
@@ -48,7 +47,7 @@ public class ShgmrpService {
 			shgmvo.setUpcheck(1);
 		}
 		
-		System.out.println("enter 2nd service");
+		ShgmService shgmsvc = new ShgmService();
 		shgmsvc.updateShgm(shgmvo.getShgmno(), shgmvo.getSellerno(), shgmvo.getBuyerno(),
 				shgmvo.getShgmname(), shgmvo.getPrice(), shgmvo.getIntro(), shgmvo.getImg(),
 				shgmvo.getUpcheck(), shgmvo.getUptime(), shgmvo.getTake(), shgmvo.getTakernm(),

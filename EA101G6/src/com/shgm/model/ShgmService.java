@@ -133,7 +133,6 @@ public class ShgmService {
 		ShgmService shgmsvc = new ShgmService();
 		ShgmVO shgmvo2 = shgmsvc.timeUpdate(shgmvo);
 
-		System.out.println(con.equals(null));
 		dao.update(shgmvo2, con);
 
 		return shgmvo2;

@@ -20,9 +20,12 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+
 import javax.servlet.http.HttpSession;
 import javax.websocket.CloseReason;
 
@@ -102,6 +105,7 @@ public class MyWebSocket {
 					sendthis.append(
 							"買家  " + buyerVO.getNickname() + "，已取消購買「" + shgmorg.getShgmname() + "」，請至賣家專區回收商品");
 					sendmsg(sellerno, sendthis);
+					sendthis.setLength(0);
 					sendthis.append(buyerVO.getNickname() + "，您已成功取消購買「" + shgmorg.getShgmname() + "」，點數共 "
 							+ shgmorg.getPrice() + "點已退還至您的帳戶");
 					sendmsg(buyerno, sendthis);
@@ -127,7 +131,10 @@ public class MyWebSocket {
 
 	@OnClose
 	public void close(Session session, CloseReason reason) {
-		System.out.println("close:" + reason.getReasonPhrase());
+		for (Entry<String, Session> keyValue : connectedSessions.entrySet()) {
+			if(session.equals(keyValue.getValue()))
+				System.out.println("close: "+ keyValue.getKey() +" leaved WebSocket, reason:" + reason.getReasonPhrase());
+		}
 	}
 
 }

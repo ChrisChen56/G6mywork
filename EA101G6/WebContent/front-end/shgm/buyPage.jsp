@@ -11,9 +11,11 @@
 <!doctype html>
 <html lang="en">
 <head>
-<script type="text/javascript" src="<%=request.getContextPath() %>/js/taiwan_address_auto_change.js"></script>
-<title>buy_page</title>
 <meta charset="utf-8">
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/taiwan_address_auto_change.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<title>buy_page</title>
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -267,6 +269,7 @@ div.top-info {
 						</div>
 						<input type="hidden" name="shgmno" value="${infoshgm.shgmno}">
 						<input type="hidden" name="suiterno" value="${member.mbrno}">
+						<input type="hidden" name="requestURL" value="<%=request.getServletPath()%>">
 						<input type="hidden" name="action" value="insertrp">
 					</form>
 				</div>
@@ -334,13 +337,20 @@ div.top-info {
 			</div>
 		</div>
 	</div>
+	<input type="hidden" id="rpsuccess" value="${rpsuccess}">
 	<div class="random-area"></div>
 
 
 	<script type="text/javascript">
 	window.onload = function () {
-	       //當頁面載完之後，用AddressSeleclList.Initialize()，
-	       //傳入要綁定的縣市下拉選單ID及鄉鎮市區下拉選單ID
+		if($("#rpsuccess").val() == "success"){
+			Swal.fire({
+				  icon: 'success',
+				  title: '您的檢舉已成功送出！',
+				  showConfirmButton: false,
+				  timer: 1500
+				})
+		}
 	       AddressSeleclList.Initialize('縣市1', '鄉鎮市區1'<%= (hashmap == null)? "":",'"+hashmap.get("city")+"'"%><%= (hashmap == null)? "": ",'"+hashmap.get("area")+"'"%>);
 	       var addressClass = document.getElementsByClassName("address");
 	       var address = document.getElementById("address");

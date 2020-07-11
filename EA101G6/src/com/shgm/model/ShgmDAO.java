@@ -232,7 +232,6 @@ public class ShgmDAO implements ShgmDAO_interface {
 			pstmt.setTimestamp(16, shgmvo.getSoldtime());
 			pstmt.setString(17, shgmvo.getShgmno());
 			pstmt.executeUpdate();
-			System.out.println("shgmdao:"+con.equals(null));
 			
 		} catch (SQLException e) {
 			try {
@@ -244,13 +243,6 @@ public class ShgmDAO implements ShgmDAO_interface {
 			if (pstmt != null) {
 				try {
 					pstmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (con != null) {
-				try {
-					con.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}

@@ -83,6 +83,9 @@ public class ShgmrpServlet extends HttpServlet {
 			HashMap<Long, String> errormap = new HashMap<Long, String>();
 			request.setAttribute("errormap", errormap);
 			
+			String requestURL = request.getParameter("requestURL");
+			System.out.println(requestURL);
+			
 			try {
 				String shgmno = request.getParameter("shgmno");
 
@@ -103,24 +106,20 @@ public class ShgmrpServlet extends HttpServlet {
 				shgmrpvo.setStatus(status);
 
 				if (!errormap.isEmpty()) {
-					String url = "/front-end/shgm/infoPage.jsp";
-					RequestDispatcher failedview = request.getRequestDispatcher(url);
+					RequestDispatcher failedview = request.getRequestDispatcher(requestURL);
 					failedview.forward(request, response);
 					return;
 				}
 
-				System.out.println("controller ok");
 				ShgmrpService shgmrpsvc = new ShgmrpService();
 				shgmrpsvc.addShgmrp(shgmno, suiterno, detail, status);
+				request.setAttribute("rpsuccess", "success");
 
-				//要再加上成功提示
-				String url = "/front-end/shgm/infoPage.jsp";
-				RequestDispatcher successview = request.getRequestDispatcher(url);
+				RequestDispatcher successview = request.getRequestDispatcher(requestURL);
 				successview.forward(request, response);
 			} catch (Exception e) {
 				errormap.put((long) 1, "無法檢舉市集商品");
-				String url = "/front-end/shgm/infoPage.jsp";
-				RequestDispatcher failedview = request.getRequestDispatcher(url);
+				RequestDispatcher failedview = request.getRequestDispatcher(requestURL);
 				failedview.forward(request, response);
 			}
 		}

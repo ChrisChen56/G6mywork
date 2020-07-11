@@ -266,6 +266,7 @@ div.top-info {
 						</div>
 						<input type="hidden" name="shgmno" value="${infoshgm.shgmno}">
 						<input type="hidden" name="suiterno" value="${member.mbrno}">
+						<input type="hidden" name="requestURL" value="<%=request.getServletPath()%>">
 						<input type="hidden" name="action" value="insertrp">
 					</form>
 				</div>
@@ -368,12 +369,13 @@ div.top-info {
 			</div>
 		</div>
 		<input type="hidden" id="points" value="${member.points}">
-		<input type="hidden" id="success" value="${buysuccess}">
+		<input type="hidden" id="buysuccess" value="${buysuccess}">
+		<input type="hidden" id="rpsuccess" value="${rpsuccess}">
 	</div>
 	
 	<script>
 	$(document).ready(function(){
-		if($("#success").val() == "success"){
+		if($("#buysuccess").val() == "success"){
 			Swal.fire({
 				  icon: 'success',
 				  title: '您已購買成功！',
@@ -381,30 +383,56 @@ div.top-info {
 				  timer: 1500
 				})
 		}
+		if($("#rpsuccess").val() == "success"){
+			Swal.fire({
+				  icon: 'success',
+				  title: '您的檢舉已成功送出！',
+				  showConfirmButton: false,
+				  timer: 1500
+				})
+		}
 		var $mbrname = $("#mbrname").text().substr(4);
 		$("#buythis").click(function(){
 			if($mbrname == ""){
-				alert("您未登入");
-				window.location.href = "<%= request.getContextPath()%>/front-end/shgm/simpleLogin.jsp";
-				return false;
-			};
-			var $price = parseInt($("#price").text());
-			var $points = $("#points").val();
-			if ( $price > $points ){
-				alert($("#price").text());
-				alert($("#points").val());
 				Swal.fire({
-					  icon: 'error',
-					  title: '您的餘額不足',
-					  text: '請進行儲值再繼續購物',
-					  footer: '<a href>沒錢了沒錢了沒錢了沒錢了</a>'
-					});
+					  title: '您尚未登入',
+					  icon: 'info',
+					  html:'請先登入再執行動作',
+					  showCancelButton: true,
+					  focusConfirm: false,
+					  confirmButtonText:
+					    '<a style="color:white;" href="<%=request.getContextPath()%>/front-end/login.jsp" class="fa">前往登入</a>',
+					  cancelButtonText:
+					    '<span class="fa fa-thumbs-down">繼續逛逛</span>',
+					})
 				event.preventDefault();
+			} else{
+				var $price = parseInt($("#price").text());
+				var $points = $("#points").val();
+				if ( $price > $points ){
+					Swal.fire({
+						  icon: 'error',
+						  title: '您的餘額不足',
+						  text: '請進行儲值再繼續購物',
+						  footer: '<a href="<%=request.getContextPath()%>/front-end/tfcord/buyPoint.jsp">點數儲值&nbsp&nbsp</a><span>尚餘'+$points+'點</span>'
+						});
+					event.preventDefault();
+				}
 			}
 		});
 		$("#rp").click(function(){
 			if($mbrname == ""){
-				alert("您未登入");
+				Swal.fire({
+					  title: '您尚未登入',
+					  icon: 'info',
+					  html:'請先登入再執行動作',
+					  showCancelButton: true,
+					  focusConfirm: false,
+					  confirmButtonText:
+					    '<a style="color:white;" href="<%=request.getContextPath()%>/front-end/login.jsp" class="fa">前往登入</a>',
+					  cancelButtonText:
+					    '<span class="fa fa-thumbs-down">繼續逛逛</span>',
+					})
 				event.stopPropagation();
 			}
 		});

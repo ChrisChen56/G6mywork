@@ -439,7 +439,7 @@ public class ShgmServlet extends HttpServlet {
 
 			MbrpfService mbrpfsvc = new MbrpfService();
 			MbrpfVO mbrpfvo = mbrpfsvc.getOneMbrpf(shgmvo.getSellerno());
-			request.setAttribute("sellerinfo", mbrpfvo);
+			session.setAttribute("sellerinfo", mbrpfvo);
 
 			String url = null;
 			if (requestURL == null) {
@@ -457,14 +457,13 @@ public class ShgmServlet extends HttpServlet {
 			request.setAttribute("errormap", errormap);
 
 			ShgmVO shgmvo = (ShgmVO) session.getAttribute("infoshgm");
-			MbrpfVO mbrpfVO = (MbrpfVO) session.getAttribute("member");
 
 			try {
 				String shgmno = request.getParameter("shgmno");
 
 				// 從會員資料取得，不需要錯誤處理
 				String buyerno = request.getParameter("buyerno");
-				if (buyerno.equals(mbrpfVO.getMbrno()))
+				if (buyerno.equals(shgmvo.getSellerno()))
 					errormap.put((long) 5, "無法購買自己的市集商品");
 
 				String take = request.getParameter("take");
@@ -520,7 +519,7 @@ public class ShgmServlet extends HttpServlet {
 
 				MbrpfService mbrpfsvc = new MbrpfService();
 				// 取出買家的mbrpfvo以便對points做更動
-				mbrpfVO = mbrpfsvc.getOneMbrpf(buyerno);
+				MbrpfVO mbrpfVO = mbrpfsvc.getOneMbrpf(buyerno);
 				// 把買家原本的points扣掉價格
 				mbrpfVO.setPoints(mbrpfVO.getPoints() - shgmvo.getPrice());
 
@@ -532,9 +531,6 @@ public class ShgmServlet extends HttpServlet {
 				// 回到infoPage的JSTL判斷用的
 				shgmvo.setPaystatus(1);
 				session.setAttribute("infoshgm", shgmvo);
-
-				mbrpfVO = mbrpfsvc.getOneMbrpf(shgmvo.getSellerno());
-				request.setAttribute("sellerinfo", mbrpfVO);
 
 				request.setAttribute("buysuccess", "success");
 
@@ -1073,7 +1069,7 @@ public class ShgmServlet extends HttpServlet {
 				request.setAttribute("psllist", list);
 				MbrpfService mbrpfsvc = new MbrpfService();
 				MbrpfVO mbrpfvo = mbrpfsvc.getOneMbrpf(sellerno);
-				request.setAttribute("sellerinfo", mbrpfvo);
+				session.setAttribute("sellerinfo", mbrpfvo);
 				String url = "/front-end/shgm/personalMkt.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
