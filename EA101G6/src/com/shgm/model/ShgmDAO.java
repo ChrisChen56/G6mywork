@@ -5,9 +5,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.naming.*;
 import javax.sql.DataSource;
@@ -101,7 +102,7 @@ public class ShgmDAO implements ShgmDAO_interface {
 		PreparedStatement pstmt = null;
 		try {
 			con = ds.getConnection();
-			
+
 			pstmt = con.prepareStatement(UPDATE_STMT);
 
 			pstmt.setString(1, shgmvo.getSellerno());
@@ -123,7 +124,7 @@ public class ShgmDAO implements ShgmDAO_interface {
 			pstmt.setInt(15, shgmvo.getStatus());
 			pstmt.setTimestamp(16, shgmvo.getSoldtime());
 			pstmt.setString(17, shgmvo.getShgmno());
-			
+
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -145,16 +146,16 @@ public class ShgmDAO implements ShgmDAO_interface {
 			}
 		}
 	}
-	
+
 	@Override
 	public void update(ShgmVO shgmvo, MbrpfVO mbrpfVO) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		try {
 			con = ds.getConnection();
-			
+
 			con.setAutoCommit(false);
-			
+
 			pstmt = con.prepareStatement(UPDATE_STMT);
 
 			pstmt.setString(1, shgmvo.getSellerno());
@@ -177,10 +178,10 @@ public class ShgmDAO implements ShgmDAO_interface {
 			pstmt.setTimestamp(16, shgmvo.getSoldtime());
 			pstmt.setString(17, shgmvo.getShgmno());
 			pstmt.executeUpdate();
-			
+
 			MbrpfService mbrpfsvc = new MbrpfService();
 			mbrpfsvc.updateMbrpf(mbrpfVO, con);
-			
+
 			con.commit();
 		} catch (SQLException e) {
 			try {
@@ -205,7 +206,7 @@ public class ShgmDAO implements ShgmDAO_interface {
 			}
 		}
 	}
-	
+
 	@Override
 	public void update(ShgmVO shgmvo, Connection con) {
 		PreparedStatement pstmt = null;
@@ -232,7 +233,7 @@ public class ShgmDAO implements ShgmDAO_interface {
 			pstmt.setTimestamp(16, shgmvo.getSoldtime());
 			pstmt.setString(17, shgmvo.getShgmno());
 			pstmt.executeUpdate();
-			
+
 		} catch (SQLException e) {
 			try {
 				con.rollback();
@@ -249,7 +250,7 @@ public class ShgmDAO implements ShgmDAO_interface {
 			}
 		}
 	}
-	
+
 	@Override
 	public void delete(String shgmno) {
 		Connection con = null;
@@ -265,12 +266,13 @@ public class ShgmDAO implements ShgmDAO_interface {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if (pstmt != null)
+			if (pstmt != null) {
 				try {
 					pstmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
 				}
+			}
 			if (con != null) {
 				try {
 					con.close();
@@ -322,11 +324,18 @@ public class ShgmDAO implements ShgmDAO_interface {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e2) {
+					e2.printStackTrace();
+				}
+			}
 			if (pstmt != null) {
 				try {
 					pstmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
 				}
 			}
 			if (con != null) {
@@ -381,11 +390,18 @@ public class ShgmDAO implements ShgmDAO_interface {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e2) {
+					e2.printStackTrace();
+				}
+			}
 			if (pstmt != null) {
 				try {
 					pstmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
 				}
 			}
 			if (con != null) {
@@ -400,11 +416,11 @@ public class ShgmDAO implements ShgmDAO_interface {
 	}
 
 	@Override
-	public List<ShgmVO> getall() {
+	public Set<ShgmVO> getall() {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		List<ShgmVO> list = new ArrayList<ShgmVO>();
+		Set<ShgmVO> set = new LinkedHashSet<ShgmVO>();
 
 		try {
 			con = ds.getConnection();
@@ -434,7 +450,7 @@ public class ShgmDAO implements ShgmDAO_interface {
 				shgmvo.setStatus(rs.getInt(16));
 				shgmvo.setSoldtime(rs.getTimestamp(17));
 
-				list.add(shgmvo);
+				set.add(shgmvo);
 			}
 
 			rs.close();
@@ -442,12 +458,20 @@ public class ShgmDAO implements ShgmDAO_interface {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if (pstmt != null)
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e2) {
+					e2.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
+			}
 			if (con != null) {
 				try {
 					con.close();
@@ -456,20 +480,20 @@ public class ShgmDAO implements ShgmDAO_interface {
 				}
 			}
 		}
-		return list;
+		return set;
 	}
-	
+
 	@Override
-	public List<ShgmVO> allForSeller(String sellerno) {
+	public Set<ShgmVO> allForSeller(String sellerno) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		List<ShgmVO> list = new ArrayList<ShgmVO>();
+		Set<ShgmVO> set = new LinkedHashSet<ShgmVO>();
 
 		try {
 			con = ds.getConnection();
 			pstmt = con.prepareStatement(GET_ALL_FOR_SELLER_STMT);
-			
+
 			pstmt.setString(1, sellerno);
 
 			rs = pstmt.executeQuery();
@@ -496,7 +520,7 @@ public class ShgmDAO implements ShgmDAO_interface {
 				shgmvo.setStatus(rs.getInt(16));
 				shgmvo.setSoldtime(rs.getTimestamp(17));
 
-				list.add(shgmvo);
+				set.add(shgmvo);
 			}
 
 			rs.close();
@@ -504,12 +528,20 @@ public class ShgmDAO implements ShgmDAO_interface {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if (pstmt != null)
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e2) {
+					e2.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
+			}
 			if (con != null) {
 				try {
 					con.close();
@@ -518,22 +550,22 @@ public class ShgmDAO implements ShgmDAO_interface {
 				}
 			}
 		}
-		return list;
+		return set;
 	}
-	
+
 	@Override
-	public List<ShgmVO> allForBuyer(String Buyerno) {
+	public Set<ShgmVO> allForBuyer(String Buyerno) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		List<ShgmVO> list = new ArrayList<ShgmVO>();
+		Set<ShgmVO> set = new LinkedHashSet<ShgmVO>();
 
 		try {
 			con = ds.getConnection();
 			pstmt = con.prepareStatement(GET_ALL_FOR_BUYER_STMT);
 
 			pstmt.setString(1, Buyerno);
-			
+
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
@@ -558,7 +590,7 @@ public class ShgmDAO implements ShgmDAO_interface {
 				shgmvo.setStatus(rs.getInt(16));
 				shgmvo.setSoldtime(rs.getTimestamp(17));
 
-				list.add(shgmvo);
+				set.add(shgmvo);
 			}
 
 			rs.close();
@@ -566,12 +598,20 @@ public class ShgmDAO implements ShgmDAO_interface {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if (pstmt != null)
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e2) {
+					e2.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
+			}
 			if (con != null) {
 				try {
 					con.close();
@@ -580,11 +620,79 @@ public class ShgmDAO implements ShgmDAO_interface {
 				}
 			}
 		}
-		return list;
+		return set;
 	}
 
 	@Override
-	public List<ShgmVO> getAllForMain() {
+	public Set<ShgmVO> getAllForMain() {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		Set<ShgmVO> set = new LinkedHashSet<ShgmVO>();
+
+		try {
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(MAINPAGE_GETALL_STMT);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				ShgmVO shgmvo = new ShgmVO();
+				shgmvo.setShgmno(rs.getString(1));
+				shgmvo.setSellerno(rs.getString(2));
+				shgmvo.setBuyerno(rs.getString(3));
+				shgmvo.setShgmname(rs.getString(4));
+				shgmvo.setPrice(rs.getInt(5));
+				Clob clob = rs.getClob(6);
+				String intro = clob.getSubString(1, (int) clob.length());
+				shgmvo.setIntro(intro);
+				shgmvo.setImg(rs.getBytes(7));
+				shgmvo.setUpcheck(rs.getInt(8));
+				shgmvo.setUptime(rs.getTimestamp(9));
+				shgmvo.setTake(rs.getString(10));
+				shgmvo.setTakernm(rs.getString(11));
+				shgmvo.setTakerph(rs.getString(12));
+				shgmvo.setAddress(rs.getString(13));
+				shgmvo.setBoxstatus(rs.getInt(14));
+				shgmvo.setPaystatus(rs.getInt(15));
+				shgmvo.setStatus(rs.getInt(16));
+				shgmvo.setSoldtime(rs.getTimestamp(17));
+
+				set.add(shgmvo);
+			}
+
+			rs.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e2) {
+					e2.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return set;
+	}
+
+	@Override
+	public java.util.List<ShgmVO> getAllForInfoShuffle() {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -626,12 +734,20 @@ public class ShgmDAO implements ShgmDAO_interface {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if (pstmt != null)
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e2) {
+					e2.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
+			}
 			if (con != null) {
 				try {
 					con.close();
@@ -642,18 +758,18 @@ public class ShgmDAO implements ShgmDAO_interface {
 		}
 		return list;
 	}
-	
+
 	@Override
-	public List<ShgmVO> allForPpersonalMkt(String sellerno) {
+	public Set<ShgmVO> allForPpersonalMkt(String sellerno) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		List<ShgmVO> list = new ArrayList<ShgmVO>();
+		Set<ShgmVO> set = new LinkedHashSet<ShgmVO>();
 
 		try {
 			con = ds.getConnection();
 			pstmt = con.prepareStatement(GET_ALL_FOR_PERSONALMKT);
-			
+
 			pstmt.setString(1, sellerno);
 
 			rs = pstmt.executeQuery();
@@ -680,7 +796,7 @@ public class ShgmDAO implements ShgmDAO_interface {
 				shgmvo.setStatus(rs.getInt(16));
 				shgmvo.setSoldtime(rs.getTimestamp(17));
 
-				list.add(shgmvo);
+				set.add(shgmvo);
 			}
 
 			rs.close();
@@ -688,12 +804,20 @@ public class ShgmDAO implements ShgmDAO_interface {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if (pstmt != null)
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e2) {
+					e2.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
+			}
 			if (con != null) {
 				try {
 					con.close();
@@ -702,20 +826,20 @@ public class ShgmDAO implements ShgmDAO_interface {
 				}
 			}
 		}
-		return list;
+		return set;
 	}
-	
+
 	@Override
-	public List<ShgmVO> searchForMain(String word) {
+	public Set<ShgmVO> searchForMain(String word) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		List<ShgmVO> list = new ArrayList<ShgmVO>();
+		Set<ShgmVO> set = new LinkedHashSet<ShgmVO>();
 
 		try {
 			con = ds.getConnection();
 			pstmt = con.prepareStatement(SEARCH_STMT);
-			pstmt.setString(1, "%"+word+"%");
+			pstmt.setString(1, "%" + word + "%");
 
 			rs = pstmt.executeQuery();
 
@@ -741,7 +865,7 @@ public class ShgmDAO implements ShgmDAO_interface {
 				shgmvo.setStatus(rs.getInt(16));
 				shgmvo.setSoldtime(rs.getTimestamp(17));
 
-				list.add(shgmvo);
+				set.add(shgmvo);
 			}
 
 			rs.close();
@@ -749,12 +873,20 @@ public class ShgmDAO implements ShgmDAO_interface {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if (pstmt != null)
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e2) {
+					e2.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
+			}
 			if (con != null) {
 				try {
 					con.close();
@@ -763,7 +895,7 @@ public class ShgmDAO implements ShgmDAO_interface {
 				}
 			}
 		}
-		return list;
+		return set;
 	}
-	
+
 }

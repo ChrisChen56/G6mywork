@@ -12,7 +12,7 @@ public class RandListFilter extends HttpServlet implements Filter {
 	private FilterConfig config;
        
     public void init(FilterConfig filterConfig) throws javax.servlet.ServletException { 
-    	this.config = config;
+    	this.config = filterConfig;
     }
     
     public void destroy() {
@@ -21,14 +21,13 @@ public class RandListFilter extends HttpServlet implements Filter {
 
     public void doFilter(ServletRequest request1, ServletResponse response1, FilterChain chain) throws java.io.IOException, javax.servlet.ServletException { 
     	HttpServletRequest request = (HttpServletRequest) request1;
-    	HttpServletResponse response = (HttpServletResponse) response1;
     	
     	ShgmService shgmsvc = new ShgmService();
     	String shgmno = request.getParameter("shgmno");
     	ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);//取得使用者點選的市集商品
     	
     	List<ShgmVO> list = new ArrayList<ShgmVO>();
-    	list = shgmsvc.getAllForMain();
+    	list = shgmsvc.getAllForInfoShuffle();
     	
     	
     	for(Iterator<ShgmVO> it = list.iterator();it.hasNext();) {

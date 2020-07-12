@@ -13,7 +13,7 @@ import java.util.Set;
 
 import javax.naming.*;
 
-public class ShgmrpDAO implements ShgmrpDAO_interface {
+public class ShgmrpJNDIDAO implements ShgmrpDAO_interface {
 	private static DataSource ds = null;
 	static {
 		try {

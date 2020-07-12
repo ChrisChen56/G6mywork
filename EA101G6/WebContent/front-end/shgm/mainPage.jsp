@@ -7,8 +7,8 @@
 <%
 	MbrpfVO member = (MbrpfVO) session.getAttribute("member");
 	ShgmService shgmsvc = new ShgmService();
-	List<ShgmVO> list = shgmsvc.getAllForMain();
-	pageContext.setAttribute("shgmlist", list);
+	Set<ShgmVO> set = shgmsvc.getAllForMain();
+	pageContext.setAttribute("shgmset", set);
 %>
 <!doctype html>
 <html lang="en">
@@ -318,7 +318,7 @@ footer{
 					<input type="hidden" name="action" value="search"/>
 				</form>
 				<div class="card-deck">
-					<c:forEach var="shgmvo" items="${(searchResult == null)? shgmlist:searchResult}"  begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
+					<c:forEach var="shgmvo" items="${(searchResult == null)? shgmset:searchResult}"  begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
 						<div class="mb-4">
 							<a target="_self" href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneForMoreInfo&shgmno=${shgmvo.shgmno}">
 								<div class="card">
@@ -336,10 +336,10 @@ footer{
 				</div>
 			</div>
 		</div>
-		<c:if test="${(searchResult == null)? true:(listsize > 12)? true:false}">
+		<c:if test="${(searchResult == null)? true:(setsize > 12)? true:false}">
 			<%@ include file="page2.file" %>
 		</c:if>
-		<c:if test="${listsize == 0}">
+		<c:if test="${setsize == 0}">
 		<div style="margin:20% 0; width:100%; text-align:center;">很抱歉！並沒有符合的搜尋結果</div>
 		</c:if>
 	</div>

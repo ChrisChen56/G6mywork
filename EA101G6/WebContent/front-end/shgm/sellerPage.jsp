@@ -9,8 +9,8 @@
 <%
 	MbrpfVO member = (MbrpfVO) session.getAttribute("member");
 	ShgmService shgmsvc = new ShgmService();
-	List<ShgmVO> shgmlist = shgmsvc.allForSeller(member.getMbrno());
-	pageContext.setAttribute("shgmlist", shgmlist);
+	Set<ShgmVO> shgmset = shgmsvc.allForSeller(member.getMbrno());
+	pageContext.setAttribute("shgmset", shgmset);
 	ShgmrpService shgmrpsvc = new ShgmrpService();
 	pageContext.setAttribute("shgmrpsvc", shgmrpsvc);
 %>
@@ -325,7 +325,7 @@ div.pageselect-area {
 											<li class="list-group-item firstlis">售價</li>
 											<li class="list-group-item firstlis">市集商品狀態</li>
 										</ul>
-										<c:forEach var="shgmvo" items="${shgmlist}">
+										<c:forEach var="shgmvo" items="${shgmset}">
 											<c:if
 												test="${shgmvo.upcheck == 0 and shgmvo.boxstatus == 0 and shgmvo.paystatus == 0 and shgmvo.status == 0}">
 												<ul class="list-group list-group-horizontal four-li">
@@ -351,7 +351,7 @@ div.pageselect-area {
 											<li class="list-group-item firstlis">售價</li>
 											<li class="list-group-item firstlis">上架時間</li>
 										</ul>
-										<c:forEach var="shgmvo" items="${shgmlist}">
+										<c:forEach var="shgmvo" items="${shgmset}">
 											<c:if
 												test="${shgmvo.upcheck == 1 and shgmvo.boxstatus == 0 and shgmvo.paystatus == 0 and shgmvo.status == 0}">
 												<ul class="list-group list-group-horizontal four-li">
@@ -378,7 +378,7 @@ div.pageselect-area {
 											<li class="list-group-item firstlis">下架原因</li>
 											<li class="list-group-item firstlis">更新商品狀態</li>
 										</ul>
-										<c:forEach var="shgmvo" items="${shgmlist}">
+										<c:forEach var="shgmvo" items="${shgmset}">
 											<c:if
 												test="${shgmvo.upcheck == 2 and shgmvo.boxstatus == 0 and shgmvo.paystatus == 0 and shgmvo.status == 0}">
 												<form method="post"
@@ -446,7 +446,7 @@ div.pageselect-area {
 												<li class="list-group-item firstlis">地址</li>
 												<li class="list-group-item firstlis">出貨狀態</li>
 											</ul>
-											<c:forEach var="shgmvo" items="${shgmlist}">
+											<c:forEach var="shgmvo" items="${shgmset}">
 												<c:if
 													test="${shgmvo.upcheck == 1 and shgmvo.boxstatus == 0 and shgmvo.paystatus == 1 and shgmvo.status == 1}">
 													<ul class="list-group list-group-horizontal six-li">
@@ -477,7 +477,7 @@ div.pageselect-area {
 												<li class="list-group-item firstlis">地址</li>
 												<li class="list-group-item firstlis">出貨狀態</li>
 											</ul>
-											<c:forEach var="shgmvo" items="${shgmlist}">
+											<c:forEach var="shgmvo" items="${shgmset}">
 												<c:if
 													test="${shgmvo.upcheck == 1 and shgmvo.boxstatus == 1 and shgmvo.paystatus == 1 and shgmvo.status == 1}">
 													<ul class="list-group list-group-horizontal six-li">
@@ -508,7 +508,7 @@ div.pageselect-area {
 												<li class="list-group-item firstlis">地址</li>
 												<li class="list-group-item firstlis">出貨狀態</li>
 											</ul>
-											<c:forEach var="shgmvo" items="${shgmlist}">
+											<c:forEach var="shgmvo" items="${shgmset}">
 												<c:if
 													test="${shgmvo.upcheck == 1 and shgmvo.boxstatus == 2 and shgmvo.paystatus == 1 and shgmvo.status == 1}">
 													<ul class="list-group list-group-horizontal six-li">
@@ -538,7 +538,7 @@ div.pageselect-area {
 									<li class="list-group-item firstlis">上架日期</li>
 									<li class="list-group-item firstlis">售出日期</li>
 								</ul>
-								<c:forEach var="shgmvo" items="${shgmlist}">
+								<c:forEach var="shgmvo" items="${shgmset}">
 									<c:if
 										test="${shgmvo.upcheck == 1 and shgmvo.boxstatus == 2 and shgmvo.paystatus == 1 and shgmvo.status == 2}">
 										<ul class="list-group list-group-horizontal five-li">
@@ -565,7 +565,7 @@ div.pageselect-area {
 									<li class="list-group-item firstlis">售價</li>
 									<li class="list-group-item firstlis">回收商品</li>
 								</ul>
-								<c:forEach var="shgmvo" items="${shgmlist}">
+								<c:forEach var="shgmvo" items="${shgmset}">
 									<c:if test="${shgmvo.status == 3}">
 										<ul class="list-group list-group-horizontal four-li">
 											<li class="list-group-item">${shgmvo.shgmname}</li>

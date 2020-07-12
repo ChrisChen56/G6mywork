@@ -70,7 +70,7 @@ public class ShgmrpService {
 		return dao.findByShgmno(shgmno);
 	}
 	
-	public java.util.List<ShgmrpVO> getAllShgmrp(){
+	public java.util.Set<ShgmrpVO> getAllShgmrp(){
 		
 		return dao.getAll();
 	}

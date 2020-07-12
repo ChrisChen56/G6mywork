@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -1046,9 +1047,9 @@ public class ShgmServlet extends HttpServlet {
 				String word = request.getParameter("word");
 
 				ShgmService shgmsvc = new ShgmService();
-				List<ShgmVO> list = shgmsvc.searchForMain(word);
-				request.setAttribute("searchResult", list);
-				request.setAttribute("listsize", (long) list.size());
+				Set<ShgmVO> set = shgmsvc.searchForMain(word);
+				request.setAttribute("searchResult", set);
+				request.setAttribute("setsize", (long) set.size());
 				String url = "/front-end/shgm/mainPage.jsp";
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
@@ -1065,8 +1066,8 @@ public class ShgmServlet extends HttpServlet {
 				String sellerno = request.getParameter("sellerno");
 
 				ShgmService shgmsvc = new ShgmService();
-				List<ShgmVO> list = shgmsvc.allForPersonalMkt(sellerno);
-				request.setAttribute("psllist", list);
+				Set<ShgmVO> set = shgmsvc.allForPersonalMkt(sellerno);
+				request.setAttribute("pslset", set);
 				MbrpfService mbrpfsvc = new MbrpfService();
 				MbrpfVO mbrpfvo = mbrpfsvc.getOneMbrpf(sellerno);
 				session.setAttribute("sellerinfo", mbrpfvo);

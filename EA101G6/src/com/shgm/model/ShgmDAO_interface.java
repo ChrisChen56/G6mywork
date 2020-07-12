@@ -12,10 +12,11 @@ public interface ShgmDAO_interface {
 	public void delete(String shgmno);
 	public ShgmVO findByPrimaryKey(String shgmno);
 	public ShgmVO getOneForInfo(String shgmno);
-	public java.util.List<ShgmVO> allForSeller(String sellerno);
-	public java.util.List<ShgmVO> allForBuyer(String buyerno);
-	public java.util.List<ShgmVO> getall();
-	public java.util.List<ShgmVO> allForPpersonalMkt(String sellerno);
-	public java.util.List<ShgmVO> getAllForMain();
-	public java.util.List<ShgmVO> searchForMain(String word);
+	public java.util.Set<ShgmVO> getall();
+	public java.util.Set<ShgmVO> allForSeller(String sellerno);
+	public java.util.Set<ShgmVO> allForBuyer(String buyerno);
+	public java.util.Set<ShgmVO> allForPpersonalMkt(String sellerno);
+	public java.util.Set<ShgmVO> getAllForMain();
+	public java.util.List<ShgmVO> getAllForInfoShuffle();
+	public java.util.Set<ShgmVO> searchForMain(String word);
 }

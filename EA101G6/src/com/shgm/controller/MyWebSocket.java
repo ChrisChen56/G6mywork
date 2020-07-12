@@ -20,7 +20,6 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

@@ -241,7 +241,7 @@ div.pageselect-area {
 		<div class="shgm-area-wrapper">
 			<div class="shgm-area ">
 				<div class="card-deck">
-					<c:forEach var="shgmvo" items="${(searchResult == null)? psllist:searchResult}">
+					<c:forEach var="shgmvo" items="${(searchResult == null)? pslset:searchResult}">
 						<div class="mb-4">
 							<a target="_self" href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneForMoreInfo&shgmno=${shgmvo.shgmno}">
 								<div class="card">

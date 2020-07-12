@@ -209,32 +209,37 @@ public class ShgmService {
 		return dao.getOneForInfo(shgmno);
 	}
 
-	public java.util.List<ShgmVO> getAllShgm() {
+	public java.util.Set<ShgmVO> getAllShgm() {
 
 		return dao.getall();
 	}
 
-	public java.util.List<ShgmVO> allForSeller(String sellerno) {
+	public java.util.Set<ShgmVO> allForSeller(String sellerno) {
 
 		return dao.allForSeller(sellerno);
 	}
 
-	public java.util.List<ShgmVO> allForBuyer(String buyerno) {
+	public java.util.Set<ShgmVO> allForBuyer(String buyerno) {
 
 		return dao.allForBuyer(buyerno);
 	}
 
-	public java.util.List<ShgmVO> getAllForMain() {
+	public java.util.Set<ShgmVO> getAllForMain() {
 
 		return dao.getAllForMain();
 	}
 	
-	public java.util.List<ShgmVO> allForPersonalMkt(String sellerno) {
+	public java.util.List<ShgmVO> getAllForInfoShuffle() {
+
+		return dao.getAllForInfoShuffle();
+	}
+	
+	public java.util.Set<ShgmVO> allForPersonalMkt(String sellerno) {
 
 		return dao.allForPpersonalMkt(sellerno);
 	}
 
-	public java.util.List<ShgmVO> searchForMain(String word) {
+	public java.util.Set<ShgmVO> searchForMain(String word) {
 
 		return dao.searchForMain(word);
 	}

@@ -5,7 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class ShgmrpJDBCDAO implements ShgmrpDAO_interface{
 	String driver = "oracle.jdbc.driver.OracleDriver";
@@ -54,18 +55,20 @@ public class ShgmrpJDBCDAO implements ShgmrpDAO_interface{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if(pstmt != null)
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			if(con != null)
+			}
+			if (con != null) {
 				try {
 					con.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+			}
 		}
 		
 	}
@@ -91,18 +94,20 @@ public class ShgmrpJDBCDAO implements ShgmrpDAO_interface{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if(pstmt != null)
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			if(con != null)
+			}
+			if (con != null) {
 				try {
 					con.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+			}
 		}
 	}
 	
@@ -123,18 +128,20 @@ public class ShgmrpJDBCDAO implements ShgmrpDAO_interface{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if(pstmt != null)
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			if(con != null)
+			}
+			if (con != null) {
 				try {
 					con.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+			}
 		}
 	}
 
@@ -170,18 +177,27 @@ public class ShgmrpJDBCDAO implements ShgmrpDAO_interface{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if(pstmt != null)
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			if(con != null)
+			}
+			if (con != null) {
 				try {
 					con.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+			}
 		}
 		return shgmrpvo;
 	}
@@ -218,27 +234,36 @@ public class ShgmrpJDBCDAO implements ShgmrpDAO_interface{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if(pstmt != null)
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			if(con != null)
+			}
+			if (con != null) {
 				try {
 					con.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+			}
 		}
 		return shgmrpvo;
 	}
 
-	public List<ShgmrpVO> getAll() {
+	public Set<ShgmrpVO> getAll() {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		List<ShgmrpVO> list = new java.util.LinkedList<ShgmrpVO>();
+		Set<ShgmrpVO> set = new LinkedHashSet<ShgmrpVO>();
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url, user, password);
@@ -255,7 +280,7 @@ public class ShgmrpJDBCDAO implements ShgmrpDAO_interface{
 				shgmrpvo.setDetail(detail);
 				shgmrpvo.setStatus(rs.getInt(5));
 				
-				list.add(shgmrpvo);
+				set.add(shgmrpvo);
 			}
 			
 			rs.close();
@@ -265,20 +290,29 @@ public class ShgmrpJDBCDAO implements ShgmrpDAO_interface{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if(pstmt != null)
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			if(con != null)
+			}
+			if (con != null) {
 				try {
 					con.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+			}
 		}
-		return list;
+		return set;
 	}
 
 }
