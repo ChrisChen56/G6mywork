@@ -14,6 +14,8 @@ import com.shgm.model.ShgmVO;
 import com.shgmrp.model.ShgmrpService;
 import com.shgmrp.model.ShgmrpVO;
 
+import connectionpool.WsMessage;
+
 import javax.websocket.EndpointConfig;
 import javax.websocket.OnOpen;
 import javax.websocket.OnMessage;
@@ -38,10 +40,12 @@ public class MyWebSocket {
 
 	HttpSession httpsession;
 
+	WsMessage wsmsg = new WsMessage();
+
 	@OnOpen
 	public void open(@PathParam("mbrno") String mbrno, Session session, EndpointConfig conf) {
 		this.conf = conf;
-		System.out.println("mbrno:" + mbrno + " " + "sessionID:" + session.getId());
+		System.out.println("mbrno:" + mbrno + " entered, " + "sessionID:" + session.getId());
 		connectedSessions.put(mbrno, session);
 	}
 
@@ -56,8 +60,10 @@ public class MyWebSocket {
 		MbrpfVO sellerVO = null;
 		MbrpfVO buyerVO = null;
 
+		// 只有後台會送出市集商品編號的資料
 		String shgmRegexp = "^CA\\d{5}$";
 		if (data.matches(shgmRegexp)) {
+			System.out.println("enter data send");
 			ShgmVO shgmvo = shgmsvc.getOneShgm(data);
 			sellerno = shgmvo.getSellerno();
 			sellerVO = mbrpfsvc.getOneMbrpf(sellerno);
@@ -71,12 +77,13 @@ public class MyWebSocket {
 				sendthis.append(sellerVO.getNickname() + "，您的商品「" + shgmvo.getShgmname() + "」，已經下架了！");
 				ShgmrpVO shgmrpvo = shgmrpsvc.getOnerpByShgmno(data);
 				if (shgmrpvo != null && shgmrpvo.getStatus() == 1)
-					sendthis.append("\n\t下架原因：" + shgmrpvo.getDetail());
+					sendthis.append("\n下架原因：" + shgmrpvo.getDetail());
 				sendmsg(sellerno, sendthis);
 			}
 			return;
-		} else {
 
+		} else {
+			// 從前台頁面ajax送來的json格式資料
 			JSONObject jsonobj = new JSONObject(data);
 			ShgmVO shgmorg = shgmsvc.getOneShgm(jsonobj.getString("shgmno"));
 
@@ -114,10 +121,12 @@ public class MyWebSocket {
 	}
 
 	public void sendmsg(String mbrno, StringBuilder sendthis) {
+		String strSendThis = sendthis.toString();
+		wsmsg.saveMbrmsg(mbrno, strSendThis);// 送出之前保存
 		for (String hashmapkey : connectedSessions.keySet()) {
 			if (mbrno.equals(hashmapkey)) {
 				if (connectedSessions.get(hashmapkey).isOpen())
-					connectedSessions.get(hashmapkey).getAsyncRemote().sendText(sendthis.toString());// sendToMbr
+					connectedSessions.get(hashmapkey).getAsyncRemote().sendText(strSendThis);// sendToMbr
 			}
 		}
 	}
@@ -130,10 +139,10 @@ public class MyWebSocket {
 
 	@OnClose
 	public void close(Session session, CloseReason reason) {
-		for (Entry<String, Session> keyValue : connectedSessions.entrySet()) {
-			if(session.equals(keyValue.getValue()))
-				System.out.println("close: "+ keyValue.getKey() +" leaved WebSocket, reason:" + reason.getReasonPhrase());
+			for (Entry<String, Session> keyValue : connectedSessions.entrySet()) {
+				if (session.equals(keyValue.getValue()))
+					System.out.println("close: " + keyValue.getKey() + " leaved , reason:" + reason.getReasonPhrase());
+			}
 		}
-	}
 
 }

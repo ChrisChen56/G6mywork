@@ -6,8 +6,8 @@
 <%@ page import="java.util.*" %>
 <%
 	ShgmrpService shgmrpsvc = new ShgmrpService();
-	List<ShgmrpVO> list = shgmrpsvc.getAllShgmrp();
-	pageContext.setAttribute("shgmrplist", list);
+	Set<ShgmrpVO> set = shgmrpsvc.getAllShgmrp();
+	pageContext.setAttribute("shgmrpset", set);
 	ShgmService shgmsvc = new ShgmService();
 	pageContext.setAttribute("shgmsvc", shgmsvc);
 %>
@@ -55,7 +55,7 @@
 			<td>刪除檢舉</td>
 		</tr>
 		
-		<c:forEach var="shgmrpvo" items="${shgmrplist}">
+		<c:forEach var="shgmrpvo" items="${shgmrpset}">
 		<tr>
 			<td>${shgmrpvo.shgmrpno}</td>
 			<td>${shgmrpvo.shgmno}</td>

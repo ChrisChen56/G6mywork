@@ -6,8 +6,8 @@
 <%@ page import="java.util.*" %>
 <%
 	ShgmService shgmsvc = new ShgmService();
-	List<ShgmVO> list = shgmsvc.getAllShgm();
-	pageContext.setAttribute("shgmlist", list);
+	Set<ShgmVO> set = shgmsvc.getAllShgm();
+	pageContext.setAttribute("shgmset", set);
 %>
 <html>
 <head>
@@ -94,7 +94,7 @@
 			<td>刪除市集商品</td>
 		</tr>
 		
-		<c:forEach var="shgmvo" items="${shgmlist}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
+		<c:forEach var="shgmvo" items="${shgmset}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
 		<tr ${(shgmvo.shgmno == param.shgmno)? 'bgcolor=#b5b5b5':''}>
 			<td>${shgmvo.shgmno}</td>
 			<td>${shgmvo.sellerno}</td>

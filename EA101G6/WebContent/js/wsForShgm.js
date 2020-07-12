@@ -19,6 +19,7 @@ if (mbrno !== '') {
 
 	webSocket.onopen = function(event) {// 成功連線，伺服器端回應←
 		console.log('success');
+		//後台向伺服器送出資料
 		if(shgmno !== '' && shgmno !== undefined){
 			webSocket.send(shgmno);
 		}

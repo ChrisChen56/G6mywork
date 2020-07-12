@@ -25,6 +25,8 @@ import com.shgm.model.ShgmService;
 import com.shgm.model.ShgmVO;
 import com.shgmrp.model.ShgmrpService;
 
+import connectionpool.WsMessage;
+
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 7 * 1024 * 1024, maxRequestSize = 5 * 5 * 1024 * 1024)
 public class ShgmServlet extends HttpServlet {
 
@@ -630,6 +632,21 @@ public class ShgmServlet extends HttpServlet {
 				RequestDispatcher failedview = request.getRequestDispatcher(url);
 				failedview.forward(request, response);
 			}
+		}
+		
+		if ("MsgUpdate".equals(action)) {
+			response.setContentType("text/html; charset=utf-8");
+			Writer out = response.getWriter();
+			JSONObject jsonobj = new JSONObject();
+			
+			String mbrno = request.getParameter("mbrno");
+			Integer index = new Integer(request.getParameter("index"));
+			
+			WsMessage wsMsg = new WsMessage();
+			wsMsg.updateMbrmsg(mbrno, index);
+			System.out.println("enter controller");
+			jsonobj.put("success", "updateSuccess!!");
+			out.write(jsonobj.toString());
 		}
 
 		if ("statusUpdate".equals(action)) {

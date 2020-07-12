@@ -391,7 +391,7 @@ div.pageselect-area {
 														</li>
 														<li class="list-group-item">
 														<c:choose>
-															<c:when test="${shgmrpsvc.getOnerpByShgmno(shgmvo.shgmno).status != 1}">
+															<c:when test="${shgmrpsvc.getOnerpByShgmno(shgmvo.shgmno).status != 1 || shgmrpsvc.getOnerpByShgmno(shgmvo.shgmno) == null}">
 																後台下架
 															</c:when>
 															<c:when test="${shgmrpsvc.getOnerpByShgmno(shgmvo.shgmno).status == 1}">
