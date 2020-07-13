@@ -30,7 +30,7 @@
 <link rel="stylesheet" href="css/style.css">
 
 <!-- 顯示訊息的css -->
-<link rel="stylesheet" href="css/alert-area.css">
+<link rel="stylesheet" href="css/cssForShgm/alert-area.css">
 
 </head>
 <style>
@@ -296,7 +296,6 @@ footer{
 		});
 	});
 	</script>
-	<script src="js/jquery-3.3.1.min.js"></script>
 	<!-- 看起來沒屁用 -->
 	<script src="js/popper.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>

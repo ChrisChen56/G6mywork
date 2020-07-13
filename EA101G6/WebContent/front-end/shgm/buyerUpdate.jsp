@@ -33,7 +33,7 @@
 <link rel="stylesheet" href="css/style.css">
 
 <!-- 顯示訊息的css -->
-<link rel="stylesheet" href="css/alert-area.css">
+<link rel="stylesheet" href="css/cssForShgm/alert-area.css">
 
 </head>
 <style>
