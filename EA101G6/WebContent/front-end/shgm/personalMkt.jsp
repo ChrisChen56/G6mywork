@@ -10,8 +10,6 @@
 <!doctype html>
 <html lang="en">
 <head>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <title>personalMkt</title>
 <meta charset="utf-8">
 <meta name="viewport"
@@ -28,6 +26,10 @@
 <link rel="stylesheet" href="css/aos.css">
 <!-- MAIN CSS -->
 <link rel="stylesheet" href="css/style.css">
+
+<!-- 顯示訊息的css -->
+<link rel="stylesheet" href="css/alert-area.css">
+
 </head>
 <style>
 body {
@@ -264,6 +266,14 @@ div.pageselect-area {
 		</c:if>
 	</div>
 	<input type="hidden" id="member" value="${member.mbrname}">
+	
+	<%@ include file="/front-end/shgm/alert-area.jsp"%>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/ajaxForMbrmsgs.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/wsForShgm.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/jsForAlert-area.js"></script>
 
 	<script>
 	$(document).ready(function(){

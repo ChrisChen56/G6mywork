@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ page import="connectionpool.*"%>
 <%@ page import="com.shgm.model.*"%>
 <%@ page import="com.mbrpf.model.*"%>
 <%@ page import="java.util.*"%>
@@ -9,14 +8,10 @@
 	ShgmService shgmsvc = new ShgmService();
 	Set<ShgmVO> set = shgmsvc.getAllForMain();
 	pageContext.setAttribute("shgmset", set);
-	WsMessage wsmsg = new WsMessage();
-	pageContext.setAttribute("wsmsg", wsmsg);
 %>
 <!doctype html>
 <html lang="en">
 <head>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <title>main_page</title>
 <meta charset="utf-8">
 <meta name="viewport"
@@ -33,6 +28,10 @@
 <link rel="stylesheet" href="css/aos.css">
 <!-- MAIN CSS -->
 <link rel="stylesheet" href="css/style.css">
+
+<!-- 顯示訊息的css -->
+<link rel="stylesheet" href="css/alert-area.css">
+
 </head>
 <style>
 body {
@@ -52,7 +51,6 @@ div.main-area {
 	background-color: white;
 	max-height: 100%;
 	margin: 2% auto;
-	z-index:5;
 }
 
 div.card-body{
@@ -166,11 +164,6 @@ div.pageselect-area {
 	display: flex;
 	justify-content: center;
 }
-.alert-area{
-	position: fixed;
-    top: 223px;
-    left: 13px;
-}
 footer{
 	padding: 0.5% 0;
 	margin:0 auto;
@@ -184,19 +177,6 @@ footer{
 .wrap{
 	margin:auto;
 	width:80%;
-}
-.circle {
-	position: fixed;
-	top: 192px;
-	left: 8px;
-	width: 40px;
-	height: 40px;
-	border-radius: 50%;
-	font-size: 25px;
-	color: black;
-	font-weight:bold;
-	text-align: center;
-	background: orange;
 }
 .footerdiv{
 	display:inline-block;
@@ -217,126 +197,10 @@ footer{
 	float:left;
 }
 </style>
-<body data-spy="scroll" data-target=".site-navbar-target"
-	data-offset="300" background="images/bgimage3.jpg">
+<body data-offset="300" background="images/bgimage3.jpg">
 
+<%@ include file="/front-end/shgm/front-end-nav.jsp"%>
 
-
-	<div class="site-wrap" id="home-section">
-
-		<div class="site-mobile-menu site-navbar-target">
-			<div class="site-mobile-menu-header">
-				<div class="site-mobile-menu-close mt-3">
-					<span class="icon-close2 js-menu-toggle"></span>
-				</div>
-			</div>
-			<div class="site-mobile-menu-body"></div>
-		</div>
-	</div>
-
-	<div class="top-bar">
-		<div class="container">
-			<div class="row">
-				<div class="col-12">
-					<a href="#" class="text-white"><span class="d-md-inline-block"><img
-							class="icon" src="images/add-icon.png">註冊</span></a>
-					<div class="float-right">
-						<c:choose>
-						<c:when test="${member.mbrname != null}">
-						<span class="d-md-inline-block text-white">歡迎你！${member.mbrname}</span>
-						<input type="hidden" id="mbrno" value="${member.mbrno}"/>
-						</c:when>
-						<c:otherwise>
-						<a href="#" class="text-white"><span class="d-md-inline-block"><img
-								class="icon" src="images/User-icon.png">會員登入</span></a> 
-						<a href="#" class="text-white"><span class="d-md-inline-block"><img
-								class="icon" src="images/man-icon.png">店家登入</span></a>
-						</c:otherwise>
-						</c:choose>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<header class="site-navbar js-sticky-header site-navbar-target"
-		role="banner">
-
-		<div class="container">
-			<div class="row align-items-center position-relative">
-
-
-				<div class="site-logo">
-					<a href="index.html" class="text-black"><span
-						class="text-primary">Gaming on Board</span></a>
-				</div>
-
-				<div class="col-12">
-					<nav class="site-navigation text-right ml-auto " role="navigation">
-
-						<ul
-							class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
-							<li><a href="" class="nav-link">首頁</a></li>
-
-							<li class="has-children"><a href="" class="nav-link">會員專區</a>
-								<ul class="dropdown arrow-top">
-									<li><a href="#team-section" class="nav-link">Team</a></li>
-									<li><a href="#pricing-section" class="nav-link">Pricing</a></li>
-									<li><a href="#faq-section" class="nav-link">FAQ</a></li>
-									<li class="has-children"><a href="#">More Links</a>
-										<ul class="dropdown">
-											<li><a href="#">Menu One</a></li>
-											<li><a href="#">Menu Two</a></li>
-											<li><a href="#">Menu Three</a></li>
-										</ul></li>
-								</ul></li>
-
-							<li><a href="#mall" class="nav-link">商城</a></li>
-							<li><a href="#shop" class="nav-link">市集</a></li>
-							<li><a href="#play" class="nav-link">揪團區</a></li>
-							<li><a href="#store" class="nav-link">店家列表</a></li>
-							<li><a href="#forum" class="nav-link">討論區</a></li>
-						</ul>
-					</nav>
-
-				</div>
-
-				<div class="toggle-button d-inline-block d-lg-none">
-					<a href="#" class="site-menu-toggle py-5 js-menu-toggle text-black"><span
-						class="icon-menu h3"></span></a>
-				</div>
-
-			</div>
-		</div>
-
-	</header>
-	<c:if test="${member != null}">
-		<div class="alert-area">
-		<button id="showMsg" class="btn btn-primary" style="width:110px;">顯示訊息</button>
-		<div class="alert-area-msgs">
-		<c:forEach var="msgvo" items="${wsmsg.getMbrmsg(member.mbrno)}" varStatus="count">
-			<c:if test="${count.last}">
-				<input type="hidden" id="last" value="${count.index}" >
-				<div id="circle" class="circle">${count.index+1}</div>
-			</c:if>
-			<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false" style="display:none;">
-			  <div class="toast-header">
-			    <img src="..." class="rounded mr-2" alt="...">
-			    <strong class="mr-auto">市集新訊</strong>
-			    <small class="text-muted">標示為已讀</small>
-			    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close" value="${msgvo.index}">
-			      <span class="xx" aria-hidden="true">&times;</span>
-			    </button>
-			  </div>
-			  <div class="toast-body">
-			    ${msgvo.message}
-			  </div>
-			</div>
-		
-		</c:forEach>
-		</div>
-		</div>
-	</c:if>
 	<div class="main-area container col-10 align-self-center">
 		<div class="top-info-wrapper">
 			<nav aria-label="breadcrumb" class="breadcrumb-nav">
@@ -356,7 +220,9 @@ footer{
 				</ol>
 			</nav>
 		</div>
-		<%@ include file="page1.file" %> 
+		
+		<%@ include file="page1.file" %>
+		 
 		<div class="shgm-area-wrapper">
 			<div class="shgm-area ">
 				<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgm.do">
@@ -391,8 +257,10 @@ footer{
 		</c:if>
 	</div>
 	<input type="hidden" id="member" value="${member.mbrname}">
-	<input type="hidden" id="getContextPath" value="<%=request.getContextPath()%>"><!-- 看是要放在include的檔案裏面還是怎樣 -->
-	<footer>
+	
+	<%@ include file="/front-end/shgm/alert-area.jsp"%>
+	
+	<footer class="top-bar">
 		<div class="wrap">
 			<div class="footer-left footerdiv">
 			asdfadsf
@@ -405,45 +273,14 @@ footer{
 			</div>
 		</div>
 	</footer>
-	<script type="text/javascript" src="<%=request.getContextPath() %>/js/ajaxForMbrmsgs.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath() %>/js/wsForShgm.js"></script>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/ajaxForMbrmsgs.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/wsForShgm.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/jsForAlert-area.js"></script>
 	<script>
 	$(document).ready(function(){
-		var timeFunc;
-		$(".alert-area").mouseleave(function(){
-			timeFunc = setTimeout(function(){
-				if($("#showMsg").text() == "隱藏訊息")
-					//顯示轉隱藏
-					$(".toast").toggle("fast");
-					$(".main-area").css("z-index","10");
-					$(".alert-area-msgs").css("z-index","-1");
-					$("#showMsg").text("顯示訊息");
-			}, 2000);			
-		});
-		
-		$(".alert-area").mouseenter(function(){
-			clearTimeout(timeFunc);
-		});
-		
-		$("#showMsg").click(function(){
-		var showMsgText = $("#showMsg").text();
-			$(".toast").toggle("fast",function(){
-				if(showMsgText == "隱藏訊息"){
-					//顯示轉隱藏
-					$(".main-area").css("z-index","10");
-					$(".alert-area-msgs").css("z-index","-1");
-					$("#showMsg").text("顯示訊息");
-				} else {
-					//隱藏轉顯示
-					$(".main-area").css("z-index","-1");
-					$(".alert-area-msgs").css("z-index","10");
-					$("#showMsg").text("隱藏訊息");
-				}
-			});
-		});
-		
-		$('.toast').toast('show');
-		
 		$("#findshgm").click(function(){
 			if($("#word").val().trim() === ''){
 				event.preventDefault();

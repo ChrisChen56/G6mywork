@@ -11,8 +11,6 @@
 <!doctype html>
 <html lang="en">
 <head>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <meta charset="utf-8">
 <title>${infoshgm.shgmname}</title>
 <meta name="viewport"
@@ -33,6 +31,9 @@
 
 <!-- MAIN CSS -->
 <link rel="stylesheet" href="css/style.css">
+
+<!-- 顯示訊息的css -->
+<link rel="stylesheet" href="css/alert-area.css">
 
 <style>
 body {
@@ -112,7 +113,7 @@ div.top-info {
 }
 
 .btn {
-	margin: 10% auto;
+	margin: 0 1%;
 	background-color: white;
 }
 
@@ -136,95 +137,9 @@ div.top-info {
 </style>
 </head>
 
-<body data-spy="scroll" data-target=".site-navbar-target"
-	data-offset="300" background="images/bgimage3.jpg">
-	<div class="site-wrap" id="home-section">
+<body data-offset="300" background="images/bgimage3.jpg">
 
-		<div class="site-mobile-menu site-navbar-target">
-			<div class="site-mobile-menu-header">
-				<div class="site-mobile-menu-close mt-3">
-					<span class="icon-close2 js-menu-toggle"></span>
-				</div>
-			</div>
-			<div class="site-mobile-menu-body"></div>
-		</div>
-	</div>
-
-	<div class="top-bar">
-		<div class="container">
-			<div class="row">
-				<div class="col-12">
-					<a href="#" class="text-white"><span class="d-md-inline-block"><img
-							class="icon" src="images/add-icon.png">註冊</span></a>
-					<div class="float-right">
-						<c:choose>
-						<c:when test="${member.mbrname != null}">
-						<span id="mbrname" class="d-md-inline-block text-white">歡迎你！${member.mbrname}</span>
-						</c:when>
-						<c:otherwise>
-						<a href="#" class="text-white"><span class="d-md-inline-block"><img
-								class="icon" src="images/User-icon.png">會員登入</span></a> 
-						<a href="#" class="text-white"><span class="d-md-inline-block"><img
-								class="icon" src="images/man-icon.png">店家登入</span></a>
-						</c:otherwise>
-						</c:choose>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<header class="site-navbar js-sticky-header site-navbar-target"
-		role="banner">
-
-		<div class="container">
-			<div class="row align-items-center position-relative">
-
-
-				<div class="site-logo">
-					<a href="index.html" class="text-black"><span
-						class="text-primary">Gaming on Board</span></a>
-				</div>
-
-				<div class="col-12">
-					<nav class="site-navigation text-right ml-auto " role="navigation">
-
-						<ul
-							class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
-							<li><a href="" class="nav-link">首頁</a></li>
-
-							<li class="has-children"><a href="" class="nav-link">會員專區</a>
-								<ul class="dropdown arrow-top">
-									<li><a href="#team-section" class="nav-link">Team</a></li>
-									<li><a href="#pricing-section" class="nav-link">Pricing</a></li>
-									<li><a href="#faq-section" class="nav-link">FAQ</a></li>
-									<li class="has-children"><a href="#">More Links</a>
-										<ul class="dropdown">
-											<li><a href="#">Menu One</a></li>
-											<li><a href="#">Menu Two</a></li>
-											<li><a href="#">Menu Three</a></li>
-										</ul></li>
-								</ul></li>
-
-							<li><a href="#mall" class="nav-link">商城</a></li>
-							<li><a href="#shop" class="nav-link">市集</a></li>
-							<li><a href="#play" class="nav-link">揪團區</a></li>
-							<li><a href="#store" class="nav-link">店家列表</a></li>
-							<li><a href="#forum" class="nav-link">討論區</a></li>
-						</ul>
-					</nav>
-
-				</div>
-
-				<div class="toggle-button d-inline-block d-lg-none">
-					<a href="#" class="site-menu-toggle py-5 js-menu-toggle text-black"><span
-						class="icon-menu h3"></span></a>
-				</div>
-
-			</div>
-		</div>
-
-	</header>
+	<%@ include file="/front-end/shgm/front-end-nav.jsp"%>
 
 	<div class="main-area container col-10 align-self-center">
 		<div class="top-info-wrapper">
@@ -234,7 +149,7 @@ div.top-info {
 					<li class="breadcrumb-item"><a
 						href="<%=request.getContextPath()%>/front-end/shgm/mainPage.jsp">市集</a></li>
 					<li class="breadcrumb-item active" aria-current="page">商品頁面</li>
-					<li class="awrapper"><span class="rpdiv">${errormap.get(1)}</span><button id="rp" type="button"
+					<li class="awrapper"><span class="rpdiv">${errormap.get("rp")}</span><button id="rp" type="button"
 							class="btn btn-primary ml-auto" data-toggle="modal"
 							data-target="#exampleModal" data-whatever="@mdo">檢舉</button></li>
 				</ol>
@@ -264,7 +179,7 @@ div.top-info {
 							<button type="button" class="btn btn-primary"
 								data-dismiss="modal">取消</button>
 						</div>
-						<input type="hidden" name="shgmno" value="${infoshgm.shgmno}">
+						<input type="hidden" id="shgmno" name="shgmno" value="${infoshgm.shgmno}">
 						<input type="hidden" name="suiterno" value="${member.mbrno}">
 						<input type="hidden" name="requestURL" value="<%=request.getServletPath()%>">
 						<input type="hidden" name="action" value="insertrp">
@@ -292,11 +207,11 @@ div.top-info {
 						</div>
 						<c:choose>
 							<c:when test="${infoshgm.paystatus == 1}">
-							<a id="sold" class="btn btn-primary" role="button">本商品已售出</a>
+							<a id="sold" class="btn btn-primary" role="button" style="margin-top:20%;width:240px;">本商品已售出</a>
 							</c:when>
 							<c:otherwise>
 							<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgm.do">
-								<button id="buythis" type="submit" class="btn btn-primary">購買</button>
+								<button id="buythis" type="submit" class="btn btn-primary" style="margin-top:20%;width:80px;">購買</button>
 								<input type="hidden" name="shgmno" value="${infoshgm.shgmno}"/>
 								<input type="hidden" name="action" value="getOneForMoreInfo"/>
 								<input type="hidden" name="requestURL" value="<%=request.getServletPath()%>"/>
@@ -373,15 +288,31 @@ div.top-info {
 		<input type="hidden" id="rpsuccess" value="${rpsuccess}">
 	</div>
 	
+	<%@ include file="/front-end/shgm/alert-area.jsp"%>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/ajaxForMbrmsgs.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/wsForShgm.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/jsForAlert-area.js"></script>
+	
 	<script>
 	$(document).ready(function(){
-		if($("#buysuccess").val() == "success"){
+		var $buysuccess = $("#buysuccess").val();
+		if($buysuccess === "success"){
+			var $shgmno = $("#shgmno").val();
 			Swal.fire({
 				  icon: 'success',
 				  title: '您已購買成功！',
 				  showConfirmButton: false,
 				  timer: 1500
 				})
+			var successObj = {
+				"shgmno":$shgmno,
+				"paystatus":1
+			}
+			var successJson = JSON.stringify(successObj);
+			webSocket.send(successJson);
 		}
 		if($("#rpsuccess").val() == "success"){
 			Swal.fire({

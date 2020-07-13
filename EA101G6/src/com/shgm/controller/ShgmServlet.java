@@ -254,7 +254,7 @@ public class ShgmServlet extends HttpServlet {
 
 		if ("sellshgm".equals(action)) {
 
-			HashMap<Long, String> errormap = new HashMap<Long, String>();
+			HashMap<String, String> errormap = new HashMap<String, String>();
 			request.setAttribute("errormap", errormap);
 
 			try {
@@ -263,32 +263,32 @@ public class ShgmServlet extends HttpServlet {
 
 				String shgmname = request.getParameter("shgmname");
 				if (shgmname.trim().length() == 0)
-					errormap.put((long) 1, "名稱不得為空");
+					errormap.put("shgmname", "名稱不得為空");
 				if (shgmname.trim().length() > 21)
-					errormap.put((long) 1, "名稱過長");
+					errormap.put("shgmname", "名稱過長");
 
 				Integer price = null;
 				String pricestr = request.getParameter("price");
 				if (pricestr.trim().length() == 0) {
-					errormap.put((long) 2, "價錢不得為空");
+					errormap.put("price", "價錢不得為空");
 				} else {
 					try {
 						price = new Integer(pricestr);
 						if (price > 999999)
-							errormap.put((long) 2, "金額超過本平台規範");
+							errormap.put("price", "金額超過本平台規範");
 					} catch (Exception e) {
-						errormap.put((long) 2, "格式不正確");
+						errormap.put("price", "格式不正確");
 					}
 				}
 
 				String intro = request.getParameter("intro");
 				if (intro.trim().length() == 0)
-					errormap.put((long) 3, "簡介文字不得為空");
+					errormap.put("intro", "簡介文字不得為空");
 
 				byte[] img = null;
 				Part imgreq = request.getPart("img");
 				if (imgreq.getSize() == 0) {
-					errormap.put((long) 4, "圖片不得為空");
+					errormap.put("img", "圖片不得為空");
 				} else if (imgreq.getSize() > 0) {
 					InputStream is = imgreq.getInputStream();
 					img = new byte[is.available()];
@@ -318,7 +318,7 @@ public class ShgmServlet extends HttpServlet {
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 			} catch (Exception e) {
-				errormap.put((long) 5, "無法新增您的商品");
+				errormap.put("error", "無法新增您的商品");
 				String url = "/front-end/shgm/sellPage.jsp";
 				RequestDispatcher failedview = request.getRequestDispatcher(url);
 				failedview.forward(request, response);
@@ -327,7 +327,7 @@ public class ShgmServlet extends HttpServlet {
 
 		if ("oneForSellerUpdate".equals(action)) {
 
-			HashMap<Long, String> errormap = new HashMap<Long, String>();
+			HashMap<String, String> errormap = new HashMap<String, String>();
 			request.setAttribute("errormap", errormap);
 
 			try {
@@ -343,7 +343,7 @@ public class ShgmServlet extends HttpServlet {
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 			} catch (Exception e) {
-				errormap.put((long) 5, "無法取得您的商品");
+				errormap.put("error", "無法取得您的商品");
 				String url = "/front-end/shgm/sellerPage.jsp";// sellerPage.jsp的錯誤處理？
 				RequestDispatcher failedview = request.getRequestDispatcher(url);
 				failedview.forward(request, response);
@@ -352,7 +352,7 @@ public class ShgmServlet extends HttpServlet {
 
 		if ("sellerUpdate".equals(action)) {
 
-			HashMap<Long, String> errormap = new HashMap<Long, String>();
+			HashMap<String, String> errormap = new HashMap<String, String>();
 			request.setAttribute("errormap", errormap);
 
 			String shgmno = request.getParameter("shgmno");
@@ -365,27 +365,27 @@ public class ShgmServlet extends HttpServlet {
 
 				String shgmname = request.getParameter("shgmname");
 				if (shgmname.trim().length() == 0)
-					errormap.put((long) 1, "名稱不得為空");
+					errormap.put("shgmname", "名稱不得為空");
 				if (shgmname.trim().length() > 21)
-					errormap.put((long) 1, "名稱過長");
+					errormap.put("shgmname", "名稱過長");
 
 				Integer price = null;
 				String pricestr = request.getParameter("price");
 				if (pricestr.trim().length() == 0) {
-					errormap.put((long) 2, "價錢不得為空");
+					errormap.put("price", "價錢不得為空");
 				} else {
 					try {
 						price = new Integer(pricestr);
 						if (price > 999999)
-							errormap.put((long) 2, "金額超過本平台規範");
+							errormap.put("price", "金額超過本平台規範");
 					} catch (Exception e) {
-						errormap.put((long) 2, "格式不正確");
+						errormap.put("price", "格式不正確");
 					}
 				}
 
 				String intro = request.getParameter("intro");
 				if (intro.trim().length() == 0)
-					errormap.put((long) 3, "簡介文字不得為空");
+					errormap.put("intro", "簡介文字不得為空");
 
 				byte[] img = null;
 				Part imgreq = request.getPart("img");
@@ -422,7 +422,7 @@ public class ShgmServlet extends HttpServlet {
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 			} catch (Exception e) {
-				errormap.put((long) 5, "無法修改您的商品");
+				errormap.put("error", "無法修改您的商品");
 				String url = "/front-end/shgm/sellerUpdate.jsp";
 				RequestDispatcher failedview = request.getRequestDispatcher(url);
 				failedview.forward(request, response);
@@ -456,7 +456,7 @@ public class ShgmServlet extends HttpServlet {
 
 		if ("dealingshgm".equals(action)) {
 
-			HashMap<Long, String> errormap = new HashMap<Long, String>();
+			HashMap<String, String> errormap = new HashMap<String, String>();
 			request.setAttribute("errormap", errormap);
 
 			ShgmVO shgmvo = (ShgmVO) session.getAttribute("infoshgm");
@@ -467,26 +467,26 @@ public class ShgmServlet extends HttpServlet {
 				// 從會員資料取得，不需要錯誤處理
 				String buyerno = request.getParameter("buyerno");
 				if (buyerno.equals(shgmvo.getSellerno()))
-					errormap.put((long) 5, "無法購買自己的市集商品");
+					errormap.put("error", "無法購買自己的市集商品");
 
 				String take = request.getParameter("take");
 				if (take == null)
-					errormap.put((long) 1, "請選擇取貨方式");
+					errormap.put("take", "請選擇取貨方式");
 
 				String takernm = request.getParameter("takernm");
 				String takernmreg = "^[(\u4e00-\u9fa5)]{1,10}$";
 				if (takernm.trim().length() == 0) {
-					errormap.put((long) 2, "請勿輸入空白");
+					errormap.put("takernm", "請勿輸入空白");
 				} else if (!takernm.trim().matches(takernmreg)) {
-					errormap.put((long) 2, "只能是中文，且長度必須在1到10之間");
+					errormap.put("takernm", "只能是中文，且長度必須在1到10之間");
 				}
 
 				String takerph = request.getParameter("takerph");
 				String takerphreg = "^09\\d{8}$";
 				if (takerph.trim().length() == 0) {
-					errormap.put((long) 3, "請勿輸入空白");
+					errormap.put("takerph", "請勿輸入空白");
 				} else if (!takerph.trim().matches(takerphreg)) {
-					errormap.put((long) 3, "請輸入符合格式的電話號碼");
+					errormap.put("takerph", "請輸入符合格式的電話號碼");
 				}
 
 				String city = request.getParameter("city");
@@ -495,11 +495,11 @@ public class ShgmServlet extends HttpServlet {
 				String adsReg = "^[(\u4e00-\u9fa5)(\\w)]{5,40}$";
 				String address = request.getParameter("address");
 				if (!ads.trim().matches(adsReg))
-					errormap.put((long) 4, "只能是中、英文字母、數字、底線，且長度必須在5到40之間");
+					errormap.put("ads", "只能是中、英文字母、數字、底線，且長度必須在5到40之間");
 				if (ads.trim().length() == 0)
-					errormap.put((long) 4, "地址不得為空");
+					errormap.put("ads", "地址不得為空");
 				if (ads.equals(address))
-					errormap.put((long) 4, "請選擇縣市、鄉鎮");
+					errormap.put("ads", "請選擇縣市、鄉鎮");
 
 				shgmvo.setShgmno(shgmno);
 				shgmvo.setBuyerno(buyerno);
@@ -541,7 +541,7 @@ public class ShgmServlet extends HttpServlet {
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 			} catch (Exception e) {
-				errormap.put((long) 5, "無法購買此商品");
+				errormap.put("error", "無法購買此商品");
 				String url = "/front-end/shgm/buyPage.jsp";
 				RequestDispatcher failedview = request.getRequestDispatcher(url);
 				failedview.forward(request, response);
@@ -550,7 +550,7 @@ public class ShgmServlet extends HttpServlet {
 
 		if ("buyerUpdate".equals(action)) {
 
-			HashMap<Long, String> errormap = new HashMap<Long, String>();
+			HashMap<String, String> errormap = new HashMap<String, String>();
 			request.setAttribute("errormap", errormap);
 
 			try {
@@ -561,21 +561,21 @@ public class ShgmServlet extends HttpServlet {
 
 				String take = request.getParameter("take");
 				if (take == null)
-					errormap.put((long) 1, "請選擇取貨方式");
+					errormap.put("take", "請選擇取貨方式");
 
 				String takernm = request.getParameter("takernm");
 				String takernmreg = "^[(\u4e00-\u9fa5)]{1,10}$";
 				if (takernm.trim().length() == 0)
-					errormap.put((long) 2, "請勿輸入空白");
+					errormap.put("takernm", "請勿輸入空白");
 				if (!takernm.trim().matches(takernmreg))
-					errormap.put((long) 2, "只能是中文，且長度必須在1到10之間");
+					errormap.put("takernm", "只能是中文，且長度必須在1到10之間");
 
 				String takerph = request.getParameter("takerph");
 				String takerphreg = "^09\\d{8}$";
 				if (takerph.trim().length() == 0) {
-					errormap.put((long) 3, "請勿輸入空白");
+					errormap.put("takerph", "請勿輸入空白");
 				} else if (!takerph.trim().matches(takerphreg)) {
-					errormap.put((long) 3, "請輸入符合格式的電話號碼");
+					errormap.put("takerph", "請輸入符合格式的電話號碼");
 				}
 
 				String city = request.getParameter("city");
@@ -584,11 +584,11 @@ public class ShgmServlet extends HttpServlet {
 				String adsReg = "^[(\u4e00-\u9fa5)(\\w)]{5,40}$";
 				String address = request.getParameter("address");
 				if (!ads.trim().matches(adsReg))
-					errormap.put((long) 4, "只能是中、英文字母、數字、底線，且長度必須在5到40之間");
+					errormap.put("ads", "只能是中、英文字母、數字、底線，且長度必須在5到40之間");
 				if (ads.trim().length() == 0)
-					errormap.put((long) 4, "地址不得為空");
+					errormap.put("ads", "地址不得為空");
 				if (ads.equals(address))
-					errormap.put((long) 4, "請選擇縣市、鄉鎮");
+					errormap.put("ads", "請選擇縣市、鄉鎮");
 
 				ShgmService shgmsvc = new ShgmService();
 				ShgmVO shgmorg = shgmsvc.getOneShgm(shgmno);
@@ -627,7 +627,7 @@ public class ShgmServlet extends HttpServlet {
 				RequestDispatcher successview = request.getRequestDispatcher(url);
 				successview.forward(request, response);
 			} catch (Exception e) {
-				errormap.put((long) 5, "無法修改此商品");
+				errormap.put("error", "無法修改此商品");
 				String url = "/front-end/shgm/buyerUpdate.jsp";
 				RequestDispatcher failedview = request.getRequestDispatcher(url);
 				failedview.forward(request, response);
@@ -644,7 +644,8 @@ public class ShgmServlet extends HttpServlet {
 			
 			WsMessage wsMsg = new WsMessage();
 			wsMsg.updateMbrmsg(mbrno, index);
-			System.out.println("enter controller");
+			
+			
 			jsonobj.put("success", "updateSuccess!!");
 			out.write(jsonobj.toString());
 		}

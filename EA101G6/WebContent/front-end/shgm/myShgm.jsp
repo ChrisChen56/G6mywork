@@ -17,8 +17,6 @@
 
 <html lang="en">
 <head>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <title>myShgame</title>
 <meta charset="utf-8">
 <meta name="viewport"
@@ -35,6 +33,10 @@
 <link rel="stylesheet" href="css/aos.css">
 <!-- MAIN CSS -->
 <link rel="stylesheet" href="css/style.css">
+
+<!-- 顯示訊息的css -->
+<link rel="stylesheet" href="css/alert-area.css">
+
 </head>
 <style>
 body {
@@ -158,99 +160,9 @@ div.pageselect-area {
 	justify-content: center;
 }
 </style>
-<body data-spy="scroll" data-target=".site-navbar-target"
-	data-offset="300" background="images/bgimage3.jpg">
+<body data-offset="300" background="images/bgimage3.jpg">
 
-
-
-	<div class="site-wrap" id="home-section">
-
-		<div class="site-mobile-menu site-navbar-target">
-			<div class="site-mobile-menu-header">
-				<div class="site-mobile-menu-close mt-3">
-					<span class="icon-close2 js-menu-toggle"></span>
-				</div>
-			</div>
-			<div class="site-mobile-menu-body"></div>
-		</div>
-	</div>
-
-	<div class="top-bar">
-		<div class="container">
-			<div class="row">
-				<div class="col-12">
-					<a href="#" class="text-white"><span class="d-md-inline-block"><img
-							class="icon" src="images/add-icon.png">註冊</span></a>
-					<div class="float-right">
-						<c:choose>
-							<c:when test="<%=member != null%>">
-								<span class="d-md-inline-block text-white">歡迎你！${member.mbrname}</span>
-								<input type="hidden" id="mbrno" value="${member.mbrno}"/>
-							</c:when>
-							<c:otherwise>
-								<a href="#" class="text-white"><span
-									class="d-md-inline-block"><img class="icon"
-										src="images/User-icon.png">會員登入</span></a>
-								<a href="#" class="text-white"><span
-									class="d-md-inline-block"><img class="icon"
-										src="images/man-icon.png">店家登入</span></a>
-							</c:otherwise>
-						</c:choose>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<header class="site-navbar js-sticky-header site-navbar-target"
-		role="banner">
-
-		<div class="container">
-			<div class="row align-items-center position-relative">
-
-
-				<div class="site-logo">
-					<a href="index.html" class="text-black"><span
-						class="text-primary">Gaming on Board</span></a>
-				</div>
-
-				<div class="col-12">
-					<nav class="site-navigation text-right ml-auto " role="navigation">
-
-						<ul
-							class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
-							<li><a href="" class="nav-link">首頁</a></li>
-
-							<li class="has-children"><a href="" class="nav-link">會員專區</a>
-								<ul class="dropdown arrow-top">
-									<li><a href="#team-section" class="nav-link">Team</a></li>
-									<li><a href="#pricing-section" class="nav-link">Pricing</a></li>
-									<li><a href="#faq-section" class="nav-link">FAQ</a></li>
-									<li class="has-children"><a href="#">More Links</a>
-										<ul class="dropdown">
-											<li><a href="#">Menu One</a></li>
-											<li><a href="#">Menu Two</a></li>
-											<li><a href="#">Menu Three</a></li>
-										</ul></li>
-								</ul></li>
-
-							<li><a href="#mall" class="nav-link">商城</a></li>
-							<li><a href="#shop" class="nav-link">市集</a></li>
-							<li><a href="#play" class="nav-link">揪團區</a></li>
-							<li><a href="#store" class="nav-link">店家列表</a></li>
-							<li><a href="#forum" class="nav-link">討論區</a></li>
-						</ul>
-					</nav>
-				</div>
-
-				<div class="toggle-button d-inline-block d-lg-none">
-					<a href="#" class="site-menu-toggle py-5 js-menu-toggle text-black"><span
-						class="icon-menu h3"></span></a>
-				</div>
-			</div>
-		</div>
-
-	</header>
+	<%@ include file="/front-end/shgm/front-end-nav.jsp"%>
 
 	<div class="main-area container col-10 align-self-center">
 		<div class="top-info-wrapper">
@@ -420,49 +332,16 @@ div.pageselect-area {
 			</div>
 		</div>
 	</div>
-	<div class="pageselect-area-wrapper">
-		<div class="pageselect-area ">
-			<nav aria-label="Page navigation example">
-				<ul class="pagination">
-					<li class="page-item"><a class="page-link" href="#"
-						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-							<span class="sr-only">Previous</span>
-					</a></li>
-					<li class="page-item"><a class="page-link" href="#">1</a></li>
-					<li class="page-item"><a class="page-link" href="#">2</a></li>
-					<li class="page-item"><a class="page-link" href="#">3</a></li>
-					<li class="page-item"><a class="page-link" href="#"
-						aria-label="Next"> <span aria-hidden="true">&raquo;</span> <span
-							class="sr-only">Next</span>
-					</a></li>
-				</ul>
-			</nav>
-		</div>
-	</div>
 	<input type="hidden" id="member" value="${member.mbrname}">
 	<input type="hidden" id="success" value="${updateSuccess}">
-
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<!-- 看起來沒屁用 -->
-	<script src="js/popper.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<!-- 重要廣告界面 -->
-	<script src="js/owl.carousel.min.js"></script>
-	<!-- 看起來沒屁用 -->
-	<script src="js/jquery.sticky.js"></script>
-	<script src="js/jquery.waypoints.min.js"></script>
-	<script src="js/jquery.animateNumber.min.js"></script>
-	<script src="js/jquery.fancybox.min.js"></script>
-
-
-	<!-- 上介面連結動畫 -->
-	<script src="js/jquery.easing.1.3.js"></script>
-
-	<!-- 重要廣告界面 -->
-	<script src="js/aos.js"></script>
-
-	<script src="js/main.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath() %>/js/wsForShgm.js"></script>
+	
+	<%@ include file="/front-end/shgm/alert-area.jsp"%>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/ajaxForMbrmsgs.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/wsForShgm.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/jsForAlert-area.js"></script>
 	<script>
 	$(document).ready(function(){
 		
@@ -542,5 +421,26 @@ div.pageselect-area {
 	});
 	</script>
 
+	<script src="js/jquery-3.3.1.min.js"></script>
+	<!-- 看起來沒屁用 -->
+	<script src="js/popper.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<!-- 重要廣告界面 -->
+	<script src="js/owl.carousel.min.js"></script>
+	<!-- 看起來沒屁用 -->
+	<script src="js/jquery.sticky.js"></script>
+	<script src="js/jquery.waypoints.min.js"></script>
+	<script src="js/jquery.animateNumber.min.js"></script>
+	<script src="js/jquery.fancybox.min.js"></script>
+
+
+	<!-- 上介面連結動畫 -->
+	<script src="js/jquery.easing.1.3.js"></script>
+
+	<!-- 重要廣告界面 -->
+	<script src="js/aos.js"></script>
+
+	<script src="js/main.js"></script>
+	
 </body>
 </html>

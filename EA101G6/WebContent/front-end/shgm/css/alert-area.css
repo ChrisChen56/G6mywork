@@ -1,0 +1,18 @@
+.circle {
+	position: fixed;
+	top: 192px;
+	left: 8px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	font-size: 25px;
+	color: black;
+	font-weight:bold;
+	text-align: center;
+	background: orange;
+}
+.alert-area{
+	position: fixed;
+    top: 223px;
+    left: 13px;
+}

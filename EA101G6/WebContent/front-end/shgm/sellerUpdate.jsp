@@ -32,6 +32,9 @@
 <!-- MAIN CSS -->
 <link rel="stylesheet" href="css/style.css">
 
+<!-- 顯示訊息的css -->
+<link rel="stylesheet" href="css/alert-area.css">
+
 </head>
 <style>
 body {
@@ -105,8 +108,12 @@ div.top-info {
 }
 
 .btn {
-	margin: 10% auto;
+	margin: 0 1%;
 	background-color: white;
+}
+
+.button-wrapper{
+	width: 125px;
 }
 
 .btn:hover {
@@ -124,96 +131,9 @@ div.top-info {
     margin: 2%;
 }
 </style>
-<body data-spy="scroll" data-target=".site-navbar-target"
-	data-offset="300" background="images/bgimage3.jpg">
+<body data-offset="300" background="images/bgimage3.jpg">
 
-	<div class="site-wrap" id="home-section">
-
-		<div class="site-mobile-menu site-navbar-target">
-			<div class="site-mobile-menu-header">
-				<div class="site-mobile-menu-close mt-3">
-					<span class="icon-close2 js-menu-toggle"></span>
-				</div>
-			</div>
-			<div class="site-mobile-menu-body"></div>
-		</div>
-	</div>
-
-	<div class="top-bar">
-		<div class="container">
-			<div class="row">
-				<div class="col-12">
-					<a href="#" class="text-white"><span class="d-md-inline-block"><img
-							class="icon" src="images/add-icon.png">註冊</span></a>
-					<div class="float-right">
-						<c:choose>
-						<c:when test="<%=member != null%>">
-						<span class="d-md-inline-block text-white">歡迎你！${member.mbrname}</span>
-						</c:when>
-						<c:otherwise>
-						<a href="#" class="text-white"><span class="d-md-inline-block"><img
-								class="icon" src="images/User-icon.png">會員登入</span></a> 
-						<a href="#" class="text-white"><span class="d-md-inline-block"><img
-								class="icon" src="images/man-icon.png">店家登入</span></a>
-						</c:otherwise>
-						</c:choose>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<header class="site-navbar js-sticky-header site-navbar-target"
-		role="banner">
-
-		<div class="container">
-			<div class="row align-items-center position-relative">
-
-
-				<div class="site-logo">
-					<a href="index.html" class="text-black"><span
-						class="text-primary">Gaming on Board</span></a>
-				</div>
-
-				<div class="col-12">
-					<nav class="site-navigation text-right ml-auto " role="navigation">
-
-						<ul
-							class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
-							<li><a href="" class="nav-link">首頁</a></li>
-
-							<li class="has-children"><a href="" class="nav-link">會員專區</a>
-								<ul class="dropdown arrow-top">
-									<li><a href="#team-section" class="nav-link">Team</a></li>
-									<li><a href="#pricing-section" class="nav-link">Pricing</a></li>
-									<li><a href="#faq-section" class="nav-link">FAQ</a></li>
-									<li class="has-children"><a href="#">More Links</a>
-										<ul class="dropdown">
-											<li><a href="#">Menu One</a></li>
-											<li><a href="#">Menu Two</a></li>
-											<li><a href="#">Menu Three</a></li>
-										</ul></li>
-								</ul></li>
-
-							<li><a href="#mall" class="nav-link">商城</a></li>
-							<li><a href="#shop" class="nav-link">市集</a></li>
-							<li><a href="#play" class="nav-link">揪團區</a></li>
-							<li><a href="#store" class="nav-link">店家列表</a></li>
-							<li><a href="#forum" class="nav-link">討論區</a></li>
-						</ul>
-					</nav>
-
-				</div>
-
-				<div class="toggle-button d-inline-block d-lg-none">
-					<a href="#" class="site-menu-toggle py-5 js-menu-toggle text-black"><span
-						class="icon-menu h3"></span></a>
-				</div>
-
-			</div>
-		</div>
-
-	</header>
+	<%@ include file="/front-end/shgm/front-end-nav.jsp"%>
 
 	<div class="main-area container col-10 align-self-center">
 		<div class="top-info-wrapper">
@@ -262,7 +182,6 @@ div.top-info {
 			<div class="shgm-info-toparea container">
 				<form method="post" action="<%=request.getContextPath()%>/front-end/shgm/shgm.do" enctype="multipart/form-data">
 					<div id="imgzoom" class="shgm-info-left col-6 rounded float-left">
-						<span class="alert">${errormap.get(4)}</span>
 						<label for="imgfile">
 							<img name="imgtag" id="blah" alt="Click here to upload!" class="img-thumbnail rounded float-left" src="<%=request.getContextPath() %>/shgm/displayimg?shgmno=${shgmvo.shgmno}"/>
 						</label>
@@ -275,11 +194,11 @@ div.top-info {
 						<div
 							class="shgm-info-right-inner d-flex align-items-center flex-column bd-highlight mb-3">
 							<div class="form-group p-2 bd-highlight">
-								<label for="shgmname">輸入桌遊名稱</label> <span class="alert">${errormap.get(1)}</span><input name="shgmname"
+								<label for="shgmname">輸入桌遊名稱</label> <span class="alert">${errormap.get("shgmname")}</span><input name="shgmname"
 									class="form-control inputtext" id="shgmname" rows="3" value=${(shgmvo != null)? shgmvo.shgmname:""}>
 							</div>
 							<div class="form-group p-2 bd-highlight">
-								<label for="price">輸入您欲販售之價格</label> <span class="alert">${errormap.get(2)}</span><input name="price"
+								<label for="price">輸入您欲販售之價格</label> <span class="alert">${errormap.get("price")}</span><input name="price"
 									class="form-control inputtext" id="price" rows="3" value=${(shgmvo != null)? shgmvo.price:""}>
 							</div>
 							<div class="button-wrapper">
@@ -290,11 +209,11 @@ div.top-info {
 					</div>
 					<br> <br> <br>
 					<div class="shgm-info-middle">
-						輸入此桌遊的詳情<span class="alert">${errormap.get(3)}</span>
+						輸入此桌遊的詳情<span class="alert">${errormap.get("intro")}</span>
 						<div class="card">
 							<textarea name="intro">${(shgmvo != null)? shgmvo.intro:""}</textarea>
 						</div>
-						${errormap.get(5)}
+						${errormap.get("error")}
 					</div>
 					<input type="hidden" name="sellerno" value="${member.mbrno}">
 					<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
@@ -304,7 +223,14 @@ div.top-info {
 			</div>
 		</div>
 	</div>
+	
+	<%@ include file="/front-end/shgm/alert-area.jsp"%>
 
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/ajaxForMbrmsgs.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/wsForShgm.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/jsForAlert-area.js"></script>
 
 	<script src="js/jquery-3.3.1.min.js"></script>
 	<!-- 看起來沒屁用 -->

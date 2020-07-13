@@ -11,7 +11,6 @@
 <!doctype html>
 <html lang="en">
 <head>
-<script type="text/javascript" src="<%=request.getContextPath() %>/js/taiwan_address_auto_change.js"></script>
 <title>buyerUpdate</title>
 <meta charset="utf-8">
 <meta name="viewport"
@@ -32,6 +31,9 @@
 
 <!-- MAIN CSS -->
 <link rel="stylesheet" href="css/style.css">
+
+<!-- 顯示訊息的css -->
+<link rel="stylesheet" href="css/alert-area.css">
 
 </head>
 <style>
@@ -55,6 +57,7 @@ div.main-area {
 }
 
 .top-info-wrapper {
+	position: relative;
 	text-align: center;
 	margin-top: 3%;
 }
@@ -63,13 +66,26 @@ div.main-area {
 	background-color: #EEEEEE;
 }
 
-.awrapper {
-	width: 150px;
-	display: inline;
-	text-align: right;
-	margin-left: 65.5%;
+.rpdiv {
+	color: #FF4500;
+	margin-right: 5%;
 }
 
+.awrapper {
+	display: block;
+	text-align: right;
+	width:75%;
+}
+@media (max-width: 1666px) {
+	.awrapper {
+		width:60%;
+	}
+}
+@media (max-width: 1080px) {
+	.awrapper {
+		width:40%;
+	}
+}
 div.top-info {
 	margin: 0 auto;
 	border: green 1px solid;
@@ -104,7 +120,7 @@ div.top-info {
 }
 
 .btn {
-	margin: 10% auto;
+	margin: 0 1%;
 	background-color: white;
 }
 
@@ -123,95 +139,9 @@ div.top-info {
 </style>
 
 
-<body data-spy="scroll" data-target=".site-navbar-target"
-	data-offset="300" background="images/bgimage3.jpg">
+<body data-offset="300" background="images/bgimage3.jpg">
 
-	<div class="site-wrap" id="home-section">
-		<div class="site-mobile-menu site-navbar-target">
-			<div class="site-mobile-menu-header">
-				<div class="site-mobile-menu-close mt-3">
-					<span class="icon-close2 js-menu-toggle"></span>
-				</div>
-			</div>
-			<div class="site-mobile-menu-body"></div>
-		</div>
-	</div>
-
-	<div class="top-bar">
-		<div class="container">
-			<div class="row">
-				<div class="col-12">
-					<a href="#" class="text-white"><span class="d-md-inline-block"><img
-							class="icon" src="images/add-icon.png">註冊</span></a>
-					<div class="float-right">
-						<c:choose>
-						<c:when test="<%=member != null%>">
-						<span class="d-md-inline-block text-white">歡迎你！${member.mbrname}</span>
-						</c:when>
-						<c:otherwise>
-						<a href="#" class="text-white"><span class="d-md-inline-block"><img
-								class="icon" src="images/User-icon.png">會員登入</span></a> 
-						<a href="#" class="text-white"><span class="d-md-inline-block"><img
-								class="icon" src="images/man-icon.png">店家登入</span></a>
-						</c:otherwise>
-						</c:choose>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<header class="site-navbar js-sticky-header site-navbar-target"
-		role="banner">
-
-		<div class="container">
-			<div class="row align-items-center position-relative">
-
-
-				<div class="site-logo">
-					<a href="index.html" class="text-black"><span
-						class="text-primary">Gaming on board</span></a>
-				</div>
-
-				<div class="col-12">
-					<nav class="site-navigation text-right ml-auto " role="navigation">
-
-						<ul
-							class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
-							<li><a href="" class="nav-link">首頁</a></li>
-
-							<li class="has-children"><a href="" class="nav-link">會員專區</a>
-								<ul class="dropdown arrow-top">
-									<li><a href="#team-section" class="nav-link">Team</a></li>
-									<li><a href="#pricing-section" class="nav-link">Pricing</a></li>
-									<li><a href="#faq-section" class="nav-link">FAQ</a></li>
-									<li class="has-children"><a href="#">More Links</a>
-										<ul class="dropdown">
-											<li><a href="#">Menu One</a></li>
-											<li><a href="#">Menu Two</a></li>
-											<li><a href="#">Menu Three</a></li>
-										</ul></li>
-								</ul></li>
-
-							<li><a href="#mall" class="nav-link">商城</a></li>
-							<li><a href="#shop" class="nav-link">市集</a></li>
-							<li><a href="#play" class="nav-link">揪團區</a></li>
-							<li><a href="#store" class="nav-link">店家列表</a></li>
-							<li><a href="#forum" class="nav-link">討論區</a></li>
-						</ul>
-					</nav>
-
-				</div>
-
-				<div class="toggle-button d-inline-block d-lg-none">
-					<a href="#" class="site-menu-toggle py-5 js-menu-toggle text-black"><span
-						class="icon-menu h3"></span></a>
-				</div>
-
-			</div>
-		</div>
-
-	</header>
+	<%@ include file="/front-end/shgm/front-end-nav.jsp"%>
 
 	<div class="main-area container col-10 align-self-center">
 		<div class="top-info-wrapper">
@@ -223,7 +153,7 @@ div.top-info {
 					<li class="breadcrumb-item"><a
 						href="<%=request.getContextPath()%>/front-end/shgm/myShgm.jsp">我的市集商品</a></li>
 					<li class="breadcrumb-item active" aria-current="page">修改取貨資訊</li>
-					<li class="awrapper"><button type="button"
+					<li class="awrapper"><span class="rpdiv">${errormap.get("rp")}</span><button type="button"
 							class="btn btn-primary" data-toggle="modal"
 							data-target="#exampleModal" data-whatever="@mdo">檢舉</button></li>
 				</ol>
@@ -255,6 +185,7 @@ div.top-info {
 						</div>
 						<input type="hidden" name="shgmno" value="${shgmvo.shgmno}">
 						<input type="hidden" name="suiterno" value="${member.mbrno}">
+						<input type="hidden" name="requestURL" value="<%=request.getServletPath()%>">
 						<input type="hidden" name="action" value="insertrp">
 					</form>
 				</div>
@@ -284,25 +215,25 @@ div.top-info {
 						<form method="post"
 							action="<%=request.getContextPath()%>/front-end/shgm/shgm.do">
 							<div class="form-group" style="margin:0;">
-								<label for="take">取貨方式</label><span class="alert">${errormap.get(1)}</span><br>
+								<label for="take">取貨方式</label><span class="alert">${errormap.get("take")}</span><br>
 								<label for="1"><input id="1" type="radio" name="take" value="宅配到府" <%=(shgmvo.getTake() == null)? "":shgmvo.getTake().equals("宅配到府")? "checked":""%>>宅配到府</label>
 								<label for="2"><input id="2" type="radio" name="take" value="超商取貨" <%=(shgmvo.getTake() == null)? "":shgmvo.getTake().equals("超商取貨")? "checked":""%>>超商取貨</label>
 							</div>
 							<br>
 							<div class="form-group">
-								<label for="takernm">取貨人姓名</label><span class="alert">${errormap.get(2)}</span>
+								<label for="takernm">取貨人姓名</label><span class="alert">${errormap.get("takernm")}</span>
 								<input type="text" class="form-control" id="takernm"
 									name="takernm" value="<%=(shgmvo.getTakernm() == null)? "":shgmvo.getTakernm()%>">
 							</div>
 							<br>
 							<div class="form-group">
-								<label for="takerph">取貨人電話</label><span class="alert">${errormap.get(3)}</span>
+								<label for="takerph">取貨人電話</label><span class="alert">${errormap.get("takerph")}</span>
 								<input type="text" class="form-control" id="takerph"
 									name="takerph" value="<%=(shgmvo.getTakerph() == null)? "":shgmvo.getTakerph()%>">
 							</div>
 							<br>
 							<div class="form-group">
-								<label for="ads">取貨地址</label><span class="alert">${errormap.get(4)}</span><br>
+								<label for="ads">取貨地址</label><span class="alert">${errormap.get("ads")}</span><br>
 								<select id="縣市1" name="city" class="address"></select>
 								<select id="鄉鎮市區1" name="area" class="address"></select>
 								<input id="ads" name="ads" type="text" class="form-control address" value="<%= (hashmap == null)? "":hashmap.get("ads") %>"/>
@@ -316,7 +247,7 @@ div.top-info {
 							<input type="hidden" name="buyerno" value="${member.mbrno}">
 							<input type="hidden" name="action" value="buyerUpdate">
 						</form>
-						<b><span class="alert">${errormap.get(5)}</span></b>
+						<b><span class="alert">${errormap.get("error")}</span></b>
 					</div>
 				</div>
 			</div>
@@ -324,7 +255,15 @@ div.top-info {
 	</div>
 	<div class="random-area"></div>
 
-
+	<%@ include file="/front-end/shgm/alert-area.jsp"%>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/taiwan_address_auto_change.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/ajaxForMbrmsgs.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/wsForShgm.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/jsForAlert-area.js"></script>
+	
 	<script type="text/javascript">
 	window.onload = function () {
 	       //當頁面載完之後，用AddressSeleclList.Initialize()，
