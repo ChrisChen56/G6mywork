@@ -23,3 +23,6 @@ S.改寫controller。應從service做重複的商業邏輯判斷，也才有完�
 T.寫getAll還沒經過審核的商品、檢舉(采庭要用的)
 U.把selectPage.jsp的內容放進listAllShgm.jsp
 V.include寫法個人版還沒改
+W.把WebSocket加進去整合版後台
+X.個人版背景圖片要改
+Y.前台首頁加上市集商品
