@@ -47,7 +47,9 @@ public class ShgmDAO implements ShgmDAO_interface {
 			+ " FROM SHGM WHERE (upcheck=1 AND boxstatus=0 AND paystatus=0 AND status=0 AND sellerno=?) ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
 	private static final String SEARCH_STMT = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
 			+ " FROM SHGM WHERE (upcheck=1 AND boxstatus=0 AND paystatus=0 AND status=0 AND UPPER(shgmname) LIKE UPPER(?)) ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
-
+	private static final String GET_ALL_UNCHECK = "SELECT shgmno,sellerno,buyerno,shgmname,price,replace(intro,CHR(10), '<BR>'),img,upcheck,uptime,take,takernm,takerph,address,boxstatus,paystatus,status,soldtime"
+			+ " FROM SHGM WHERE upcheck=0 ORDER BY CAST(SUBSTR(shgmno, 5) AS INT)";
+	
 	public void insertShgm(ShgmVO shgmvo) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -840,6 +842,74 @@ public class ShgmDAO implements ShgmDAO_interface {
 			con = ds.getConnection();
 			pstmt = con.prepareStatement(SEARCH_STMT);
 			pstmt.setString(1, "%" + word + "%");
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				ShgmVO shgmvo = new ShgmVO();
+				shgmvo.setShgmno(rs.getString(1));
+				shgmvo.setSellerno(rs.getString(2));
+				shgmvo.setBuyerno(rs.getString(3));
+				shgmvo.setShgmname(rs.getString(4));
+				shgmvo.setPrice(rs.getInt(5));
+				Clob clob = rs.getClob(6);
+				String intro = clob.getSubString(1, (int) clob.length());
+				shgmvo.setIntro(intro);
+				shgmvo.setImg(rs.getBytes(7));
+				shgmvo.setUpcheck(rs.getInt(8));
+				shgmvo.setUptime(rs.getTimestamp(9));
+				shgmvo.setTake(rs.getString(10));
+				shgmvo.setTakernm(rs.getString(11));
+				shgmvo.setTakerph(rs.getString(12));
+				shgmvo.setAddress(rs.getString(13));
+				shgmvo.setBoxstatus(rs.getInt(14));
+				shgmvo.setPaystatus(rs.getInt(15));
+				shgmvo.setStatus(rs.getInt(16));
+				shgmvo.setSoldtime(rs.getTimestamp(17));
+
+				set.add(shgmvo);
+			}
+
+			rs.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e2) {
+					e2.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return set;
+	}
+	
+	@Override
+	public Set<ShgmVO> getAllUncheck() {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		Set<ShgmVO> set = new LinkedHashSet<ShgmVO>();
+
+		try {
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(GET_ALL_UNCHECK);
 
 			rs = pstmt.executeQuery();
 

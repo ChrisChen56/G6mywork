@@ -74,4 +74,9 @@ public class ShgmrpService {
 		
 		return dao.getAll();
 	}
+	
+	public java.util.Set<ShgmrpVO> getAllShgmrpUncheck(){
+		
+		return dao.getAllUncheck();
+	}
 }

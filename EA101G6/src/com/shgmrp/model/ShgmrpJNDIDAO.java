@@ -29,6 +29,7 @@ public class ShgmrpJNDIDAO implements ShgmrpDAO_interface {
 	private static final String GET_ONE_STMT = "SELECT * FROM SHGMRP WHERE shgmrpno=?";
 	private static final String GET_ONE_BY_SHGMNO = "SELECT * FROM SHGMRP WHERE shgmno=?";
 	private static final String GET_ALL_STMT = "SELECT * FROM SHGMRP ORDER BY CAST(SUBSTR(shgmrpno, 5) AS INT)";
+	private static final String GET_ALL_UNCHECK = "SELECT * FROM SHGMRP WHERE status=0 ORDER BY CAST(SUBSTR(shgmrpno, 5) AS INT)";
 
 	public static void main(String[] args) {
 		ShgmrpJDBCDAO dao = new ShgmrpJDBCDAO();
@@ -277,6 +278,60 @@ public class ShgmrpJNDIDAO implements ShgmrpDAO_interface {
 		try {
 			con = ds.getConnection();
 			pstmt = con.prepareStatement(GET_ALL_STMT);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				ShgmrpVO shgmrpvo = new ShgmrpVO();
+				shgmrpvo.setShgmrpno(rs.getString(1));
+				shgmrpvo.setShgmno(rs.getString(2));
+				shgmrpvo.setSuiterno(rs.getString(3));
+				java.sql.Clob clob = rs.getClob(4);
+				String detail = clob.getSubString(1, (int) clob.length());
+				shgmrpvo.setDetail(detail);
+				shgmrpvo.setStatus(rs.getInt(5));
+
+				set.add(shgmrpvo);
+			}
+
+			rs.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return set;
+	}
+
+	@Override
+	public Set<ShgmrpVO> getAllUncheck() {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		Set<ShgmrpVO> set = new LinkedHashSet<ShgmrpVO>();
+		try {
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(GET_ALL_UNCHECK);
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {

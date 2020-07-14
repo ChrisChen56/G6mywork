@@ -2,7 +2,7 @@ package com.shgm.model;
 
 import java.sql.Connection;
 import java.sql.Timestamp;
-import java.util.HashMap;
+import java.util.*;
 
 import com.mbrpf.model.MbrpfVO;
 
@@ -209,39 +209,44 @@ public class ShgmService {
 		return dao.getOneForInfo(shgmno);
 	}
 
-	public java.util.Set<ShgmVO> getAllShgm() {
+	public Set<ShgmVO> getAllShgm() {
 
 		return dao.getall();
 	}
 
-	public java.util.Set<ShgmVO> allForSeller(String sellerno) {
+	public Set<ShgmVO> allForSeller(String sellerno) {
 
 		return dao.allForSeller(sellerno);
 	}
 
-	public java.util.Set<ShgmVO> allForBuyer(String buyerno) {
+	public Set<ShgmVO> allForBuyer(String buyerno) {
 
 		return dao.allForBuyer(buyerno);
 	}
 
-	public java.util.Set<ShgmVO> getAllForMain() {
+	public Set<ShgmVO> getAllForMain() {
 
 		return dao.getAllForMain();
 	}
 	
-	public java.util.List<ShgmVO> getAllForInfoShuffle() {
+	public List<ShgmVO> getAllForInfoShuffle() {
 
 		return dao.getAllForInfoShuffle();
 	}
 	
-	public java.util.Set<ShgmVO> allForPersonalMkt(String sellerno) {
+	public Set<ShgmVO> allForPersonalMkt(String sellerno) {
 
 		return dao.allForPpersonalMkt(sellerno);
 	}
 
-	public java.util.Set<ShgmVO> searchForMain(String word) {
+	public Set<ShgmVO> searchForMain(String word) {
 
 		return dao.searchForMain(word);
 	}
+	
+	public Set<ShgmVO> getAllShgmUncheck() {
+
+		return dao.getAllUncheck();
+	} 
 
 }

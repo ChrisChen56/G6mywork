@@ -1,6 +1,7 @@
 package com.shgm.model;
 
 import java.sql.Connection;
+import java.util.*;
 
 import com.mbrpf.model.MbrpfVO;
 
@@ -12,11 +13,12 @@ public interface ShgmDAO_interface {
 	public void delete(String shgmno);
 	public ShgmVO findByPrimaryKey(String shgmno);
 	public ShgmVO getOneForInfo(String shgmno);
-	public java.util.Set<ShgmVO> getall();
-	public java.util.Set<ShgmVO> allForSeller(String sellerno);
-	public java.util.Set<ShgmVO> allForBuyer(String buyerno);
-	public java.util.Set<ShgmVO> allForPpersonalMkt(String sellerno);
-	public java.util.Set<ShgmVO> getAllForMain();
-	public java.util.List<ShgmVO> getAllForInfoShuffle();
-	public java.util.Set<ShgmVO> searchForMain(String word);
+	public Set<ShgmVO> getall();
+	public Set<ShgmVO> allForSeller(String sellerno);
+	public Set<ShgmVO> allForBuyer(String buyerno);
+	public Set<ShgmVO> allForPpersonalMkt(String sellerno);
+	public Set<ShgmVO> getAllForMain();
+	public List<ShgmVO> getAllForInfoShuffle();
+	public Set<ShgmVO> searchForMain(String word);
+	public Set<ShgmVO> getAllUncheck();
 }

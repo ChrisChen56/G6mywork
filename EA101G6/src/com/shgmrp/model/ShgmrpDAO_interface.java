@@ -9,4 +9,5 @@ public interface ShgmrpDAO_interface {
 	public ShgmrpVO findByPrimaryKey(String shgmrpno);
 	public ShgmrpVO findByShgmno(String shgmno);
 	public Set<ShgmrpVO> getAll();
+	public Set<ShgmrpVO> getAllUncheck();
 }
