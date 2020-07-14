@@ -14,9 +14,12 @@ J.取消後的商品，如果重新上架，要把原本買家的資料清除√
 K.增加賣家未出貨前，買家可更改購買資料√
 L.要把假資料地址的部分做更改、地址連動的資料也要更新√
 M.要再增加多一點假資料，版面才不會太空√
-★N.infoPage.jsp增加賣家圖示(and個人市集)？
+★N.infoPage.jsp增加賣家圖示(and個人市集√)？
 ★O.做footer
 P.後台做新版本，詳細資料額外顯示√
 Q.getone_update、oneForBuyerUpdate做好從哪裡來從哪裡回去√
 R.正則表達式判斷輸入的內容長度√
 S.改寫controller。應從service做重複的商業邏輯判斷，也才有完整的transaction√
+T.寫getAll還沒經過審核的商品、檢舉(采庭要用的)
+U.把selectPage.jsp的內容放進listAllShgm.jsp
+V.include寫法個人版還沒改
