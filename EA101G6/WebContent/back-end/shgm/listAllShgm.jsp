@@ -255,7 +255,6 @@
 	function showmodal(){
 		$(this).modal("show");
 	}
-
 	</script>
 </body>
 </html>

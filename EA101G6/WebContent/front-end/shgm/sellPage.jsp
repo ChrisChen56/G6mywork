@@ -138,7 +138,7 @@ div.top-info {
 
 	<div class="main-area container col-10 align-self-center">
 		<div class="top-info-wrapper">
-			<nav aria-label="breadcrumb" calss="breadcrumb-nav">
+			<nav aria-label="breadcrumb" class="breadcrumb-nav">
 				<ol class="breadcrumb d-flex">
 					<li class="breadcrumb-item"><a href="#">首頁</a></li>
 					<li class="breadcrumb-item"><a href="<%=request.getContextPath()%>/front-end/shgm/mainPage.jsp">市集</a></li>
