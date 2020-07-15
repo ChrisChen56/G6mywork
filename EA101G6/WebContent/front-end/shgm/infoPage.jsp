@@ -123,6 +123,9 @@ div.top-info {
 	box-shadow: 0 0 11px rgba(33, 33, 33, .2);
 }
 
+a img:hover{
+	background-color:orange;
+}
 .carousel-item img{
 	width: 250px;
 	height: 250px;
@@ -130,7 +133,6 @@ div.top-info {
 }
 
 .slide {
-	height: 90px;
 	min-height: 300px;
 	background-size: cover;
 }
@@ -180,7 +182,7 @@ div.top-info {
 								data-dismiss="modal">取消</button>
 						</div>
 						<input type="hidden" id="shgmno" name="shgmno" value="${infoshgm.shgmno}">
-						<input type="hidden" name="suiterno" value="${member.mbrno}">
+						<input type="hidden" name="suiterno" value="${mbrpfVO.mbrno}">
 						<input type="hidden" name="requestURL" value="<%=request.getServletPath()%>">
 						<input type="hidden" name="action" value="insertrp">
 					</form>
@@ -236,7 +238,7 @@ div.top-info {
 						<div class="row blog">
 							<div class="col-md-12">
 								<div id="blogCarousel" class="carousel slide"
-									data-ride="carousel">
+									data-ride="carousel" style="height:90px;">
 
 									<ol class="carousel-indicators">
 										<li data-target="#blogCarousel" data-slide-to="0"
@@ -249,7 +251,7 @@ div.top-info {
 										<div class="carousel-item active">
 											<div class="row">
 											<c:forEach var="i" begin="0" end="3">
-												<div class="col-md-3">
+												<div class="col-md-3 ">
 													<a
 														href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneForMoreInfo&shgmno=${list.get(i).shgmno}">
 														<img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${list.get(i).shgmno}" alt="Image"
@@ -262,7 +264,7 @@ div.top-info {
 										<div class="carousel-item">
 											<div class="row">
 											<c:forEach var="i" begin="4" end="7">
-												<div class="col-md-3">
+												<div class="col-md-3 ">
 													<a
 														href="<%=request.getContextPath()%>/front-end/shgm/shgm.do?action=getOneForMoreInfo&shgmno=${list.get(i).shgmno}">
 														<img src="<%=request.getContextPath()%>/shgm/displayimg?shgmno=${list.get(i).shgmno}" alt="Image"
@@ -283,7 +285,7 @@ div.top-info {
 				</div>
 			</div>
 		</div>
-		<input type="hidden" id="points" value="${member.points}">
+		<input type="hidden" id="points" value="${mbrpfVO.points}">
 		<input type="hidden" id="buysuccess" value="${buysuccess}">
 		<input type="hidden" id="rpsuccess" value="${rpsuccess}">
 	</div>

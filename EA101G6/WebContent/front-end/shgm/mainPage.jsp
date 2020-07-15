@@ -199,7 +199,7 @@ footer{
 </style>
 <body data-offset="300" background="<%=request.getContextPath()%>/front-end/shgm/images/bgimage3.jpg">
 
-<%@ include file="/front-end/shgm/front-end-nav.jsp"%>
+<jsp:include page="/front-end/shgm/front-end-nav.jsp"></jsp:include>
 
 	<div class="main-area container col-10 align-self-center">
 		<div class="top-info-wrapper">
