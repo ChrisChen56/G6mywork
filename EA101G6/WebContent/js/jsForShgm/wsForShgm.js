@@ -26,7 +26,32 @@ if (mbrno !== '') {
 	};
 
 	webSocket.onmessage = function(event) {// 接收伺服器端回應的json字串←
-		alert(event.data);
+		let timerInterval
+		Swal.fire({
+		  title: event.data,
+		  html: '<b></b>秒內自動關閉',
+		  timer: 5000,
+		  timerProgressBar: true,
+		  onBeforeOpen: () => {
+		    Swal.showLoading()
+		    timerInterval = setInterval(() => {
+		      const content = Swal.getContent()
+		      if (content) {
+		        const b = content.querySelector('b')
+		        if (b) {
+		          b.textContent = Swal.getTimerLeft()
+		        }
+		      }
+		    }, 100)
+		  },
+		  onClose: () => {
+		    clearInterval(timerInterval)
+		  }
+		}).then((result) => {
+		  if (result.dismiss === Swal.DismissReason.timer) {
+		    console.log('I was closed by the timer')
+		  }
+		})
 	};
 
 	webSocket.onclose = function(event) {// 成功關閉，伺服器端回應←

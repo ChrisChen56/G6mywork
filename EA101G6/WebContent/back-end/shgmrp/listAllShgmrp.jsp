@@ -14,6 +14,7 @@
 
 <html>
 <head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 <meta charset="UTF-8">
 <title>All_Shgmrp</title>
 
@@ -94,5 +95,12 @@
 		</c:forEach>
 	</table>
 	<a href="/EA101G6/back-end/shgmrp/shgmrp_select_page.jsp">回首頁</a>
+	
+	<input type="hidden" id="mbrno" value="shgmBackEnd">
+	<input type="hidden" id="wsShgmno" value="${param.shgmno}">
+	
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/wsForShgm.js"></script>
 </body>
 </html>

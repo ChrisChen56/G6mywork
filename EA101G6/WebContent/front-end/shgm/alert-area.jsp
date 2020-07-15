@@ -24,7 +24,7 @@
 					</c:if>
 					<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false" style="display:none;">
 					  <div class="toast-header">
-					    <img src="<%=request.getContextPath() %>/image/alertMsg.png" class="rounded mr-2" style="width:20px;height:20px;">
+					    <img src="<%=request.getContextPath() %>/front-end/shgm/images/alertMsg.png" class="rounded mr-2" style="width:20px;height:20px;">
 					    <strong class="mr-auto">市集新訊</strong>
 					    <small class="text-muted">標示為已讀</small>
 					    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close" value="${msgvo.index}">

@@ -197,7 +197,7 @@ footer{
 	float:left;
 }
 </style>
-<body data-offset="300" background="images/bgimage3.jpg">
+<body data-offset="300" background="<%=request.getContextPath()%>/front-end/shgm/images/bgimage3.jpg">
 
 <%@ include file="/front-end/shgm/front-end-nav.jsp"%>
 
