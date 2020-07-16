@@ -125,10 +125,10 @@ public class MyWebSocket {
 			}
 			// 購買成功，前台送過來
 			if (shgmvo.getPaystatus() != null) {
-				sendthis.append("買家 " + buyerVO.getNickname() + "，已購買您的商品「" + shgmorg.getShgmname() + "」，請至賣家專區出貨。");
+				sendthis.append("買家 " + sellerVO.getNickname() + "，已購買您的商品「" + shgmorg.getShgmname() + "」，請至賣家專區出貨。");
 				sendmsg(sellerno, sendthis);
 				sendthis.setLength(0);
-				sendthis.append(sellerVO.getNickname() + "，您已成功購買商品「" + shgmorg.getShgmname() + "」，請等待賣家出貨。");
+				sendthis.append(buyerVO.getNickname() + "，您已成功購買商品「" + shgmorg.getShgmname() + "」，請等待賣家出貨。");
 				sendmsg(buyerno, sendthis);
 			}
 		}

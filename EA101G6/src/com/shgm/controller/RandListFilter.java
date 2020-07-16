@@ -24,6 +24,7 @@ public class RandListFilter extends HttpServlet implements Filter {
     	
     	ShgmService shgmsvc = new ShgmService();
     	String shgmno = request.getParameter("shgmno");
+    	System.out.println(shgmno);
     	ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);//取得使用者點選的市集商品
     	
     	List<ShgmVO> list = new ArrayList<ShgmVO>();

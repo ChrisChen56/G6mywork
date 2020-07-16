@@ -250,7 +250,7 @@
 	<br>
 	<a href="<%= request.getContextPath()%>/back-end/shgm/shgm_select_page.jsp">回首頁</a>
 	
-	<script type="text/javascript" src="<%=request.getContextPath() %>/js/wsForShgm.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/jsForShgm/wsForShgm.js"></script>
 	<script>
 	function showmodal(){
 		$(this).modal("show");

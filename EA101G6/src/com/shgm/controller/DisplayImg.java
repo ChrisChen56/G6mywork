@@ -23,9 +23,10 @@ public class DisplayImg extends HttpServlet {
 		response.setContentType("image/gif");
 		ShgmService shgmsvc = new ShgmService();
 		byte[] bytearr = null;
-
+		
 		String shgmno = request.getParameter("shgmno");
 		ShgmVO shgmvo = shgmsvc.getOneShgm(shgmno);
+		
 		bytearr = shgmvo.getImg();
 
 		ServletOutputStream ops = response.getOutputStream();
