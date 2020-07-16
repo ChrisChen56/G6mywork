@@ -20,9 +20,9 @@ P.後台做新版本，詳細資料額外顯示√
 Q.getone_update、oneForBuyerUpdate做好從哪裡來從哪裡回去√
 R.正則表達式判斷輸入的內容長度√
 S.改寫controller。應從service做重複的商業邏輯判斷，也才有完整的transaction√
-T.寫getAll還沒經過審核的商品、檢舉(采庭要用的)
-U.把selectPage.jsp的內容放進listAllShgm.jsp
+T.寫getAll還沒經過審核的商品、檢舉(采庭要用的)√
+U.把selectPage.jsp的內容放進listAllShgm.jsp√
 V.include寫法個人版還沒改
-W.把WebSocket加進去整合版後台
+W.把WebSocket加進去整合版後台√
 X.個人版背景圖片要改
-Y.前台首頁加上市集商品
+Y.前台首頁加上市集商品√
